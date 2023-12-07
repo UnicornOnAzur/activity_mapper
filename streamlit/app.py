@@ -10,7 +10,7 @@ import pandas as pd
 import streamlit as st
 from streamlit.elements.utils import _shown_default_value_warning
 # Local imports
-sys.path.append("../")
+# sys.path.append("../")
 from backend import charts
 from backend import get_data
 from backend import strava_parser
@@ -244,14 +244,14 @@ def main() -> None:
                                  )
 
         # SLIDER
-        with st.container():
-            st.select_slider(label="Select a timeframe",
-                              options=utils.get_time_range(st.session_state.get("dataframe")),
-                              value=utils.get_min_max_time(st.session_state.get("dataframe")),
-                              key="time_range",
-                              help="Select a time period to display",
-                              on_change=filter_df,
-                              )
+        # with st.container():
+            # st.select_slider(label="Select a timeframe",
+            #                   options=utils.get_time_range(st.session_state.get("dataframe")),
+            #                   value=utils.get_min_max_time(st.session_state.get("dataframe")),
+            #                   key="time_range",
+            #                   help="Select a time period to display",
+            #                   on_change=filter_df,
+            #                   )
 
 if __name__ == "__main__":
     # set the initial state of the sidebar
