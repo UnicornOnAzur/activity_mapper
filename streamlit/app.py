@@ -5,7 +5,6 @@
 """
 # Standard library
 import sys
-import tkinter
 # Third party
 import pandas as pd
 import streamlit as st
@@ -124,23 +123,21 @@ def reset_time_slider():
         st.session_state["time_range"] = utils.get_min_max_time(dataframe)
 
 
-def main(height) -> None:
+def main() -> None:
     """
 
 
     Parameters
     ----------
-    height : TYPE
-        DESCRIPTION.
+    None
 
     Returns
     -------
     None
-        DESCRIPTION.
 
     """
     # INITIALIZATION
-    intervals = (height//100)*10
+    intervals = 100
     height1 = intervals * 3.5
     height2 = height1 * 2
     filter_df()
@@ -265,6 +262,4 @@ if __name__ == "__main__":
                        layout="wide",
                        initial_sidebar_state=st.session_state.get("sidebar_state")
                        )
-    # get the screen height to determine the height of the plots
-    screen_height = tkinter.Tk().winfo_screenheight()
-    main(screen_height)
+    main()
