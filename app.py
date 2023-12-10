@@ -10,11 +10,10 @@ import pandas as pd
 import streamlit as st
 from streamlit.elements.utils import _shown_default_value_warning
 # Local imports
-# sys.path.append("../")
-from ..backend import charts
-from ..backend import get_data
-from ..backend import strava_parser
-from ..backend import utils
+import charts
+import get_data
+import strava_parser
+import utils
 
 
 TITLE = "Activity Mapper"
