@@ -7,7 +7,7 @@
 
 # Third party
 import pandas as pd
-import plotly.graph_objs as go
+#import plotly.graph_objs as go
 import plotly.express as px
 # Local imports
 from backend import utils
