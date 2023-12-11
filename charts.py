@@ -3,8 +3,6 @@
 @author: QtyPython2020
 
 """
-# Standard library
-
 # Third party
 import pandas as pd
 import plotly.graph_objs as go
