@@ -1,2 +1,1 @@
-plotly
-plotly.graph_objects
+plotly==5.11.0
