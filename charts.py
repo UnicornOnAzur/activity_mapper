@@ -7,22 +7,13 @@
 
 # Third party
 import pandas as pd
-#import plotly.graph_objs as go
+import plotly.graph_objs as go
 import plotly.express as px
 # Local imports
 from backend import utils
 
 TEMPLATE = "plotly_dark"
 COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
-            '2017': 'rgb(127,39,4)',
-            '2018': 'rgb(166,54,3)',
-            '2019': 'rgb(217,72,1)',
-            '2020': 'rgb(241,105,19)',
-            '2021': 'rgb(253,141,60)',
-            '2022': 'rgb(253,174,107)',
-            '2023': 'rgb(253,208,162)',
-            '2024': 'rgb(254,230,206)',
-            '2025': 'rgb(255,245,235)'
              }
 LEFT_RIGHT_MARGIN = 15
 TOP_BOTTOM_MARGIN = 25
@@ -149,9 +140,6 @@ def timeline(dataframe: pd.DataFrame,
                        x=dataframe["cw"], # position the dots by week
                        y=dataframe["pos"],
                        )
-    # TODO: fix that 1st of january dates are shown on incorrect position
-    # calender week numbers for the first week of the year are not matching with the year
-    # fix in parser
     return figure
 
 
@@ -383,7 +371,6 @@ def locations(dataframe: pd.DataFrame,
     data = dataframe.loc[(~dataframe["lat"].isna()) &
                          (~dataframe["lon"].isna())
                          ].astype({"year": str})
-    # TODO: make zoom better adapted to scale
     zoom = utils.determine_zoom(data.lat.to_list(), data.lon.to_list())
     lats = []
     lons = []
@@ -455,22 +442,7 @@ def locations(dataframe: pd.DataFrame,
                                  "r": LEFT_RIGHT_MARGIN,
                                  "t": TOP_BOTTOM_MARGIN,
                                  "b": TOP_BOTTOM_MARGIN},
-                          updatemenus=[{"type":"buttons",
-                                        "showactive": True,
-                                        "direction": "right", # order buttons next to eachother
-                                        "x": 1,
-                                        "y": 1,
-                                        "buttons": [{"args":[{"line.color": "#FC4C02"}],
-                                                     "label": "Same color",
-                                                     "method": "restyle"},
-                                                    {"args":[{"line.color": "#ff0000"}],
-                                                     "label": "Color by year",
-                                                     "method": "restyle"}
-                                                    ]
-                                        }
-                                       ]
                          )
-    # TODO: make point recolor on button press
     return figure
 
 
