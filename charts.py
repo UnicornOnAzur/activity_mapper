@@ -10,7 +10,7 @@ import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
 # Local imports
-from backend import utils
+import utils
 
 TEMPLATE = "plotly_dark"
 COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
