@@ -8,6 +8,7 @@
 # Third party
 import plotly.graph_objects as go
 import streamlit as st
+import glob
 # Local imports
 
 TITLE = "Activity Mapper"
@@ -23,6 +24,7 @@ def main():
     # MAIN PAGE
     with st.container():
         st.header(TITLE)
+	st.write(glob.glob("*"))
         # top row
         left, right = st.columns(spec=[6,6],
                                  gap="small")
