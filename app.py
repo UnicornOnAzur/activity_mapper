@@ -20,6 +20,23 @@ def main():
     # MAIN PAGE
     with st.container():
         st.header(TITLE)
+        # top row
+        left, right = st.columns(spec=[6,6],
+                                 gap="small")
+        left.plotly_chart(figure_or_data=None,
+                          use_container_width=True)
+        right.plotly_chart(figure_or_data=None,
+                           use_container_width=True)
+        # middel row
+        cols = left.columns([2,1,1])
+        cols[0].plotly_chart(figure_or_data=None,
+                             use_container_width=True)
+        cols[1].plotly_chart(figure_or_data=None,
+                             use_container_width=True)
+        cols[2].plotly_chart(figure_or_data=None,
+                             use_container_width=True)
+    with st.container():
+        st.write("")
 
 
 if __name__ == "__main__":
