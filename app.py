@@ -10,11 +10,9 @@ import plotly.graph_objects as go
 import streamlit as st
 import glob
 # Local imports
-import backend.plotly_charts
+import backend.plotly_charts as bpc
 
 TITLE = "Activity Mapper"
-
-temporary_figure = go.Figure()
 
 def main():
     with st.spinner("Making visualizations..."):
@@ -28,17 +26,17 @@ def main():
         # top row
         left, right = st.columns(spec=[6,6],
                                  gap="small")
-        left.plotly_chart(figure_or_data=go.Figure(),
+        left.plotly_chart(figure_or_data=bpc.empty_figure(),
                           use_container_width=True)
-        right.plotly_chart(figure_or_data=temporary_figure,
+        right.plotly_chart(figure_or_data=bpc.empty_figure(),
                            use_container_width=True)
         # middel row
         cols = left.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=temporary_figure,
+        cols[0].plotly_chart(figure_or_data=bpc.empty_figure(),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=temporary_figure,
+        cols[1].plotly_chart(figure_or_data=bpc.empty_figure(),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=temporary_figure,
+        cols[2].plotly_chart(figure_or_data=bpc.empty_figure(),
                              use_container_width=True)
     with st.container():
         st.write("")
