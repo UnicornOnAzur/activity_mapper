@@ -24,8 +24,7 @@ def main():
 
     # MAIN PAGE
     with st.container():
-        st.header(TITLE);
-        st.write(glob.glob("*"))
+        st.header(TITLE)
         # top row
         left, right = st.columns(spec=[6,6],
                                  gap="small")
