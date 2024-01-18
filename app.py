@@ -9,7 +9,7 @@ import streamlit as st
 TITLE = "Activity Mapper"
 
 def main():
-    with st.spinner("Making visualizations."):
+    with st.spinner("Making visualizations..."):
         # SIDEBAR
         with st.sidebar:
             st.header("Menu")
