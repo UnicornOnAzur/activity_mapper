@@ -6,9 +6,7 @@
 # Standard library
 
 # Third party
-import plotly.graph_objects as go
 import streamlit as st
-import glob
 # Local imports
 import backend.plotly_charts as bpc
 
@@ -24,19 +22,20 @@ def main():
     with st.container():
         st.header(TITLE)
         # top row
-        left, right = st.columns(spec=[6,6],
+        left, right = st.columns(spec=[4,8],
                                  gap="small")
-        left.plotly_chart(figure_or_data=bpc.empty_figure(),
+        left.plotly_chart(figure_or_data=bpc.empty_figure("1",640),
                           use_container_width=True)
-        right.plotly_chart(figure_or_data=bpc.empty_figure(),
+        right.plotly_chart(figure_or_data=bpc.empty_figure("2",640),
                            use_container_width=True)
         # middel row
-        cols = left.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=bpc.empty_figure(),
+    with st.container():
+        cols = st.columns([2,1,1])
+        cols[0].plotly_chart(figure_or_data=bpc.empty_figure("3",200),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=bpc.empty_figure(),
+        cols[1].plotly_chart(figure_or_data=bpc.empty_figure("4",200),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=bpc.empty_figure(),
+        cols[2].plotly_chart(figure_or_data=bpc.empty_figure("5",200),
                              use_container_width=True)
     with st.container():
         st.write("")
