@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 import streamlit as st
 import glob
 # Local imports
+import backend.plotly_charts
 
 TITLE = "Activity Mapper"
 
