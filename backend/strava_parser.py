@@ -50,7 +50,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     parsed_activities = []
     for activity in activities:
         timestamp = pd.to_datetime(activity.get("start_date_local"),
-                                   format="%Y%m%dT%H:%MZ")
+                                   # format="%Y%m%dT%H:%MZ"
+                                   )
         elements = {"name": activity.get("name"),
                     "timestamp": timestamp,
                     "year": timestamp.year,
