@@ -10,9 +10,15 @@ import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
+import backend.strava_parser as bsp
 
 TITLE = "Activity Mapper"
-df = pd.DataFrame()
+def test():
+    import json
+    with open("api_test.txt", "r") as f:
+        data = json.load(f)
+    return bsp.parse(data)
+df = test() #pd.DataFrame() #bsp.parse()
 
 def main():
     with st.spinner("Making visualizations..."):
