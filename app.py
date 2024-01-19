@@ -22,20 +22,20 @@ def main():
     with st.container():
         st.header(TITLE)
         # top row
-        left, right = st.columns(spec=[4,8],
+        left, right = st.columns(spec=[6,6],
                                  gap="small")
-        left.plotly_chart(figure_or_data=bpc.empty_figure("1",640),
+        left.plotly_chart(figure_or_data=bpc.timeline("1",500),
                           use_container_width=True)
-        right.plotly_chart(figure_or_data=bpc.empty_figure("2",640),
+        right.plotly_chart(figure_or_data=bpc.locations("2",500),
                            use_container_width=True)
         # middel row
     with st.container():
         cols = st.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=bpc.empty_figure("3",200),
+        cols[0].plotly_chart(figure_or_data=bpc.days("3",200),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=bpc.empty_figure("4",200),
+        cols[1].plotly_chart(figure_or_data=bpc.hours("4",200),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=bpc.empty_figure("5",200),
+        cols[2].plotly_chart(figure_or_data=bpc.types("5",200),
                              use_container_width=True)
     with st.container():
         st.write("")
