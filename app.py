@@ -6,7 +6,6 @@
 # Standard library
 
 # Third party
-import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
@@ -18,7 +17,9 @@ def test():
     with open("api_test.txt", "r") as f:
         data = json.load(f)
     return bsp.parse(data)
-df = test() #pd.DataFrame() #bsp.parse()
+import glob
+st.write(glob.glob("*"))
+df = test()
 
 def main():
     with st.spinner("Making visualizations..."):
@@ -32,13 +33,13 @@ def main():
         # top row
         left, right = st.columns(spec=[6,6],
                                  gap="small")
-        left.plotly_chart(figure_or_data=bpc.timeline(df,500),
+        left.plotly_chart(figure_or_data=bpc.timeline(df,400),
                           use_container_width=True)
         right.plotly_chart(figure_or_data=bpc.locations(df,500),
                            use_container_width=True)
         # middel row
-    with st.container():
-        cols = st.columns([2,1,1])
+    # with st.container():
+        cols = left.columns([2,1,1])
         cols[0].plotly_chart(figure_or_data=bpc.days(df,200),
                              use_container_width=True)
         cols[1].plotly_chart(figure_or_data=bpc.hours(df,200),

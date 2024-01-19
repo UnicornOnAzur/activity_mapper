@@ -8,7 +8,7 @@
 import typing
 # Third party
 import pandas as pd
-# import polyline
+import polyline
 # Local imports
 
 
@@ -66,8 +66,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}).get("summary_polyline"),
                     }
-        # if elements.get("polyline"):
-            # elements.update({"coords": polyline.decode(elements.get("polyline"), 5)})
+        if elements.get("polyline"):
+            elements.update({"coords": polyline.decode(elements.get("polyline"), 5)})
         elements.update(dict(zip(["lat","lon"],
                                  get_lat_long(activity.get("start_latlng",
                                                            [])))))
