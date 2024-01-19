@@ -6,11 +6,13 @@
 # Standard library
 
 # Third party
+import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 
 TITLE = "Activity Mapper"
+df = pd.DataFrame()
 
 def main():
     with st.spinner("Making visualizations..."):
@@ -24,18 +26,18 @@ def main():
         # top row
         left, right = st.columns(spec=[6,6],
                                  gap="small")
-        left.plotly_chart(figure_or_data=bpc.timeline("1",500),
+        left.plotly_chart(figure_or_data=bpc.timeline(df,500),
                           use_container_width=True)
-        right.plotly_chart(figure_or_data=bpc.locations("2",500),
+        right.plotly_chart(figure_or_data=bpc.locations(df,500),
                            use_container_width=True)
         # middel row
     with st.container():
         cols = st.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=bpc.days("3",200),
+        cols[0].plotly_chart(figure_or_data=bpc.days(df,200),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=bpc.hours("4",200),
+        cols[1].plotly_chart(figure_or_data=bpc.hours(df,200),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=bpc.types("5",200),
+        cols[2].plotly_chart(figure_or_data=bpc.types(df,200),
                              use_container_width=True)
     with st.container():
         st.write("")
