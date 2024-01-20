@@ -18,7 +18,6 @@ def test():
         data = json.load(f)
     return bsp.parse(data)
 df = test()
-st.write(type(df), df)
 
 def main():
     with st.spinner("Making visualizations..."):
@@ -34,16 +33,16 @@ def main():
                                  gap="small")
         left.plotly_chart(figure_or_data=bpc.timeline(df,400),
                           use_container_width=True)
-        right.plotly_chart(figure_or_data=bpc.locations(df,500),
+        right.plotly_chart(figure_or_data=bpc.timeline(df,500),
                            use_container_width=True)
         # middel row
     # with st.container():
         cols = left.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=bpc.days(df,200),
+        cols[0].plotly_chart(figure_or_data=bpc.timeline(df,200),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=bpc.hours(df,200),
+        cols[1].plotly_chart(figure_or_data=bpc.timeline(df,200),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=bpc.types(df,200),
+        cols[2].plotly_chart(figure_or_data=bpc.timeline(df,200),
                              use_container_width=True)
     with st.container():
         st.write("")
