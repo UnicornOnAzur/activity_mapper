@@ -16,7 +16,9 @@ def test():
     import json
     with open("api_test.txt", "r") as f:
         data = json.load(f)
+    return bsp.parse(data)
 df = test()
+st.write(type(df), df)
 
 def main():
     with st.spinner("Making visualizations..."):
