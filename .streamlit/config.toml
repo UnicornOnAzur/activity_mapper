@@ -1,5 +1,6 @@
 [theme]
+base="dark"
 primaryColor = "#FC4C02" # the color of the Strava app
-backgroundColor = "#0E1117"
-secondaryBackgroundColor = "#262730"
-textColor = "#FAFAFA"
+#backgroundColor = "#0E1117"
+#secondaryBackgroundColor = "#262730"
+textColor = "#FC4C02"

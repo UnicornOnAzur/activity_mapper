@@ -6,18 +6,22 @@
 # Standard library
 
 # Third party
+import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
 
 TITLE = "Activity Mapper"
+TOP_ROW_HEIGHT = 200
+BOTTOM_ROW_HEIGHT = 500
+
 def test():
     import json
     with open("api_test.txt", "r") as f:
         data = json.load(f)
     return bsp.parse(data)
-df = test()
+df = pd.DataFrame()#test()
 
 def main():
     with st.spinner("Making visualizations..."):
@@ -29,20 +33,25 @@ def main():
     with st.container():
         st.header(TITLE)
         # top row
-        left, right = st.columns(spec=[6,6],
-                                 gap="small")
-        left.plotly_chart(figure_or_data=bpc.timeline(df,400),
-                          use_container_width=True)
-        right.plotly_chart(figure_or_data=bpc.timeline(df,500),
+        st.plotly_chart(figure_or_data=bpc.timeline(df,
+                                                    TOP_ROW_HEIGHT),
                            use_container_width=True)
-        # middel row
-    # with st.container():
-        cols = left.columns([2,1,1])
-        cols[0].plotly_chart(figure_or_data=bpc.timeline(df,200),
+
+    with st.container():
+        # middle row
+        cols = st.columns(spec=[2,2,2,6],
+                          gap="small")
+        cols[0].plotly_chart(figure_or_data=bpc.types(df,
+                                                         BOTTOM_ROW_HEIGHT),
                              use_container_width=True)
-        cols[1].plotly_chart(figure_or_data=bpc.timeline(df,200),
+        cols[1].plotly_chart(figure_or_data=bpc.hours(df,
+                                                         BOTTOM_ROW_HEIGHT),
                              use_container_width=True)
-        cols[2].plotly_chart(figure_or_data=bpc.timeline(df,200),
+        cols[2].plotly_chart(figure_or_data=bpc.days(df,
+                                                         BOTTOM_ROW_HEIGHT),
+                             use_container_width=True)
+        cols[3].plotly_chart(figure_or_data=bpc.locations(df,
+                                                         BOTTOM_ROW_HEIGHT),
                              use_container_width=True)
     with st.container():
         st.write("")
