@@ -4,7 +4,7 @@
 
 """
 # Standard library
-
+import os
 # Third party
 import pandas as pd
 import streamlit as st
@@ -35,6 +35,7 @@ def main():
             image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
             st.markdown(f'<a href="https://gmail.com"><img src="data:image/png;base64,{image_connect}" width="100%"></a>',
                         unsafe_allow_html=True)
+            st.write(os.environ)
 
         # MAIN PAGE
         with st.container():
