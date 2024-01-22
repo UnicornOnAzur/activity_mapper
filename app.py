@@ -23,7 +23,7 @@ def test():
     return bsp.parse(data)
 
 def main():
-    df = pd.DataFrame(columns=["app", "weekday", "time"])
+    df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
@@ -31,10 +31,11 @@ def main():
             k = st.button("load")
             if k:
                 df=test()
+            st.dataframe(df)
 
     # MAIN PAGE
     with st.container():
-        st.header(TITLE)
+        st.subheader(TITLE)
         # top row
         st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                     TOP_ROW_HEIGHT),
