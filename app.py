@@ -16,7 +16,7 @@ import backend.utils as bu
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 500
-APP_URL = "http://localhost/exchange_token"#os.environ.get("APP_URL")
+APP_URL = "http://localhost/exchange_token" #os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
