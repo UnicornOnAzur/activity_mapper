@@ -16,9 +16,6 @@ import backend.utils as bu
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 500
-APP_URL = os.environ.get("APP_URL")
-STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
-STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 
 def test():
@@ -39,9 +36,6 @@ def main():
             image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
             st.markdown(f'<a href="https://gmail.com"><img src="data:image/png;base64,{image_connect}" width="100%"></a>',
                         unsafe_allow_html=True)
-            st.write(f"{APP_URL=}")
-            st.write(f"{STRAVA_CLIENT_ID=}")
-            st.write(f"{STRAVA_CLIENT_SECRET=}")
 
         # MAIN PAGE
         with st.container():
