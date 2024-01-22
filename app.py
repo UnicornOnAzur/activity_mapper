@@ -16,7 +16,11 @@ import backend.utils as bu
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 500
+APP_URL = os.environ.get("APP_URL")
+STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
+STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
+authorization_link = "https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read"
 
 def test():
     import json
@@ -34,7 +38,7 @@ def main():
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
             image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
-            st.markdown(f'<a href="https://gmail.com"><img src="data:image/png;base64,{image_connect}" width="100%"></a>',
+            st.markdown(f'<a href="{authorization_link}"><img src="data:image/png;base64,{image_connect}" width="100%"></a>',
                         unsafe_allow_html=True)
 
         # MAIN PAGE
