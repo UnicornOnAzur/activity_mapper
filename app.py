@@ -21,13 +21,16 @@ def test():
     with open("api_test.txt", "r") as f:
         data = json.load(f)
     return bsp.parse(data)
-df = pd.DataFrame()#test()
 
 def main():
+    df = pd.DataFrame(columns=["app", "weekday", "time"])
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
             st.header("Menu")
+            k = st.button("load")
+            if k:
+                df=test()
 
     # MAIN PAGE
     with st.container():
