@@ -4,10 +4,31 @@
 
 """
 # Standard library
+import base64
 import datetime
 # Third party
 import numpy as np
 import pandas as pd
+
+def load_image(path: str) -> str:
+    """
+
+
+    Parameters
+    ----------
+    path : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    str
+        DESCRIPTION.
+
+    """
+    with open(path, "rb") as file:
+        contents: bytes = file.read()
+    image_as_str: str = base64.b64encode(contents).decode("utf-8")
+    return image_as_str
 
 
 def min2ang(time: int) -> int:
@@ -104,38 +125,6 @@ def get_min_max_time(dataframe: pd.DataFrame) -> tuple[datetime.datetime]:
     date_range = get_time_range(dataframe)
     return min(date_range), max(date_range)
 
-
-def determine_zoom(latitudes: list[float],
-                   longitudes: list[float]) -> int:
-    """
-
-
-    Parameters
-    ----------
-    longitudes : list[float]
-        DESCRIPTION.
-    latitudes : list[float]
-        DESCRIPTION.
-
-    Returns
-    -------
-    int
-        DESCRIPTION.
-
-    """
-    #
-    if latitudes == []:
-        latitudes, longitudes = [[0],[0]]
-    height = max(latitudes)- min(latitudes)
-    width = max(longitudes)- min(longitudes)
-    area = height * width
-    zoom = int(round(np.interp(x=area,
-                               xp=[0, 5**-10, 4**-10, 3**-10, 2**-10, 1**-10, 1**-5],
-                               fp=[20, 15,    14,     13,     12,     7,      1]
-                               )+10**-5
-                     )
-               )
-    return zoom
 
 if __name__ == "__main__":
     pass

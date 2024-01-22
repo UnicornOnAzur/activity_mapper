@@ -4,13 +4,14 @@
 
 """
 # Standard library
-import base64
+
 # Third party
 import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
+import backend.utils as bu
 
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
@@ -22,23 +23,17 @@ def test():
         data = json.load(f)
     return bsp.parse(data)
 
-def load_image(path):
-    with open(path, "rb") as file:
-        contents = file.read()
-    a = base64.b64encode(contents).decode("utf-8")
-    return a
-
 def main():
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
             st.header("Menu")
-            image = load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
-            st.markdown(f'<img src="data:image/png;base64,{image}" width="100%">',
+            image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
+            st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
-            image = load_image("logos/btn_strava_connectwith_orange@2x.png")
-            st.markdown(f'<a href="https://gmail.com"><img src="data:image/png;base64,{image}" width="100%"></a>',
+            image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
+            st.markdown(f'<a href="https://gmail.com"><img src="data:image/png;base64,{image_connect}" width="100%"></a>',
                         unsafe_allow_html=True)
 
         # MAIN PAGE
