@@ -44,20 +44,80 @@ def post_request(url: str) -> dict:
         result: dict = response.json()
     return result
 
-def get_token(authorization_code):
+
+def get_request(url: str, header, param) -> dict:
+    """
+
+
+    Parameters
+    ----------
+    url : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict
+        DESCRIPTION.
+
+    """
+    result: dict = {}
+    response = requests.get(url=url,
+                            headers=header,
+                            params=param)
+    if response.ok:
+        result: dict = response.json()
+    return result
+
+def get_access_token(authorization_code):
     other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
     res = post_request(other_link)
     st.session_state["athlete_name"] = res.get("athlete", {}).get("firstname")
-    return res.get("refresh_token"),
+    st.session_state["refresh_token"] = res.get("refresh_token")
+    access_token = res.get("access_token")
+    return access_token
 
+
+def get_activities(access_token):
+    activities_url = "https://www.strava.com/api/v3/athlete/activities"
+    header = {"Authorization": f"Bearer {access_token}"}
+    request_page_num = 1
+    all_activities = []
+
+    while True:
+        param = {"per_page": 200,
+                 "page": request_page_num}
+        response = requests.get(activities_url,
+                                headers=header,
+                                params=param)
+        data_set = response.json()
+        print(request_page_num, response.status_code, type(data_set))
+        if not response.ok:
+            all_activities.append(data_set)
+            return all_activities
+        # break out of the loop if the response is empty
+        if len(data_set) == 0:
+            break
+        # add onto the list
+        if all_activities:
+            all_activities.extend(data_set)
+        # populate the list if it is empty
+        else:
+            all_activities = data_set
+        # increment to get the next page
+        request_page_num += 1
+    return all_activities
+
+
+def connect(code):
+    token = get_access_token(code)
+    st.session_state["df"] = get_activities(token)
 
 def main():
     params: dict = st.query_params.to_dict()
     code = params.get("code")
-    welcome_text = "Welcome" + "" if not (n:=st.session_state.get('athlete_name')) else f", {n}"
+    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     if code:
-        token = get_token(code)
-        st.write(f"{token=}")
+        connect(code)
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
@@ -98,7 +158,8 @@ def main():
                                                              BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
         with st.container():
-            st.write("")
+            st.divider()
+            st.dataframe(st.session_state.get("df"))
 
 
 if __name__ == "__main__":
