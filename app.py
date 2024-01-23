@@ -127,7 +127,6 @@ def main():
         # sidebar
         with st.sidebar:
             st.header("Menu")
-            st.subheader(welcome_text)
             image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
@@ -140,6 +139,7 @@ def main():
         # MAIN PAGE
         with st.container():
             st.subheader(TITLE)
+            st.subheader(welcome_text)
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT),
