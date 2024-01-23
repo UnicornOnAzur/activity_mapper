@@ -15,6 +15,6 @@ def load_test_data() -> dict:
         DESCRIPTION.
 
     """
-    with open("../api_test.txt", "rb") as file:
+    with open("api_test.txt", "rb") as file:
         data: dict = json.loads(file.read())
     return data
