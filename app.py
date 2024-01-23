@@ -23,28 +23,47 @@ STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read_all"
 
+def post_request(url: str) -> dict:
+    """
+
+
+    Parameters
+    ----------
+    url : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict
+        DESCRIPTION.
+
+    """
+    result: dict = {}
+    response = requests.post(url=url)
+    if response.ok:
+        result: dict = response.json()
+    return result
 
 def get_token(authorization_code):
-    response = requests.post(url=f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
-                            )
-    # if response.ok:
-    #     return response.json().get("token")
-    return response.json()
+    other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
+    res = post_request(other_link)
+    st.session_state["athlete_name"] = res.get("athlete", {}).get("firstname")
+    return res.get("refresh_token"),
 
 
 def main():
     params: dict = st.query_params.to_dict()
     code = params.get("code")
+    welcome_text = "Welcome" + "" if not (n:=st.session_state.get('athlete_name')) else f", {n}"
     if code:
-        st.write("requesting token")
         token = get_token(code)
         st.write(f"{token=}")
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
-            st.write(f"{code=}")
             st.header("Menu")
+            st.subheader(welcome_text)
             image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
