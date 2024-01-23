@@ -71,7 +71,7 @@ def get_request(url: str, header, param) -> dict:
 def get_access_token(authorization_code):
     other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
     res = post_request(other_link)
-    st.session_state["athlete_name"] = res.get("athlete", {}).get("firstname")
+    st.session_state["athlete_name"] = res.get("athlete", {}).get("firstname") + " " + res.get("athlete", {}).get("lastname")
     st.session_state["refresh_token"] = res.get("refresh_token")
     access_token = res.get("access_token")
     return access_token
@@ -90,22 +90,22 @@ def get_activities(access_token):
                                 headers=header,
                                 params=param)
         data_set = response.json()
-        print(request_page_num, response.status_code, type(data_set))
-        if not response.ok:
-            all_activities.append(data_set)
-            return all_activities
-        # break out of the loop if the response is empty
-        if len(data_set) == 0:
-            break
-        # add onto the list
-        if all_activities:
-            all_activities.extend(data_set)
-        # populate the list if it is empty
-        else:
-            all_activities = data_set
-        # increment to get the next page
-        request_page_num += 1
-        st.warning(f"{request_page_num=} {response=}")
+        st.write(request_page_num, response.status_code, type(data_set))
+        # if not response.ok:
+        #     all_activities.append(data_set)
+        #     return all_activities
+        # # break out of the loop if the response is empty
+        # if len(data_set) == 0:
+        #     break
+        # # add onto the list
+        # if all_activities:
+        #     all_activities.extend(data_set)
+        # # populate the list if it is empty
+        # else:
+        #     all_activities = data_set
+        # # increment to get the next page
+        # request_page_num += 1
+        # st.warning(f"{request_page_num=} {response=}")
     return all_activities
 
 
