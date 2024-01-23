@@ -25,12 +25,8 @@ authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_
 
 
 def get_token(authorization_code):
-    response = requests.post(url="https://www.strava.com/oauth/token",
-                             data={"client_id": STRAVA_CLIENT_ID,
-                                   "client_secret": STRAVA_CLIENT_SECRET,
-                                   "code": authorization_code,
-                                   "grant_type": "authorization_code",
-                                   "f": "json"})
+    response = requests.post(url="https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
+                            )
     # if response.ok:
     #     return response.json().get("token")
     return response.json()
