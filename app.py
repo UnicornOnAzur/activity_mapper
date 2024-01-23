@@ -23,12 +23,13 @@ STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read_all"
 
+
 def get_token(authorization_code):
     response = requests.post(url="https://www.strava.com/oauth/token",
-                             jsons={"client_id": STRAVA_CLIENT_ID,
-                                    "client_secret": STRAVA_CLIENT_SECRET,
-                                    "code": authorization_code,
-                                    "grant_type": "authorization_code"})
+                             json={"client_id": STRAVA_CLIENT_ID,
+                                   "client_secret": STRAVA_CLIENT_SECRET,
+                                   "code": authorization_code,
+                                   "grant_type": "authorization_code"})
     if response.ok:
         return response.json().get("token")
 
@@ -39,7 +40,7 @@ def main():
     if code:
         st.write("requesting token")
         token = get_token(code)
-        st.write(f"write")
+        st.write(f"{token=}")
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
