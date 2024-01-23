@@ -114,7 +114,7 @@ def connect(code):
     st.warning("retrieving access token")
     token = get_access_token(code)
     st.warning(f"{token=}")
-    # st.session_state["df"] = get_activities(token)
+    st.session_state["df"] = get_activities(token)
     # st.warning("done")
 
 def main():
