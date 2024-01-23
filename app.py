@@ -29,7 +29,8 @@ def get_token(authorization_code):
                              data={"client_id": STRAVA_CLIENT_ID,
                                    "client_secret": STRAVA_CLIENT_SECRET,
                                    "code": authorization_code,
-                                   "grant_type": "authorization_code"})
+                                   "grant_type": "authorization_code",
+                                   "f": "json"})
     if response.ok:
         return response.json().get("token")
     return response.json()
