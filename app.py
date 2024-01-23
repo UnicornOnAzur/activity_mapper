@@ -37,8 +37,8 @@ def main():
     code = params.get("code")
     if code:
         st.write("requesting token")
-        # token = get_token(code)
-        # st.write(f"{token=}")
+        token = get_token(code)
+        st.write(f"{token=}")
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
