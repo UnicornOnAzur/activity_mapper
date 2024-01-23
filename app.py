@@ -4,6 +4,7 @@
 
 """
 # Standard library
+import requests
 import os
 # Third party
 import pandas as pd
@@ -20,19 +21,30 @@ APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
-authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read"
+authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read_all"
 
-def test():
-    import json
-    with open("api_test.txt", "r") as f:
-        data = json.load(f)
-    return bsp.parse(data)
+def get_token(authorization_code):
+    response = requests.post(url="https://www.strava.com/oauth/token",
+                             jsons={"client_id": STRAVA_CLIENT_ID,
+                                    "client_secret": STRAVA_CLIENT_SECRET,
+                                    "code": authorization_code,
+                                    "grant_type": "authorization_code"})
+    if response.ok:
+        return response.json().get("token")
+
 
 def main():
+    params: dict = st.query_params.to_dict()
+    code = params.get("code")
+    if code:
+        st.write("requesting token")
+        token = get_token(code)
+        st.write(f"write")
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
+            st.write(f"{code=}")
             st.header("Menu")
             image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
