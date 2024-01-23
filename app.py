@@ -12,6 +12,7 @@ import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
+import backend.test as bt
 import backend.utils as bu
 
 TITLE = "Activity Mapper"
@@ -22,6 +23,10 @@ STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read_all"
+
+def test():
+    data = bt.load_test_data()
+    st.session_state["df"] = bsp.parse(data)
 
 
 def get_access_token(authorization_code):
@@ -48,14 +53,18 @@ def main():
         # sidebar
         with st.sidebar:
             st.header("Menu")
+            st.divider()
             image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
-            image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
-            st.markdown(f'<a href="{authorization_link}">'
-                        f'<img src="data:image/png;base64,{image_connect}" width="100%">'
-                        f'</a>',
-                        unsafe_allow_html=True)
+            if not st.session_state.get("athlete_name"):
+                image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
+                st.markdown(f'<a href="{authorization_link}">'
+                            f'<img src="data:image/png;base64,{image_connect}" width="100%">'
+                            f'</a>',
+                            unsafe_allow_html=True)
+            st.divider()
+            test_page = st.button("Use test data")
 
         # MAIN PAGE
         with st.container():
