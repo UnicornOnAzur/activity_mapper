@@ -105,6 +105,7 @@ def get_activities(access_token):
             all_activities = data_set
         # increment to get the next page
         request_page_num += 1
+        st.warning(f"{request_page_num=} {response=}")
     return all_activities
 
 
