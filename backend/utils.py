@@ -10,7 +10,8 @@ import requests
 # Third party
 import pandas as pd
 
-def post_request(url: str) -> dict:
+def post_request(url: str,
+                 timeout: int = 5) -> dict:
     """
 
 
@@ -26,15 +27,17 @@ def post_request(url: str) -> dict:
 
     """
     result: dict = {}
-    response = requests.post(url=url)
+    response = requests.post(url=url,
+                             timeout=timeout)
     if response.ok:
         result: dict = response.json()
     return result
 
 
 def get_request(url: str,
-                params,
-                headers) -> dict:
+                params: dict,
+                headers: dict,
+                timeout: int = 5) -> dict:
     """
 
 
