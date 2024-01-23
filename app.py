@@ -146,6 +146,7 @@ def main():
 
         with st.container():
             # middle row
+            st.divider()
             cols = st.columns(spec=[2,2,2,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=bpc.types(df,
@@ -162,6 +163,7 @@ def main():
                                  use_container_width=True)
         with st.container():
             st.divider()
+            st.write(st.session_state)
             st.dataframe(st.session_state.get("df"))
 
 
