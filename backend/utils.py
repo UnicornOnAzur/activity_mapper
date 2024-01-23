@@ -6,9 +6,57 @@
 # Standard library
 import base64
 import datetime
+import requests
 # Third party
-import numpy as np
 import pandas as pd
+
+def post_request(url: str) -> dict:
+    """
+
+
+    Parameters
+    ----------
+    url : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict
+        DESCRIPTION.
+
+    """
+    result: dict = {}
+    response = requests.post(url=url)
+    if response.ok:
+        result: dict = response.json()
+    return result
+
+
+def get_request(url: str,
+                params,
+                headers) -> dict:
+    """
+
+
+    Parameters
+    ----------
+    url : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict
+        DESCRIPTION.
+
+    """
+    result: dict = {}
+    response = requests.get(url=url,
+                            params=params,
+                            headers=headers)
+    if response.ok:
+        result: dict = response.json()
+    return result
+
 
 def load_image(path: str) -> str:
     """
