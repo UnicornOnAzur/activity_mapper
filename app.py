@@ -65,6 +65,8 @@ def main():
                             unsafe_allow_html=True)
             st.divider()
             test_page = st.button("Use test data")
+            if test_page:
+                test()
 
         # MAIN PAGE
         with st.container():
