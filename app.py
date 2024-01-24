@@ -24,10 +24,6 @@ STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 
-def test():
-    data = bt.load_test_data()
-    st.session_state["dataframe"] = bsp.parse(data)
-
 
 def get_access_token(authorization_code):
     other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
@@ -117,21 +113,21 @@ def main():
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
-            st.header("Menu")
-            st.divider()
             image_powered = bu.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
+            st.header("Menu")
+            st.divider()
             if not st.session_state.get("athlete_name"):
                 image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
                 st.markdown(f'<a href="{authorization_link}">'
                             f'<img src="data:image/png;base64,{image_connect}" width="100%">'
                             f'</a>',
                             unsafe_allow_html=True)
+            else:
+                st.info("connected")
+                st.session_state["sidebar_state"] = "collapsed"
             st.divider()
-            test_page = st.button("Use test data")
-            if test_page:
-                test()
 
         # MAIN PAGE
         with st.container():
@@ -148,16 +144,16 @@ def main():
             cols = st.columns(spec=[2,2,2,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=bpc.types(df,
-                                                             BOTTOM_ROW_HEIGHT),
+                                                          BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
             cols[1].plotly_chart(figure_or_data=bpc.hours(df,
-                                                             BOTTOM_ROW_HEIGHT),
+                                                          BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
             cols[2].plotly_chart(figure_or_data=bpc.days(df,
-                                                             BOTTOM_ROW_HEIGHT),
+                                                         BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
             cols[3].plotly_chart(figure_or_data=bpc.locations(df,
-                                                             BOTTOM_ROW_HEIGHT),
+                                                         BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
         with st.container():
             st.divider()
