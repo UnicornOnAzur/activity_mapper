@@ -47,6 +47,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         DESCRIPTION.
 
     """
+    if not activities:
+        return pd.DataFrame()
     parsed_activities = []
     for activity in activities:
         timestamp = pd.to_datetime(activity.get("start_date_local"),
