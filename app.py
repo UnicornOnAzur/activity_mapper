@@ -83,6 +83,7 @@ def retrieve_activities():
     all_activities = []
 
     while True:
+        st.write(f"{request_page_num=}")
         param = {"per_page": 200,
                  "page": request_page_num}
         response = requests.get(activities_url,
