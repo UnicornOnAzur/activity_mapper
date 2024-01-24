@@ -112,7 +112,8 @@ def main():
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     if code:
         connect_strava(code)
-    df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
+    df = st.session_state.get("dataframe",
+                              pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"]))
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
