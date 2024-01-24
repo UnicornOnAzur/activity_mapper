@@ -37,12 +37,28 @@ def get_access_token(authorization_code):
     st.session_state["refresh_token"] = res.get("refresh_token")
     st.session_state["access_token"] = res.get("access_token")
 
-def connect(code):
-    st.write("getting access code")
+
+def connect_strava(code):
+    error_message = st.empty()
+    # RETREIVING THE ACCESS TOKEN
+    progress_bar = st.progress(0, "Getting access token")
     get_access_token(code)
-    st.write("getting activities")
-    # st.write(retrieve_activities())
-    st.write("done")
+    # RETREIVING THE DATA
+    progress_bar.progress(10, "Retreiving data...")
+    # data = get_data.request_data_from_api(access_token)
+    # PARSING THE DATA
+    progress_bar.progress(80, "Parsing data...")
+    # if list(data[0].keys()) == ["message","errors"]:
+    #     # if an error occur stop the function
+    #     error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
+    #     return
+    # st.session_state["dataframe"] = strava_parser.parse(data)
+    # FINALIZE THE PROCRESS
+    progress_bar.progress(100, "Done")
+    dataframe = st.session_state.get("dataframe")
+    # st.session_state["time_range"] = utils.get_min_max_time(dataframe)
+    progress_bar.empty()
+    return
 
 
 def main():
@@ -50,7 +66,7 @@ def main():
     code = params.get("code")
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     if code:
-        connect(code)
+        connect_strava(code)
     df = pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"])
     with st.spinner("Making visualizations..."):
         # sidebar
@@ -100,7 +116,7 @@ def main():
         with st.container():
             st.divider()
             st.write(st.session_state)
-            st.dataframe(st.session_state.get("df"))
+            st.dataframe(st.session_state.get("dataframe"))
 
 
 if __name__ == "__main__":
