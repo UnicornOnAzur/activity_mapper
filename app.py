@@ -50,7 +50,11 @@ def retrieve_activities():
     return data_set
 
 def connect(code):
+    st.warning("getting access code")
     get_access_token(code)
+    st.warning("getting activities")
+    retrieve_activities()
+    st.warning("done")
 
 
 def main():
