@@ -45,14 +45,14 @@ def connect_strava(code):
     get_access_token(code)
     # RETREIVING THE DATA
     progress_bar.progress(10, "Retreiving data...")
-    # data = get_data.request_data_from_api(access_token)
+    data = [{}] #get_data.request_data_from_api(access_token)
     # PARSING THE DATA
     progress_bar.progress(80, "Parsing data...")
     # if list(data[0].keys()) == ["message","errors"]:
     #     # if an error occur stop the function
     #     error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
     #     return
-    # st.session_state["dataframe"] = strava_parser.parse(data)
+    st.session_state["dataframe"] = bsp.parse(data)
     # FINALIZE THE PROCRESS
     progress_bar.progress(100, "Done")
     dataframe = st.session_state.get("dataframe")
