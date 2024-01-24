@@ -5,14 +5,12 @@
 """
 # Standard library
 import os
-import requests
 # Third party
 import pandas as pd
 import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
-import backend.test as bt
 import backend.utils as bu
 
 TITLE = "Activity Mapper"
@@ -22,62 +20,19 @@ APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
+
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 
 
 def get_access_token(authorization_code):
     other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
     res = bu.post_request(other_link)
-    st.session_state["athlete_name"] = " ".join((res.get("athlete", {}).get("firstname"),
+    athlete_name = " ".join((res.get("athlete", {}).get("firstname"),
                                                  res.get("athlete", {}).get("lastname")))
-    st.session_state["refresh_token"] = res.get("refresh_token")
-    st.session_state["access_token"] = res.get("access_token")
+    refresh_token = res.get("refresh_token")
+    access_token = res.get("access_token")
+    return athlete_name, refresh_token, access_token
 
-
-def request_data_from_api(access_token: str) -> list[dict]:
-    """
-    Send get requests in a loop to retreive all the activities. Loop will stop if
-    the result is empty implying that all activities have been retrieved.
-
-    Parameters
-    ----------
-    access_token : str
-        DESCRIPTION.
-
-    Returns
-    -------
-    list[dict]
-        DESCRIPTION.
-
-    """
-    activities_url = "https://www.strava.com/api/v3/athlete/activities"
-    header = {"Authorization": f"Bearer {access_token}"}
-    request_page_num = 1
-    all_activities = []
-
-    while True:
-        param = {"per_page": 200,
-                 "page": request_page_num}
-        response = requests.get(activities_url,
-                                headers=header,
-                                params=param)
-        data_set = response.json()
-        print(request_page_num, response.status_code, type(data_set))
-        if not response.ok:
-            all_activities.append(data_set)
-            return all_activities
-        # break out of the loop if the response is empty
-        if len(data_set) == 0:
-            break
-        # add onto the list
-        if all_activities:
-            all_activities.extend(data_set)
-        # populate the list if it is empty
-        else:
-            all_activities = data_set
-        # increment to get the next page
-        request_page_num += 1
-    return all_activities
 
 def connect_strava(code):
     error_message = st.empty()
@@ -86,7 +41,7 @@ def connect_strava(code):
     get_access_token(code)
     # RETREIVING THE DATA
     progress_bar.progress(10, "Retreiving data...")
-    data = request_data_from_api(st.session_state["access_token"])
+    data = bsp.request_data_from_api(st.session_state["access_token"])
     # PARSING THE DATA
     progress_bar.progress(80, "Parsing data...")
     if list(data[0].keys()) == ["message","errors"]:
@@ -155,9 +110,9 @@ def main():
             cols[3].plotly_chart(figure_or_data=bpc.locations(df,
                                                          BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
-        with st.container():
             st.divider()
-            st.write(st.session_state)
+            # SLIDER
+        with st.expander():
             st.dataframe(st.session_state.get("dataframe"))
 
 
