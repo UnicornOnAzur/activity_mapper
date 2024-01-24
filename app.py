@@ -26,7 +26,7 @@ authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_
 
 def test():
     data = bt.load_test_data()
-    st.session_state["df"] = bsp.parse(data)
+    st.session_state["dataframe"] = bsp.parse(data)
 
 
 def get_access_token(authorization_code):
@@ -38,6 +38,51 @@ def get_access_token(authorization_code):
     st.session_state["access_token"] = res.get("access_token")
 
 
+def request_data_from_api(access_token: str) -> list[dict]:
+    """
+    Send get requests in a loop to retreive all the activities. Loop will stop if
+    the result is empty implying that all activities have been retrieved.
+
+    Parameters
+    ----------
+    access_token : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    list[dict]
+        DESCRIPTION.
+
+    """
+    activities_url = "https://www.strava.com/api/v3/athlete/activities"
+    header = {"Authorization": f"Bearer {access_token}"}
+    request_page_num = 1
+    all_activities = []
+
+    while True:
+        param = {"per_page": 200,
+                 "page": request_page_num}
+        response = requests.get(activities_url,
+                                headers=header,
+                                params=param)
+        data_set = response.json()
+        print(request_page_num, response.status_code, type(data_set))
+        if not response.ok:
+            all_activities.append(data_set)
+            return all_activities
+        # break out of the loop if the response is empty
+        if len(data_set) == 0:
+            break
+        # add onto the list
+        if all_activities:
+            all_activities.extend(data_set)
+        # populate the list if it is empty
+        else:
+            all_activities = data_set
+        # increment to get the next page
+        request_page_num += 1
+    return all_activities
+
 def connect_strava(code):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
@@ -45,7 +90,7 @@ def connect_strava(code):
     get_access_token(code)
     # RETREIVING THE DATA
     progress_bar.progress(10, "Retreiving data...")
-    data = [{}] #get_data.request_data_from_api(access_token)
+    data = request_data_from_api(st.session_state["access_token"])
     # PARSING THE DATA
     progress_bar.progress(80, "Parsing data...")
     if list(data[0].keys()) == ["message","errors"]:
