@@ -4,7 +4,6 @@
 
 """
 # Standard library
-import requests
 import os
 # Third party
 import pandas as pd
@@ -37,6 +36,18 @@ def get_access_token(authorization_code):
     st.session_state["refresh_token"] = res.get("refresh_token")
     st.session_state["access_token"] = res.get("access_token")
 
+def retrieve_activities():
+    activities_url = "https://www.strava.com/api/v3/athlete/activities"
+    header = {"Authorization": f"Bearer {st.session_state['access_token']}"}
+    request_page_num = 1
+    all_activities = []
+    param = {"per_page": 200,
+             "page": request_page_num}
+    data_set = bu.get_request(activities_url,
+                              headers=header,
+                              params=param)
+    st.write(data_set)
+    return data_set
 
 def connect(code):
     get_access_token(code)
