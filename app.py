@@ -22,7 +22,7 @@ APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
-authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=read_all"
+authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 
 def test():
     data = bt.load_test_data()
