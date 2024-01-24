@@ -47,7 +47,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         DESCRIPTION.
 
     """
-    if not activities:
+    if activities == [{}]:
         return pd.DataFrame()
     parsed_activities = []
     for activity in activities:
