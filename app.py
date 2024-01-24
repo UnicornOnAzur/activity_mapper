@@ -50,7 +50,7 @@ def retrieve_activities():
                                 headers=header,
                                 params=param)
         data_set = response.json()
-        print(request_page_num, response.status_code, type(data_set))
+        st.write(request_page_num, response.status_code, type(data_set))
         if not response.ok:
             all_activities.append(data_set)
             return all_activities
