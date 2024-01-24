@@ -37,23 +37,41 @@ def get_access_token(authorization_code):
     st.session_state["access_token"] = res.get("access_token")
 
 def retrieve_activities():
+    import requests
     activities_url = "https://www.strava.com/api/v3/athlete/activities"
     header = {"Authorization": f"Bearer {st.session_state['access_token']}"}
     request_page_num = 1
     all_activities = []
-    param = {"per_page": 200,
-             "page": request_page_num}
-    data_set = bu.get_request(activities_url,
-                              headers=header,
-                              params=param)
-    st.write(data_set)
-    return data_set
+
+    while True:
+        param = {"per_page": 200,
+                 "page": request_page_num}
+        response = requests.get(activities_url,
+                                headers=header,
+                                params=param)
+        data_set = response.json()
+        print(request_page_num, response.status_code, type(data_set))
+        if not response.ok:
+            all_activities.append(data_set)
+            return all_activities
+        # break out of the loop if the response is empty
+        if len(data_set) == 0:
+            break
+        # add onto the list
+        if all_activities:
+            all_activities.extend(data_set)
+        # populate the list if it is empty
+        else:
+            all_activities = data_set
+        # increment to get the next page
+        request_page_num += 1
+    return all_activities
 
 def connect(code):
     st.write("getting access code")
     get_access_token(code)
     st.write("getting activities")
-    retrieve_activities()
+    st.write(retrieve_activities())
     st.write("done")
 
 
