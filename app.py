@@ -112,7 +112,7 @@ def main():
                                  use_container_width=True)
             st.divider()
             # SLIDER
-        with st.expander():
+        with st.expander("See unique events", expanded = False):
             st.dataframe(st.session_state.get("dataframe"))
 
 
