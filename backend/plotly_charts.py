@@ -227,7 +227,7 @@ def worldmap_figure(data: pd.DataFrame,
                     **kwargs):
     lats = kwargs.get("lat", [])
     lons = kwargs.get("lon", [])
-    colors = kwargs.get("color", [])
+    # colors = kwargs.get("color", [])
     names = kwargs.get("name", [])
     dates = kwargs.get("date", [])
     times = kwargs.get("time", [])
@@ -235,7 +235,7 @@ def worldmap_figure(data: pd.DataFrame,
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
                             lon=lons,
-                            color=colors,
+                            color=["Strava"]*len(lats),
                             hover_name=names,
                             custom_data=[names, dates, times],
                             color_discrete_map=COLOR_MAP,
