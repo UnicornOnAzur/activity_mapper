@@ -225,10 +225,21 @@ def worldmap_figure(data: pd.DataFrame,
                     title:str,
                     height: int = None,
                     **kwargs):
-    print(kwargs)
+    lats = kwargs.get("lat", [])
+    lons = kwargs.get("lon", [])
+    colors = kwargs.get("name", [])
+    names = kwargs.get("name", [])
+    dates = kwargs.get("name", [])
+    times = kwargs.get("name", [])
+    zoom = kwargs.get("zoom", 0)
     figure = px.line_mapbox(data_frame=data,
-                            lat=kwargs.get("lat"),
+                            lat=lats,
                             lon=kwargs.get("lon"),
+                            color=["Strava"]*len(lats),
+                            hover_name=names,
+                            custom_data=[names, dates, times],
+                            color_discrete_map=COLOR_MAP,
+                            zoom=zoom,
                             center={"lat": data.lat.median(),
                                     "lon": data.lon.median()
                                     },
@@ -377,6 +388,7 @@ def locations(dataframe: pd.DataFrame,
                          ].astype({"year": str})
     lats = []
     lons = []
+    colors = []
     names = []
     dates = []
     years = []
@@ -387,6 +399,8 @@ def locations(dataframe: pd.DataFrame,
         lat, lon = zip(*row["coords"]) # unpack a list of tuples to two lists
         lats.extend(lat)
         lons.extend(lon)
+        color = ["Strava"]*(len(lat)+1)
+        colors.extend(color)
         name = [row["name"]]*(len(lat)+1)
         names.extend(name)
         date = [row["date"]]*(len(lat)+1)
@@ -407,7 +421,10 @@ def locations(dataframe: pd.DataFrame,
     worldmap = worldmap_figure(dataframe,
                                title=plot_title,
                                height=plot_height,
-                               lat=lats, lon=lons)
+                               lat=lats,
+                               lon=lons,
+                               color=colors,
+                               name=names)
     return worldmap
 
 
