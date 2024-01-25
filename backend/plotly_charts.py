@@ -439,7 +439,7 @@ def locations(dataframe: pd.DataFrame,
     print(len(lats),len(colors))
     # create figure
     worldmap = worldmap_figure(dataframe,
-                               title=plot_title,
+                               title=plot_title+f"{len(lats)=},{len(colors)=}",
                                height=plot_height,
                                lat=lats,
                                lon=lons,
