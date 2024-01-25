@@ -129,7 +129,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     Returns
     -------
     figure : go.Figure
-        DESCRIPTION.
+        The plotly area figure with an overlayed scatter plot.
 
     """
     xaxis = kwargs.get("x")
@@ -185,12 +185,11 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
         DESCRIPTION. The default is None.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
     figure : TYPE
-        DESCRIPTION.
+        The plotly bar figure.
 
     """
     hover_data = [day for num, day in enumerate(["Monday",
@@ -210,7 +209,8 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
                     text_auto=".0%",
                     title=title,
                     template=TEMPLATE,
-                    height=height
+                    height=height,
+                    **kwargs
                     )
     figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{y}"
                          )
@@ -247,7 +247,6 @@ def clock_figure(aggregated_data: pd.DataFrame,
         DESCRIPTION. The default is None.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -266,7 +265,8 @@ def clock_figure(aggregated_data: pd.DataFrame,
                               start_angle=90, #start at due north
                               title=title,
                               template=TEMPLATE,
-                              height=height
+                              height=height,
+                              **kwargs
                               )
     figure.update_traces()
     max_axis = 0 if aggregated_data.empty else int(aggregated_data["count"].max())
@@ -299,7 +299,6 @@ def pie_figure(aggregated_data: pd.DataFrame,
         DESCRIPTION. The default is None.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -314,7 +313,8 @@ def pie_figure(aggregated_data: pd.DataFrame,
                     color_discrete_sequence=DISCRETE_COLOR,
                     title=title,
                     template=TEMPLATE,
-                    height=height
+                    height=height,
+                    **kwargs
                     )
     figure.update_traces(textposition='inside', # set the percentage inside the chart
                          # show the category and the amount in the chart
@@ -342,7 +342,6 @@ def worldmap_figure(data: pd.DataFrame,
         DESCRIPTION. The default is None.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -371,7 +370,8 @@ def worldmap_figure(data: pd.DataFrame,
                             mapbox_style="carto-darkmatter",
                             title=title,
                             template=TEMPLATE,
-                            height=height
+                            height=height,
+                            **kwargs.get("mapbox", {})
                             )
     figure.update_traces(hovertemplate="<br>".join(["<b>%{customdata[0]}</b>",
                                                     "%{customdata[1]}",
@@ -393,6 +393,7 @@ def worldmap_figure(data: pd.DataFrame,
                                           },
                                   mode="markers",
                                   name=app,
+                                  **kwargs.get("scatter", {})
                                   )
     return figure
 
@@ -411,7 +412,6 @@ def timeline(dataframe: pd.DataFrame,
         DESCRIPTION.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -461,7 +461,8 @@ def timeline(dataframe: pd.DataFrame,
                                 title=plot_title,
                                 height=plot_height,
                                 x="calender-week",
-                                y=summarize_name, **{"area":{}})
+                                y=summarize_name, **{"area":{}},
+                                **kwargs)
     return time_line
 
 
@@ -479,7 +480,6 @@ def types(dataframe: pd.DataFrame,
         DESCRIPTION.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -501,7 +501,8 @@ def types(dataframe: pd.DataFrame,
     # create figure
     pie = pie_figure(data,
                      title=plot_title,
-                     height=plot_height)
+                     height=plot_height,
+                     **kwargs)
     return pie
 
 
@@ -519,7 +520,6 @@ def hours(dataframe: pd.DataFrame,
         DESCRIPTION.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -548,7 +548,8 @@ def hours(dataframe: pd.DataFrame,
     # create figure
     clock = clock_figure(dataframe,
                          title=plot_title,
-                         height=plot_height)
+                         height=plot_height,
+                         **kwargs)
     # show empty figure if no data is provided
     if dataframe.empty:
         # TODO: add annotation
@@ -570,7 +571,6 @@ def days(dataframe: pd.DataFrame,
         DESCRIPTION.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
@@ -591,7 +591,8 @@ def days(dataframe: pd.DataFrame,
     # create figure
     weekdays = weekdays_figure(data,
                                title=plot_title,
-                               height=plot_height)
+                               height=plot_height,
+                               **kwargs)
     # show empty figure if no data is provided
     if dataframe.empty:
         weekdays = _add_annotation(weekdays)
@@ -616,6 +617,7 @@ def process_data(data,
         DESCRIPTION.
 
     """
+    _ = kwargs
     lats = []
     lons = []
     colors = []
@@ -690,7 +692,8 @@ def locations(dataframe: pd.DataFrame,
                                title=plot_title,
                                height=plot_height,
                                **process_data(data),
-                               zoom=0)
+                               zoom=0,
+                               **kwargs)
     return worldmap
 
 
