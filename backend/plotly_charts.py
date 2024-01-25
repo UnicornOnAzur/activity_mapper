@@ -418,7 +418,7 @@ def locations(dataframe: pd.DataFrame,
         lat, lon = zip(*row["coords"]) # unpack a list of tuples to two lists
         lats.extend(lat)
         lons.extend(lon)
-        color = ["Strava"]*(len(lat)+1)
+        color = [row["app"]]*(len(lat)+1)
         colors.extend(color)
         name = [row["name"]]*(len(lat)+1)
         names.extend(name)
