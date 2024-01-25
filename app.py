@@ -11,6 +11,7 @@ import streamlit as st
 # Local imports
 import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
+import backend.test as bt
 import backend.utils as bu
 
 TITLE = "Activity Mapper"
@@ -53,11 +54,11 @@ def connect_strava(code):
         # if an error occur stop the function
         error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
         return
-    st.session_state["dataframe"] = bsp.parse(data)
+    st.session_state["dataframe"] = (dataframe:= bsp.parse(data))
+    st.session_state["time_range"] = bu.get_min_max_time(dataframe)
     # FINALIZE THE PROCRESS
     progress_bar.progress(100, "Done")
-    dataframe = st.session_state.get("dataframe")
-    st.session_state["time_range"] = bu.get_min_max_time(dataframe)
+    # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
     return
 
@@ -88,6 +89,9 @@ def main():
                 st.info("connected")
                 st.session_state["sidebar_state"] = "collapsed"
             st.divider()
+            test = st.button("Use test data")
+            if test:
+                st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
 
         # MAIN PAGE
         with st.container():
