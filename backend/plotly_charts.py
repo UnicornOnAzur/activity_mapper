@@ -12,7 +12,8 @@ import plotly.graph_objects as go
 # Local imports
 import backend.utils as bu
 
-COLOR_MAP = None
+COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
+             }
 DISCRETE_COLOR = px.colors.sequential.Oranges_r
 TEMPLATE = None
 LEFT_RIGHT_MARGIN = 20
@@ -96,14 +97,27 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                     title:str,
                     height: int = None,
                     **kwargs):
+    xaxis = kwargs.get("x")
+    yaxis = kwargs.get("y")
     figure = px.area(data_frame=aggregated_data,
-                     x=kwargs.get("x"),
-                     y=kwargs.get("y"),
+                     x=xaxis,
+                     y=yaxis,
+                     line_group="app",
+                     color="app",
+                     hover_name=None,
+                     hover_data={"app": False,
+                                 xaxis: False,
+                                 yaxis: False
+                                 },
+                     custom_data=["app"],
+                     color_discrete_map=COLOR_MAP,
+                     orientation="v", # orient the chart
+                     line_shape="spline", # smoothes out the line
                      title=title,
                      template=TEMPLATE,
                      height=height
                      )
-    figure.update_traces()
+    figure.update_traces(hovertemplate="Activity on %{customdata[0]}")
     figure.add_scatter(customdata=dataframe.loc[:,["name","date"]].values,
                        hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]}",
                        marker={"size": 3},
