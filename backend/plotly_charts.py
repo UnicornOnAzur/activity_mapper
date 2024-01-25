@@ -234,8 +234,8 @@ def worldmap_figure(data: pd.DataFrame,
     zoom = kwargs.get("zoom", 0)
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
-                            lon=kwargs.get("lon"),
-                            color=["Strava"]*len(lats),
+                            lon=lons,
+                            color=colors,
                             hover_name=names,
                             custom_data=[names, dates, times],
                             color_discrete_map=COLOR_MAP,
@@ -255,6 +255,19 @@ def worldmap_figure(data: pd.DataFrame,
                                                     ],
                                                     ),
                           )
+    for app in (groups:=data.groupby("app").groups):
+        app_data = data.loc[groups[app].values]
+        figure.add_scattermapbox(below="traces",
+                                 customdata=app_data.loc[:,["name", "date", "time"]].values,
+                                 lat=data["lat"],
+                                 lon=data["lon"],
+                                 marker={"size": 5,
+                                         "color": COLOR_MAP.get(app),
+                                         "symbol": "circle",
+                                         },
+                                 mode="markers",
+                                 name=app,
+                                 )
     figure = _update_layout(figure)
     return figure
 
