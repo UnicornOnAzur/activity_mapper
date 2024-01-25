@@ -414,9 +414,11 @@ def locations(dataframe: pd.DataFrame,
     times = []
     for _, row in data.iterrows():
         lat, lon = zip(*row["coords"]) # unpack a list of tuples to two lists
-        lats.extend(row["lat"]+lat+[None])
+        lat = row["lat"]+lat+[None]
+        lon = row["lon"]+lon+[None]
+        lats.extend(lat)
 
-        lons.extend(row["lon"]+lon+[None])
+        lons.extend(lon)
 
         color = [row["app"]]*(len(lat)+1)
         colors.extend(color)
