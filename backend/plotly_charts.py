@@ -135,6 +135,7 @@ def clock_figure(aggregated_data: pd.DataFrame,
                  title:str,
                  height: int = None):
     figure = px.scatter_polar(data_frame=aggregated_data,
+                              r="count",
                               theta="timestep",
                               color="app",
                               hover_name="name",
