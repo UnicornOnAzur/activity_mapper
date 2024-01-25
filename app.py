@@ -20,7 +20,7 @@ BOTTOM_ROW_HEIGHT = 500
 APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
-
+STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 
@@ -70,7 +70,7 @@ def main():
     if code:
         connect_strava(code)
     df = st.session_state.get("dataframe",
-                              pd.DataFrame(columns=["app", "weekday", "time", "hour", "minutes", "name"]))
+                              pd.DataFrame(columns=STRAVA_COLS))
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
