@@ -413,26 +413,27 @@ def locations(dataframe: pd.DataFrame,
     years = []
     times = []
     for _, row in data.iterrows():
-        lat, lon = zip(*row["coords"]) # unpack a list of tuples to two lists
-        lat = [row["lat"]]+list(lat)+[None]
-        lon = [row["lon"]]+list(lon)+[None]
+        segment_length = len(coords:= row["coords"])+1
+        lat, lon = zip(*coords) # unpack a list of tuples to two lists
+        lat = [row["lat"]]+list(lat)
+        lon = [row["lon"]]+list(lon)
         lats.extend(lat)
-
         lons.extend(lon)
 
-        color = [row["app"]]*(len(lat)+1)
+        color = [row["app"]]*segment_length
         colors.extend(color)
-        name = [row["name"]]*(len(lat)+1)
+        name = [row["name"]]*segment_length
         names.extend(name)
-        date = [row["date"]]*(len(lat)+1)
+        date = [row["date"]]*segment_length
         dates.extend(date)
-        year = [row["year"]]*(len(lat)+1)
+        year = [row["year"]]*segment_length
         years.extend(year)
-        time = [row["time"]]*(len(lat)+1)
+        time = [row["time"]]*segment_length
         times.extend(time)
         # make a seperation in the lists
 
-
+        lats.append(None)
+        lons.append(None)
         colors.append(None)
         names.append(None)
         dates.append(None)
