@@ -256,19 +256,19 @@ def worldmap_figure(data: pd.DataFrame,
                                                     ),
                           )
     figure = _update_layout(figure)
-    for app in (groups:=data.groupby("app").groups):
-        app_data = data.loc[groups[app].values]
-        figure.add_scattermapbox(below="traces",
-                                 customdata=app_data.loc[:,["name", "date", "time"]].values,
-                                 lat=data["lat"],
-                                 lon=data["lon"],
-                                 marker={"size": 5,
-                                         "color": COLOR_MAP.get(app),
-                                         "symbol": "circle",
-                                         },
-                                 mode="markers",
-                                 name=app,
-                                 )
+    # for app in (groups:=data.groupby("app").groups):
+    #     app_data = data.loc[groups[app].values]
+    #     figure.add_scattermapbox(below="traces",
+    #                              customdata=app_data.loc[:,["name", "date", "time"]].values,
+    #                              lat=data["lat"],
+    #                              lon=data["lon"],
+    #                              marker={"size": 5,
+    #                                      "color": COLOR_MAP.get(app),
+    #                                      "symbol": "circle",
+    #                                      },
+    #                              mode="markers",
+    #                              name=app,
+    #                              )
     return figure
 
 
