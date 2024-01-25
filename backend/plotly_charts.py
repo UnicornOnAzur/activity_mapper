@@ -15,7 +15,7 @@ import backend.utils as bu
 COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
              }
 DISCRETE_COLOR = px.colors.sequential.Oranges_r
-TEMPLATE = None
+TEMPLATE = "plotly_dark"#None
 LEFT_RIGHT_MARGIN = 20
 TOP_BOTTOM_MARGIN = 25
 
@@ -187,7 +187,11 @@ def pie_figure(aggregated_data: pd.DataFrame,
                     template=TEMPLATE,
                     height=height
                     )
-    figure.update_traces()
+    figure.update_traces(textposition='inside', # set the percentage inside the chart
+                         # show the category and the amount in the chart
+                         textinfo="label+percent",
+                         hovertemplate="<b>%{label}</b><br>%{value}"
+                         )
     figure = _update_layout(figure)
     return figure
 
