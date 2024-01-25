@@ -235,9 +235,9 @@ def worldmap_figure(data: pd.DataFrame,
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
                             lon=lons,
-                            color=colors,
-                            hover_name=names,
-                            custom_data=[names, dates, times],
+                            # color=colors,
+                            # hover_name=names,
+                            # custom_data=[names, dates, times],
                             color_discrete_map=COLOR_MAP,
                             zoom=zoom,
                             center={"lat": data.lat.median(),
@@ -255,20 +255,20 @@ def worldmap_figure(data: pd.DataFrame,
                                                     ],
                                                     ),
                           )
-    # figure = _update_layout(figure)
-    # for app in (groups:=data.groupby("app").groups):
-    #     app_data = data.loc[groups[app].values]
-    #     figure.add_scattermapbox(below="traces",
-    #                              customdata=app_data.loc[:,["name", "date", "time"]].values,
-    #                              lat=data["lat"],
-    #                              lon=data["lon"],
-    #                              marker={"size": 5,
-    #                                      "color": COLOR_MAP.get(app),
-    #                                      "symbol": "circle",
-    #                                      },
-    #                              mode="markers",
-    #                              name=app,
-    #                              )
+    figure = _update_layout(figure)
+    for app in (groups:=data.groupby("app").groups):
+        app_data = data.loc[groups[app].values]
+        figure.add_scattermapbox(below="traces",
+                                  customdata=app_data.loc[:,["name", "date", "time"]].values,
+                                  lat=data["lat"],
+                                  lon=data["lon"],
+                                  marker={"size": 5,
+                                          "color": COLOR_MAP.get(app),
+                                          "symbol": "circle",
+                                          },
+                                  mode="markers",
+                                  name=app,
+                                  )
     return figure
 
 
@@ -413,11 +413,11 @@ def locations(dataframe: pd.DataFrame,
     years = []
     times = []
     for _, row in data.iterrows():
-        lats.append(row["lat"])
-        lons.append(row["lon"])
         lat, lon = zip(*row["coords"]) # unpack a list of tuples to two lists
-        lats.extend(lat)
-        lons.extend(lon)
+        lats.extend(row["lat"]+lat+[None])
+
+        lons.extend(row["lon"]+lon+[None])
+
         color = [row["app"]]*(len(lat)+1)
         colors.extend(color)
         name = [row["name"]]*(len(lat)+1)
@@ -429,14 +429,13 @@ def locations(dataframe: pd.DataFrame,
         time = [row["time"]]*(len(lat)+1)
         times.extend(time)
         # make a seperation in the lists
-        lats.append(None)
-        lons.append(None)
+
+
         colors.append(None)
         names.append(None)
         dates.append(None)
         years.append(None)
         times.append(None)
-    print(len(lats),len(colors))
     # create figure
     worldmap = worldmap_figure(dataframe,
                                title=plot_title+f"{len(lats)=},{len(colors)=}",
