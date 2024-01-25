@@ -66,9 +66,9 @@ def connect_strava(code):
 def main():
     params: dict = st.query_params.to_dict()
     code = params.get("code")
-    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     if code:
         connect_strava(code)
+    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=STRAVA_COLS))
     with st.spinner("Making visualizations..."):
