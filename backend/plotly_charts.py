@@ -216,6 +216,7 @@ def timeline(dataframe: pd.DataFrame,
         count += 1
         dataframe.loc[index,"pos"] = count
     # rework the calender-week column to be the first day of the week
+    # TODO: update use of .loc
     dataframe["cw"] = dataframe.loc[:,["year","week"]]\
         .apply(lambda row: f"{row[0]}-{row[1]}-1",
                axis=1)
@@ -225,6 +226,7 @@ def timeline(dataframe: pd.DataFrame,
     data = dataframe.groupby(["app", "year", "week"])["timestamp"]\
         .count().reset_index().rename({"timestamp": summarize_name}, axis=1)
     # rework the calender-week column to be the first day of the week
+    # TODO: update use of .loc
     data["calender-week"] = data.loc[:,["year","week"]].apply(lambda row: f"{row[0]}-{row[1]}-1",
                                                               axis=1)
     # TODO: update use of pd.to_datetime
