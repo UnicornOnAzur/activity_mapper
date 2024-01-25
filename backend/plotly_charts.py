@@ -133,14 +133,39 @@ def timeline_figure(aggregated_data: pd.DataFrame,
 def weekdays_figure(aggregated_data: pd.DataFrame,
                     title:str,
                     height: int = None):
+    hover_data = [day for num, day in enumerate(["Monday",
+                                             "Tuesday",
+                                             "Wednesday",
+                                             "Thursday",
+                                             "Friday",
+                                             "Saturday",
+                                             "Sunday"]) if num in aggregated_data.weekday]
     figure = px.bar(data_frame=aggregated_data,
                     x="weekday",
                     y="percentage",
+                    color="app",
+                    color_discrete_map=COLOR_MAP,
+                    hover_data=[hover_data,
+                                ],
+                    text_auto=".0%",
                     title=title,
                     template=TEMPLATE,
                     height=height
                     )
-    figure.update_traces()
+    figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{y}"
+                         )
+    figure.update_layout(xaxis = {"tickmode":"array",
+                                  "tickvals": list(range(7)),
+                                  # relabel the xaxis ticks
+                                  "ticktext": ["M","T","W","T","F","S","S"],
+                                  # fix that all labels are shown even if the column is empty
+                                  "range":[-.5,6.5]
+                                  },
+                         yaxis = {"tickmode": "linear",
+                                  "tick0": 0,
+                                  "dtick": 0.05,
+                                  "tickformat": ".0%"}
+                         )
     figure = _update_layout(figure)
     return figure
 
