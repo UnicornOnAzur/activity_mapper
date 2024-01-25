@@ -148,6 +148,7 @@ def clock_figure(aggregated_data: pd.DataFrame,
                               )
     figure.update_traces()
     max_axis = 0 if aggregated_data.empty else int(aggregated_data["count"].max())
+    figure = _update_layout(figure)
     figure.update_layout(polar={"radialaxis": {"tickvals":
                                                list(range(0, max_axis+1, 5))},
                                 "angularaxis": {"tickvals":
@@ -156,7 +157,6 @@ def clock_figure(aggregated_data: pd.DataFrame,
                                                 [str(24 if hr==0 else hr) for hr in range(24)]}
                                 }
                          )
-    figure = _update_layout(figure)
     return figure
 
 
