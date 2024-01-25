@@ -182,9 +182,14 @@ def worldmap_figure(data: pd.DataFrame,
                     title:str,
                     height: int = None,
                     **kwargs):
+    print(kwargs)
     figure = px.line_mapbox(data_frame=data,
                             lat=kwargs.get("lat"),
                             lon=kwargs.get("lon"),
+                            center={"lat": data.lat.median(),
+                                    "lon": data.lon.median()
+                                    },
+                            mapbox_style="carto-darkmatter",
                             title=title,
                             template=TEMPLATE,
                             height=height
@@ -232,7 +237,6 @@ def timeline(dataframe: pd.DataFrame,
     # TODO: update use of pd.to_datetime
     data["calender-week"] = pd.to_datetime(data["calender-week"],
                                             format="%Y-%W-%w")
-    print(data)
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
@@ -355,6 +359,7 @@ def locations(dataframe: pd.DataFrame,
         dates.append(None)
         years.append(None)
         times.append(None)
+    print(lats, lons)
     # create figure
     worldmap = worldmap_figure(dataframe,
                                title=plot_title,
