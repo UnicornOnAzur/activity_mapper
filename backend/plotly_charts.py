@@ -4,7 +4,7 @@
 
 """
 # Standard library
-
+import typing
 # Third party
 import pandas as pd
 import plotly.express as px
@@ -19,14 +19,18 @@ TEMPLATE = "plotly_dark"#None
 LEFT_RIGHT_MARGIN = 20
 TOP_BOTTOM_MARGIN = 25
 
-def _add_annotation(fig: go.Figure) -> go.Figure:
+
+def _add_annotation(fig: go.Figure,
+                    **kwargs: typing.Any) -> go.Figure:
     """
 
 
     Parameters
     ----------
     fig : go.Figure
-        DESCRIPTION.
+        The plotly figure.
+    **kwargs : typing.Any
+        Key word arguments.
 
     Returns
     -------
@@ -39,11 +43,13 @@ def _add_annotation(fig: go.Figure) -> go.Figure:
                        text="No Data to Display",
                        font={"family": "sans serif",
                              "size": 25},
-                       showarrow=False)
+                       showarrow=False,
+                       **kwargs)
     return fig
 
 
-def _update_layout(fig: go.Figure) -> go.Figure:
+def _update_layout(fig: go.Figure,
+                   **kwargs: typing.Any) -> go.Figure:
     """
 
 
@@ -51,10 +57,12 @@ def _update_layout(fig: go.Figure) -> go.Figure:
     ----------
     fig : go.Figure
         DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
 
     Returns
     -------
-    fig : go.Figure
+    fig : TYPE
         DESCRIPTION.
 
     """
@@ -62,12 +70,14 @@ def _update_layout(fig: go.Figure) -> go.Figure:
                       margin={"l": LEFT_RIGHT_MARGIN,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
-                              "b": TOP_BOTTOM_MARGIN})
+                              "b": TOP_BOTTOM_MARGIN},
+                      **kwargs)
     return fig
 
 
 def empty_figure(title: str,
-                 height: int = None) -> go.Figure:
+                 height: int = None,
+                 **kwargs: typing.Any) -> go.Figure:
     """
     Create an empty figure with the title and a text label to show that no data is
     available to display.
@@ -78,6 +88,8 @@ def empty_figure(title: str,
         The title of the replaced figure.
     height : int, optional
         The desired height of the figure. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
 
     Returns
     -------
@@ -88,7 +100,8 @@ def empty_figure(title: str,
     figure = go.Figure()
     figure.update_layout(title=title,
                          height=height)
-    figure = _add_annotation(figure)
+    figure = _add_annotation(figure,
+                             **kwargs)
     return figure
 
 
@@ -96,7 +109,29 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                     dataframe: pd.DataFrame,
                     title:str,
                     height: int = None,
-                    **kwargs):
+                    **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    aggregated_data : pd.DataFrame
+        DESCRIPTION.
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    title : str
+        DESCRIPTION.
+    height : int, optional
+        DESCRIPTION. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
+
+    Returns
+    -------
+    figure : go.Figure
+        DESCRIPTION.
+
+    """
     xaxis = kwargs.get("x")
     yaxis = kwargs.get("y")
     figure = px.area(data_frame=aggregated_data,
@@ -115,7 +150,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                      line_shape="spline", # smoothes out the line
                      title=title,
                      template=TEMPLATE,
-                     height=height
+                     height=height,
+                     **kwargs.get("area")
                      )
     figure.update_traces(hovertemplate="Activity on %{customdata[0]}")
     figure.add_scatter(customdata=dataframe.loc[:,["name","date"]].values,
@@ -125,14 +161,38 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        name="", # set trace name to empty
                        opacity=1,
                        x=dataframe["cw"], # position the dots by week
-                       y=dataframe["pos"],)
+                       y=dataframe["pos"],
+                       **kwargs.get("scatter")
+                       )
     figure = _update_layout(figure)
     return figure
 
 
 def weekdays_figure(aggregated_data: pd.DataFrame,
                     title:str,
-                    height: int = None):
+                    height: int = None,
+                    **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    aggregated_data : pd.DataFrame
+        DESCRIPTION.
+    title : str
+        DESCRIPTION.
+    height : int, optional
+        DESCRIPTION. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    figure : TYPE
+        DESCRIPTION.
+
+    """
     hover_data = [day for num, day in enumerate(["Monday",
                                              "Tuesday",
                                              "Wednesday",
@@ -172,7 +232,29 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
 
 def clock_figure(aggregated_data: pd.DataFrame,
                  title:str,
-                 height: int = None):
+                 height: int = None,
+                 **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    aggregated_data : pd.DataFrame
+        DESCRIPTION.
+    title : str
+        DESCRIPTION.
+    height : int, optional
+        DESCRIPTION. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    figure : TYPE
+        DESCRIPTION.
+
+    """
     figure = px.scatter_polar(data_frame=aggregated_data,
                               r="count",
                               theta="timestep",
@@ -202,7 +284,29 @@ def clock_figure(aggregated_data: pd.DataFrame,
 
 def pie_figure(aggregated_data: pd.DataFrame,
                title:str,
-               height: int = None):
+               height: int = None,
+               **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    aggregated_data : pd.DataFrame
+        DESCRIPTION.
+    title : str
+        DESCRIPTION.
+    height : int, optional
+        DESCRIPTION. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    figure : TYPE
+        DESCRIPTION.
+
+    """
     figure = px.pie(data_frame=aggregated_data,
                     names="sport_type",
                     values="counts",
@@ -224,7 +328,28 @@ def pie_figure(aggregated_data: pd.DataFrame,
 def worldmap_figure(data: pd.DataFrame,
                     title:str,
                     height: int = None,
-                    **kwargs):
+                    **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        DESCRIPTION.
+    title : str
+        DESCRIPTION.
+    height : int, optional
+        DESCRIPTION. The default is None.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    figure : TYPE
+        DESCRIPTION.
+
+    """
     lats = kwargs.get("lat", [])
     lons = kwargs.get("lon", [])
     colors = kwargs.get("color", [])
@@ -273,7 +398,27 @@ def worldmap_figure(data: pd.DataFrame,
 
 
 def timeline(dataframe: pd.DataFrame,
-             plot_height: int):
+             plot_height: int,
+             **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    plot_height : int
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
 
     # show empty figure if no data is provided
     plot_title = "Timeline"
@@ -316,12 +461,32 @@ def timeline(dataframe: pd.DataFrame,
                                 title=plot_title,
                                 height=plot_height,
                                 x="calender-week",
-                                y=summarize_name)
+                                y=summarize_name, **{"area":{}})
     return time_line
 
 
 def types(dataframe: pd.DataFrame,
-          plot_height: int):
+          plot_height: int,
+          **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    plot_height : int
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
     plot_title = "Activity types"
     # show empty figure if no data is provided
     if dataframe.empty:
@@ -341,7 +506,27 @@ def types(dataframe: pd.DataFrame,
 
 
 def hours(dataframe: pd.DataFrame,
-          plot_height: int):
+          plot_height: int,
+          **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    plot_height : int
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    clock : TYPE
+        DESCRIPTION.
+
+    """
     plot_title = "Hours"
     # prepare data
     dataframe["timestep"] = dataframe["hour"]*60+dataframe["minutes"]//10
@@ -372,7 +557,27 @@ def hours(dataframe: pd.DataFrame,
 
 
 def days(dataframe: pd.DataFrame,
-         plot_height: int):
+         plot_height: int,
+         **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    plot_height : int
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    weekdays : TYPE
+        DESCRIPTION.
+
+    """
 
 
     plot_title = "Weekdays"
@@ -392,7 +597,25 @@ def days(dataframe: pd.DataFrame,
         weekdays = _add_annotation(weekdays)
     return weekdays
 
-def process_data(data):
+def process_data(data,
+                 **kwargs: typing.Any) -> list[dict]:
+    """
+
+
+    Parameters
+    ----------
+    data : TYPE
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    list[dict]
+        DESCRIPTION.
+
+    """
     lats = []
     lons = []
     colors = []
@@ -419,15 +642,38 @@ def process_data(data):
         names.append(None)
         dates.append(None)
         times.append(None)
-    return dict(lat=lats,
-    lon=lons,
-    color=colors,
-    name=names,
-    date=dates,
-    time=times,)
+    lists = {"lat": lats,
+             "lon": lons,
+             "color": colors,
+             "name": names,
+             "date": dates,
+             "time": times}
+    return lists
+
+
 
 def locations(dataframe: pd.DataFrame,
-              plot_height: int):
+              plot_height: int,
+              **kwargs: typing.Any) -> go.Figure:
+    """
+
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        DESCRIPTION.
+    plot_height : int
+        DESCRIPTION.
+    **kwargs : typing.Any
+        Key word arguments.
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
 
     # show empty figure if no data is provided
     plot_title = "Locations"
@@ -444,12 +690,6 @@ def locations(dataframe: pd.DataFrame,
                                title=plot_title,
                                height=plot_height,
                                **process_data(data),
-                               # lat=lats,
-                               # lon=lons,
-                               # color=colors,
-                               # name=names,
-                               # date=dates,
-                               # time=times,
                                zoom=0)
     return worldmap
 
