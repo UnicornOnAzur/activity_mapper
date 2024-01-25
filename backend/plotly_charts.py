@@ -392,19 +392,7 @@ def days(dataframe: pd.DataFrame,
         weekdays = _add_annotation(weekdays)
     return weekdays
 
-
-def locations(dataframe: pd.DataFrame,
-              plot_height: int):
-
-    # show empty figure if no data is provided
-    plot_title = "Locations"
-    if dataframe.empty:
-        return empty_figure(plot_title,
-                            plot_height)
-    # prepare data
-    data = dataframe.loc[(~dataframe["lat"].isna()) &
-                         (~dataframe["lon"].isna())
-                         ].astype({"year": str})
+def process_data(data):
     lats = []
     lons = []
     colors = []
@@ -431,16 +419,37 @@ def locations(dataframe: pd.DataFrame,
         names.append(None)
         dates.append(None)
         times.append(None)
+    return dict(lat=lats,
+    lon=lons,
+    color=colors,
+    name=names,
+    date=dates,
+    time=times,)
+
+def locations(dataframe: pd.DataFrame,
+              plot_height: int):
+
+    # show empty figure if no data is provided
+    plot_title = "Locations"
+    if dataframe.empty:
+        return empty_figure(plot_title,
+                            plot_height)
+    # prepare data
+    data = dataframe.loc[(~dataframe["lat"].isna()) &
+                         (~dataframe["lon"].isna())
+                         ].astype({"year": str})
+
     # create figure
     worldmap = worldmap_figure(dataframe,
                                title=plot_title,
                                height=plot_height,
-                               lat=lats,
-                               lon=lons,
-                               color=colors,
-                               name=names,
-                               date=dates,
-                               time=times,
+                               **process_data(data),
+                               # lat=lats,
+                               # lon=lons,
+                               # color=colors,
+                               # name=names,
+                               # date=dates,
+                               # time=times,
                                zoom=0)
     return worldmap
 
