@@ -31,14 +31,17 @@ def get_access_token(authorization_code):
                                                  res.get("athlete", {}).get("lastname")))
     refresh_token = res.get("refresh_token")
     access_token = res.get("access_token")
-    return athlete_name, refresh_token, access_token
+    return athlete_name, access_token, refresh_token
 
 
 def connect_strava(code):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
-    st.session_state["athlete_name"],st.session_state["access_token"], st.session_state["refresh_token"] = get_access_token(code)
+    results = get_access_token(code)
+    st.session_state["athlete_name"] = results[0]
+    st.session_state["access_token"] = results[1]
+    st.session_state["refresh_token"] = results[2]
     # RETREIVING THE DATA
     progress_bar.progress(10, "Retreiving data...")
     data = bsp.request_data_from_api(st.session_state["access_token"])
