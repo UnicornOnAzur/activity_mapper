@@ -227,10 +227,10 @@ def worldmap_figure(data: pd.DataFrame,
                     **kwargs):
     lats = kwargs.get("lat", [])
     lons = kwargs.get("lon", [])
-    colors = kwargs.get("name", [])
+    colors = kwargs.get("color", [])
     names = kwargs.get("name", [])
-    dates = kwargs.get("name", [])
-    times = kwargs.get("name", [])
+    dates = kwargs.get("date", [])
+    times = kwargs.get("time", [])
     zoom = kwargs.get("zoom", 0)
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
@@ -248,7 +248,13 @@ def worldmap_figure(data: pd.DataFrame,
                             template=TEMPLATE,
                             height=height
                             )
-    figure.update_traces()
+    figure.update_traces(hovertemplate="<br>".join(["<b>%{customdata[0]}</b>",
+                                                    "%{customdata[1]}",
+                                                    "%{customdata[2]}",
+                                                    "(%{lat},%{lon})",
+                                                    ],
+                                                    ),
+                          )
     figure = _update_layout(figure)
     return figure
 
@@ -424,7 +430,10 @@ def locations(dataframe: pd.DataFrame,
                                lat=lats,
                                lon=lons,
                                color=colors,
-                               name=names)
+                               name=names,
+                               date=dates,
+                               time=times,
+                               zoom=0)
     return worldmap
 
 
