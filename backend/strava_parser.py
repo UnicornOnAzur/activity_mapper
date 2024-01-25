@@ -101,7 +101,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         timestamp = pd.to_datetime(activity.get("start_date_local"),
                                    # format="%Y%m%dT%H:%MZ"
                                    )
-        elements = {"name": activity.get("name"),
+        elements = {"view on Strava": f"https://www.strava.com/activities/{activity.get('id')}",
+                    "name": activity.get("name"),
                     "timestamp": timestamp,
                     "year": timestamp.year,
                     "week": timestamp.week,
