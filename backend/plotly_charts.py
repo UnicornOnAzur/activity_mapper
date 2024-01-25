@@ -151,7 +151,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                      title=title,
                      template=TEMPLATE,
                      height=height,
-                     **kwargs.get("area")
+                     **kwargs.get("area", {})
                      )
     figure.update_traces(hovertemplate="Activity on %{customdata[0]}")
     figure.add_scatter(customdata=dataframe.loc[:,["name","date"]].values,
@@ -162,7 +162,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        opacity=1,
                        x=dataframe["cw"], # position the dots by week
                        y=dataframe["pos"],
-                       **kwargs.get("scatter")
+                       **kwargs.get("scatter", {})
                        )
     figure = _update_layout(figure)
     return figure
