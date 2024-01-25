@@ -255,6 +255,7 @@ def worldmap_figure(data: pd.DataFrame,
                                                     ],
                                                     ),
                           )
+    figure = _update_layout(figure)
     for app in (groups:=data.groupby("app").groups):
         app_data = data.loc[groups[app].values]
         figure.add_scattermapbox(below="traces",
@@ -268,7 +269,6 @@ def worldmap_figure(data: pd.DataFrame,
                                  mode="markers",
                                  name=app,
                                  )
-    figure = _update_layout(figure)
     return figure
 
 
@@ -436,7 +436,6 @@ def locations(dataframe: pd.DataFrame,
         dates.append(None)
         years.append(None)
         times.append(None)
-    print(lats, lons)
     # create figure
     worldmap = worldmap_figure(dataframe,
                                title=plot_title,
