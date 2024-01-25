@@ -410,7 +410,6 @@ def locations(dataframe: pd.DataFrame,
     colors = []
     names = []
     dates = []
-    years = []
     times = []
     for _, row in data.iterrows():
         segment_length = len(coords:= row["coords"])+1
@@ -420,16 +419,10 @@ def locations(dataframe: pd.DataFrame,
         lats.extend(lat)
         lons.extend(lon)
 
-        color = [row["app"]]*segment_length
-        colors.extend(color)
-        name = [row["name"]]*segment_length
-        names.extend(name)
-        date = [row["date"]]*segment_length
-        dates.extend(date)
-        year = [row["year"]]*segment_length
-        years.extend(year)
-        time = [row["time"]]*segment_length
-        times.extend(time)
+        colors.extend([row["app"]]*segment_length)
+        names.extend([row["name"]]*segment_length)
+        dates.extend([row["date"]]*segment_length)
+        times.extend([row["time"]]*segment_length)
         # make a seperation in the lists
 
         lats.append(None)
@@ -437,11 +430,10 @@ def locations(dataframe: pd.DataFrame,
         colors.append(None)
         names.append(None)
         dates.append(None)
-        years.append(None)
         times.append(None)
     # create figure
     worldmap = worldmap_figure(dataframe,
-                               title=plot_title+f"{len(lats)=},{len(colors)=}",
+                               title=plot_title,
                                height=plot_height,
                                lat=lats,
                                lon=lons,
