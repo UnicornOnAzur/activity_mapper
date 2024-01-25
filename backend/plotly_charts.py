@@ -436,6 +436,7 @@ def locations(dataframe: pd.DataFrame,
         dates.append(None)
         years.append(None)
         times.append(None)
+    print(len(lats),len(colors))
     # create figure
     worldmap = worldmap_figure(dataframe,
                                title=plot_title,
