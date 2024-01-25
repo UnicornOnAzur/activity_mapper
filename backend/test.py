@@ -18,3 +18,6 @@ def load_test_data() -> dict:
     with open("api_test.txt", "rb") as file:
         data: dict = json.loads(file.read())
     return data
+
+if __name__ == "__main__":
+    pass
