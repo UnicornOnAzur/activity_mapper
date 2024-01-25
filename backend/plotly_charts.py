@@ -431,6 +431,7 @@ def locations(dataframe: pd.DataFrame,
         # make a seperation in the lists
         lats.append(None)
         lons.append(None)
+        colors.append(None)
         names.append(None)
         dates.append(None)
         years.append(None)
