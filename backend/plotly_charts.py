@@ -398,7 +398,7 @@ def worldmap_figure(data: pd.DataFrame,
     return figure
 
 
-def timeline(dataframe: pd.DataFrame,
+def timeline(original: pd.DataFrame,
              plot_height: int,
              **kwargs: typing.Any) -> go.Figure:
     """
@@ -406,7 +406,7 @@ def timeline(dataframe: pd.DataFrame,
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
+    original : pd.DataFrame
         DESCRIPTION.
     plot_height : int
         DESCRIPTION.
@@ -422,16 +422,18 @@ def timeline(dataframe: pd.DataFrame,
 
     # show empty figure if no data is provided
     plot_title = "Timeline"
-    if dataframe.empty:
+    if original.empty:
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
     summarize_name = "times per week"
+    name = "calender-week"
+    dataframe = original.copy()
     dataframe["pos"] = 0
     last = None
     count = None
     for index, row in dataframe.loc[:].iterrows():
-        week = row["calender-week"]
+        week = row[name]
         if week != last:
             last = week
             count = 0
@@ -450,18 +452,18 @@ def timeline(dataframe: pd.DataFrame,
         .count().reset_index().rename({"timestamp": summarize_name}, axis=1)
     # rework the calender-week column to be the first day of the week
     # TODO: update use of .loc
-    data["calender-week"] = data.loc[:,["year","week"]].apply(lambda row: f"{row[0]}-{row[1]}-1",
+    data[name] = data.loc[:,["year","week"]].apply(lambda row: f"{row[0]}-{row[1]}-1",
                                                               axis=1)
     # TODO: update use of pd.to_datetime
-    data["calender-week"] = pd.to_datetime(data["calender-week"],
+    data[name] = pd.to_datetime(data[name],
                                             format="%Y-%W-%w")
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
                                 title=plot_title,
                                 height=plot_height,
-                                x="calender-week",
-                                y=summarize_name, **{"area":{}},
+                                x=name,
+                                y=summarize_name,
                                 **kwargs)
     return time_line
 
