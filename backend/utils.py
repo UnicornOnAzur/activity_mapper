@@ -11,6 +11,7 @@ import requests
 import pandas as pd
 
 def post_request(url: str,
+                 params: dict = None,
                  timeout: int = 5) -> dict:
     """
 
@@ -28,6 +29,7 @@ def post_request(url: str,
     """
     result: dict = {}
     response = requests.post(url=url,
+                             params=params,
                              timeout=timeout)
     if response.ok:
         result: dict = response.json()
