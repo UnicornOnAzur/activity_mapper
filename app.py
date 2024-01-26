@@ -24,6 +24,16 @@ STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 AUTH_LINK = "https://www.strava.com/oauth/token"
+CONFIG = {"displaylogo": False,
+          "displayModeBar": False,}
+
+CONFIG2 = {"displaylogo": False,
+           "modeBarButtonsToRemove": ["pan2d",
+                                      "lasso2d",
+                                      "select2d",
+                                      "toImage",
+                                      "zoom2d",
+                                      "autoscale"]}
 
 def get_access_token(authorization_code):
     res = bu.post_request(AUTH_LINK,
@@ -104,27 +114,30 @@ def main():
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT),
-                               use_container_width=True)
+                               use_container_width=True,
+                               config=CONFIG)
 
         with st.container():
             # middle row
-            st.divider()
             cols = st.columns(spec=[6,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=bpc.days(df,
-                                                          BOTTOM_ROW_HEIGHT/2),
-                                  use_container_width=True)
+                                                         BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True,
+                                  config=CONFIG)
             cols[1].plotly_chart(figure_or_data=bpc.locations(df,
-                                                         BOTTOM_ROW_HEIGHT),
-                                 use_container_width=True)
+                                                              BOTTOM_ROW_HEIGHT),
+                                 use_container_width=True,
+                                 config=CONFIG2)
             subcols = cols[0].columns(spec=[3,3], gap="small")
             subcols[0].plotly_chart(figure_or_data=bpc.types(df,
-                                                          BOTTOM_ROW_HEIGHT/2),
-                                  use_container_width=True)
+                                                             BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True,
+                                  config=CONFIG)
             subcols[1].plotly_chart(figure_or_data=bpc.hours(df,
-                                                          BOTTOM_ROW_HEIGHT/2),
-                                  use_container_width=True)
-            st.divider()
+                                                             BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True,
+                                  config=CONFIG)
             # SLIDER
         with st.expander("See unique events", expanded = False):
             st.dataframe(data=st.session_state.get("dataframe", pd.DataFrame(columns=DISPLAY_COLS)).loc[:, DISPLAY_COLS],
