@@ -124,7 +124,7 @@ def main():
             st.divider()
             # SLIDER
         with st.expander("See unique events", expanded = False):
-            st.dataframe(data=st.session_state.get("dataframe").loc[:, DISPLAY_COLS],
+            st.dataframe(data=st.session_state.get("dataframe", pd.DataFrame(columns=DISPLAY_COLS)).loc[:, DISPLAY_COLS],
                          use_container_width=True,
                          hide_index=True,
                          column_order=DISPLAY_COLS,
