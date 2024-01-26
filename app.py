@@ -109,20 +109,21 @@ def main():
         with st.container():
             # middle row
             st.divider()
-            cols = st.columns(spec=[2,2,2,6],
+            cols = st.columns(spec=[6,6],
                               gap="small")
-            cols[0].plotly_chart(figure_or_data=bpc.types(df,
-                                                          BOTTOM_ROW_HEIGHT),
-                                 use_container_width=True)
-            cols[1].plotly_chart(figure_or_data=bpc.hours(df,
-                                                          BOTTOM_ROW_HEIGHT),
-                                 use_container_width=True)
-            cols[2].plotly_chart(figure_or_data=bpc.days(df,
+            cols[0].plotly_chart(figure_or_data=bpc.days(df,
+                                                          BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True)
+            cols[1].plotly_chart(figure_or_data=bpc.locations(df,
                                                          BOTTOM_ROW_HEIGHT),
                                  use_container_width=True)
-            cols[3].plotly_chart(figure_or_data=bpc.locations(df,
-                                                         BOTTOM_ROW_HEIGHT),
-                                 use_container_width=True)
+            subcols = cols[0].columns(spec=[3,3], gap="small")
+            subcols[0].plotly_chart(figure_or_data=bpc.types(df,
+                                                          BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True)
+            subcols[1].plotly_chart(figure_or_data=bpc.hours(df,
+                                                          BOTTOM_ROW_HEIGHT/2),
+                                  use_container_width=True)
             st.divider()
             # SLIDER
         with st.expander("See unique events", expanded = False):
