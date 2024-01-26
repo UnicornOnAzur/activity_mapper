@@ -23,11 +23,10 @@ STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
-
+AUTH_LINK = "https://www.strava.com/oauth/token"
 
 def get_access_token(authorization_code):
-    # other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
-    res = bu.post_request("https://www.strava.com/oauth/token",
+    res = bu.post_request(AUTH_LINK,
                           params={"client_id":STRAVA_CLIENT_ID,
                                   "client_secret": STRAVA_CLIENT_SECRET,
                                   "code": authorization_code,
