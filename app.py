@@ -49,10 +49,10 @@ def connect_strava(code):
     st.session_state["access_token"] = results[1]
     st.session_state["refresh_token"] = results[2]
     # RETREIVING THE DATA
-    progress_bar.progress(10, "Retreiving data...")
+    progress_bar.progress(33, "Retreiving data...")
     data = bsp.request_data_from_api(st.session_state["access_token"])
     # PARSING THE DATA
-    progress_bar.progress(80, "Parsing data...")
+    progress_bar.progress(67, "Parsing data...")
     if list(data[0].keys()) == ["message","errors"]:
         # if an error occur stop the function
         error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
@@ -92,7 +92,7 @@ def main():
                 st.info("connected")
                 st.session_state["sidebar_state"] = "collapsed"
             st.divider()
-            st.markdown(body=None)
+            st.markdown(body=open("intro.txt").read())
             st.divider()
             test = st.button("Use test data")
             if test:
@@ -100,8 +100,7 @@ def main():
 
         # MAIN PAGE
         with st.container():
-            st.subheader(TITLE)
-            st.subheader(welcome_text)
+            st.subheader(": ".join([TITLE, welcome_text]))
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT),
