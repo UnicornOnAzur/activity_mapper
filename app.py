@@ -26,8 +26,12 @@ authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_
 
 
 def get_access_token(authorization_code):
-    other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
-    res = bu.post_request(other_link)
+    # other_link = f"https://www.strava.com/oauth/token?client_id={STRAVA_CLIENT_ID}&client_secret={STRAVA_CLIENT_SECRET}&code={authorization_code}&grant_type=authorization_code"
+    res = bu.post_request("https://www.strava.com/oauth/token",
+                          params={"client_id":STRAVA_CLIENT_ID,
+                                  "client_secret": STRAVA_CLIENT_SECRET,
+                                  "code": authorization_code,
+                                  "grant_type": "authorization_code"})
     athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
                              res.get("athlete", {}).get("lastname", "")
                              )
