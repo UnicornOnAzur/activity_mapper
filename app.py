@@ -122,7 +122,14 @@ def main():
             st.divider()
             # SLIDER
         with st.expander("See unique events", expanded = False):
-            st.dataframe(st.session_state.get("dataframe"))
+            st.dataframe(data=st.session_state.get("dataframe"),
+                         use_container_width=True,
+                         hide_index=True,
+                         column_order=None,
+                         column_config={"view on Strava": st.column_config.LinkColumn(label=None,
+                                                                                      help="See this activity on the Strava website",
+                                                                                      display_text="Open link")}
+                         )
 
 
 if __name__ == "__main__":
