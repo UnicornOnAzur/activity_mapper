@@ -21,7 +21,7 @@ APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
-
+DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
 
 
@@ -89,6 +89,8 @@ def main():
                 st.info("connected")
                 st.session_state["sidebar_state"] = "collapsed"
             st.divider()
+            st.markdown(body=None)
+            st.divider()
             test = st.button("Use test data")
             if test:
                 st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
@@ -122,13 +124,13 @@ def main():
             st.divider()
             # SLIDER
         with st.expander("See unique events", expanded = False):
-            st.dataframe(data=st.session_state.get("dataframe"),
+            st.dataframe(data=st.session_state.get("dataframe").loc[:, DISPLAY_COLS],
                          use_container_width=True,
                          hide_index=True,
-                         column_order=None,
+                         column_order=DISPLAY_COLS,
                          column_config={"view on Strava": st.column_config.LinkColumn(label=None,
-                                                                                      help="See this activity on the Strava website",
-                                                                                      display_text="Open link")}
+                                                                                      help="See this activity on the Strava website")
+                                        }
                          )
 
 
