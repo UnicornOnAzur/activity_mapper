@@ -37,7 +37,7 @@ CONFIG2 = {"displaylogo": False,
 
 def get_access_token(authorization_code):
     res = bu.post_request(AUTH_LINK,
-                          params={"client_id":STRAVA_CLIENT_ID,
+                          data={"client_id":STRAVA_CLIENT_ID,
                                   "client_secret": STRAVA_CLIENT_SECRET,
                                   "code": authorization_code,
                                   "grant_type": "authorization_code"})

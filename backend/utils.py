@@ -11,15 +11,19 @@ import requests
 import pandas as pd
 
 def post_request(url: str,
-                 params: dict = None,
+                 data: dict = None,
                  timeout: int = 5) -> dict:
     """
-
+    Wrapper for the post request that always returns a dictionary.
 
     Parameters
     ----------
     url : str
-        DESCRIPTION.
+        The requested url.
+    params : dict, optional
+        The payload. The default is None.
+    timeout : int, optional
+        The amount of seconds before closing the connection. The default is 5.
 
     Returns
     -------
@@ -29,24 +33,32 @@ def post_request(url: str,
     """
     result: dict = {}
     response = requests.post(url=url,
-                             params=params,
+                             data=data,
                              timeout=timeout)
     if response.ok:
         result: dict = response.json()
+    else:
+        result.update({str(response.status_code): response.reason})
     return result
 
 
 def get_request(url: str,
-                params: dict,
-                headers: dict,
+                params: dict = None,
+                headers: dict = None,
                 timeout: int = 5) -> dict:
     """
-
+    Wrapper for the get request that always returns a dictionary.
 
     Parameters
     ----------
     url : str
-        DESCRIPTION.
+        The requested url.
+    params : dict, optional
+        The query string elements. The default is None.
+    headers : dict, optional
+        The HTTP headers. The default is None.
+    timeout : int, optional
+        The amount of seconds before closing the connection. The default is 5.
 
     Returns
     -------
@@ -60,6 +72,8 @@ def get_request(url: str,
                             headers=headers)
     if response.ok:
         result: dict = response.json()
+    else:
+        result.update({str(response.status_code): response.reason})
     return result
 
 
