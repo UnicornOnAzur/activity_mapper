@@ -99,7 +99,6 @@ def main():
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
             st.header("Menu")
-            st.divider()
             if not st.session_state.get("athlete_name"):
                 image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
                 st.markdown(f'<a href="{authorization_link}">'
@@ -108,7 +107,7 @@ def main():
                             unsafe_allow_html=True)
             else:
                 st.error("connected")
-                st.session_state["sidebar_state"] = "collapsed"
+            st.divider()
             st.markdown(body=open("intro.txt").read())
             if st.button("Show with demo data"):
                 st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
