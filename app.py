@@ -73,12 +73,15 @@ def connect_strava(code):
     progress_bar.progress(100, "Done")
     # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
+    wrap_up()
+    return
+
+def wrap_up():
     st.session_state["sidebar_state"] = "collapsed"
     # raise flag that data has been loaded
     st.session_state["loaded"] = True
     # rerun the page to have header and sidebar be updated
     st.rerun()
-    return
 
 
 def main():
@@ -104,14 +107,12 @@ def main():
                             f'</a>',
                             unsafe_allow_html=True)
             else:
-                st.info("connected")
+                st.error("connected")
                 st.session_state["sidebar_state"] = "collapsed"
-            st.divider()
             st.markdown(body=open("intro.txt").read())
-            st.divider()
-            test = st.button("Use test data")
-            if test:
+            if st.button("Show with demo data"):
                 st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
+                wrap_up()
 
         # MAIN PAGE
         with st.container():
@@ -145,12 +146,16 @@ def main():
                                   config=CONFIG)
             # SLIDER
         with st.expander("See unique events", expanded = False):
-            st.dataframe(data=st.session_state.get("dataframe", pd.DataFrame(columns=DISPLAY_COLS)).loc[:, DISPLAY_COLS],
+            st.dataframe(data=st.session_state.get("dataframe",
+                                                   pd.DataFrame(columns=DISPLAY_COLS)
+                                                   ).loc[:, DISPLAY_COLS],
                          use_container_width=True,
                          hide_index=True,
                          column_order=DISPLAY_COLS,
-                         column_config={"view on Strava": st.column_config.LinkColumn(label=None,
-                                                                                      help="See this activity on the Strava website")
+                         column_config={"view on Strava":
+                                        st.column_config.LinkColumn(label=None,
+                                                                    help=\
+                                        "See this activity on the Strava website")
                                         }
                          )
 
