@@ -73,6 +73,7 @@ def connect_strava(code):
     progress_bar.progress(100, "Done")
     # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
+    st.session_state["sidebar_state"] = "collapsed"
     return
 
 
