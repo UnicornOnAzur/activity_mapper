@@ -75,6 +75,7 @@ def connect_strava(code):
     progress_bar.empty()
     st.session_state["sidebar_state"] = "collapsed"
     st.session_state["loaded"] = True
+    st.rerun()
     return
 
 
