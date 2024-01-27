@@ -37,7 +37,7 @@ def connect_strava(code):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
-    results = bu.get_access_token(code)
+    results = bsp.get_access_token(code)
     st.session_state["athlete_name"] = results[0]
     st.session_state["access_token"] = results[1]
     st.session_state["refresh_token"] = results[2]
