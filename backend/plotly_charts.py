@@ -694,7 +694,7 @@ def locations(dataframe: pd.DataFrame,
                                title=plot_title,
                                height=plot_height,
                                **process_data(data),
-                               zoom=0,
+                               zoom=1,
                                **kwargs)
     return worldmap
 
