@@ -74,13 +74,14 @@ def connect_strava(code):
     # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
     st.session_state["sidebar_state"] = "collapsed"
+    st.session_state["loaded"] = True
     return
 
 
 def main():
     params: dict = st.query_params.to_dict()
     code = params.get("code")
-    if code:
+    if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
