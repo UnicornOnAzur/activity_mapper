@@ -15,7 +15,7 @@ import backend.utils as bu
 COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
              }
 DISCRETE_COLOR = px.colors.sequential.Oranges_r
-TEMPLATE = "plotly_dark"#None
+TEMPLATE = "plotly_dark"
 LEFT_RIGHT_MARGIN = 20
 TOP_BOTTOM_MARGIN = 25
 
@@ -23,7 +23,7 @@ TOP_BOTTOM_MARGIN = 25
 def _add_annotation(fig: go.Figure,
                     **kwargs: typing.Any) -> go.Figure:
     """
-
+    A wrapper to add annotation to a figure to indicate it is empty.
 
     Parameters
     ----------
@@ -51,19 +51,19 @@ def _add_annotation(fig: go.Figure,
 def _update_layout(fig: go.Figure,
                    **kwargs: typing.Any) -> go.Figure:
     """
-
+    A wrapper to update the layout of a figure uniformly for all figures.
 
     Parameters
     ----------
     fig : go.Figure
-        DESCRIPTION.
+        The plotly figure.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
     fig : TYPE
-        DESCRIPTION.
+        The plotly figure with updated layout.
 
     """
     fig.update_layout(showlegend=False,
