@@ -69,12 +69,14 @@ def connect_strava(code):
         return
     st.session_state["dataframe"] = (dataframe:= bsp.parse(data))
     st.session_state["time_range"] = bu.get_min_max_time(dataframe)
-    # FINALIZE THE PROCRESS
+    # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
     st.session_state["sidebar_state"] = "collapsed"
+    # raise flag that data has been loaded
     st.session_state["loaded"] = True
+    # rerun the page to have header and sidebar be updated
     st.rerun()
     return
 
