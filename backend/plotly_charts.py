@@ -268,7 +268,7 @@ def clock_figure(aggregated_data: pd.DataFrame,
                               height=height,
                               **kwargs
                               )
-    figure.update_traces()
+    figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]}")
     max_axis = 0 if aggregated_data.empty else int(aggregated_data["count"].max())
     figure = _update_layout(figure)
     figure.update_layout(polar={"radialaxis": {"tickvals":
