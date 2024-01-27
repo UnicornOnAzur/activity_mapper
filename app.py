@@ -19,14 +19,11 @@ TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 500
 APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
-STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
 authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all"
-AUTH_LINK = "https://www.strava.com/oauth/token"
 CONFIG = {"displaylogo": False,
           "displayModeBar": False,}
-
 CONFIG2 = {"displaylogo": False,
            "modeBarButtonsToRemove": ["pan2d",
                                       "lasso2d",
@@ -35,26 +32,12 @@ CONFIG2 = {"displaylogo": False,
                                       "zoom2d",
                                       "autoscale"]}
 
-def get_access_token(authorization_code):
-    res = bu.post_request(AUTH_LINK,
-                          data={"client_id":STRAVA_CLIENT_ID,
-                                  "client_secret": STRAVA_CLIENT_SECRET,
-                                  "code": authorization_code,
-                                  "grant_type": "authorization_code"})
-    athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
-                             res.get("athlete", {}).get("lastname", "")
-                             )
-                            )
-    refresh_token = res.get("refresh_token")
-    access_token = res.get("access_token")
-    return athlete_name, access_token, refresh_token
-
 
 def connect_strava(code):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
-    results = get_access_token(code)
+    results = bu.get_access_token(code)
     st.session_state["athlete_name"] = results[0]
     st.session_state["access_token"] = results[1]
     st.session_state["refresh_token"] = results[2]

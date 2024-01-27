@@ -5,12 +5,50 @@
 """
 
 # Standard library
+import os
 import requests
 import typing
 # Third party
 import pandas as pd
 import polyline
 # Local imports
+import backend.utils as bu
+
+AUTH_LINK = "https://www.strava.com/oauth/token"
+STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
+STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
+
+def get_access_token(authorization_code):
+    """
+
+
+    Parameters
+    ----------
+    authorization_code : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    athlete_name : TYPE
+        DESCRIPTION.
+    access_token : TYPE
+        DESCRIPTION.
+    refresh_token : TYPE
+        DESCRIPTION.
+
+    """
+    res = bu.post_request(AUTH_LINK,
+                          data={"client_id":STRAVA_CLIENT_ID,
+                                "client_secret": STRAVA_CLIENT_SECRET,
+                                "code": authorization_code,
+                                "grant_type": "authorization_code"})
+    athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
+                             res.get("athlete", {}).get("lastname", "")
+                             )
+                            )
+    refresh_token = res.get("refresh_token")
+    access_token = res.get("access_token")
+    return athlete_name, access_token, refresh_token
 
 
 def request_data_from_api(access_token: str) -> list[dict]:
