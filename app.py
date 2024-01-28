@@ -21,7 +21,7 @@ APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
-authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read"
+authorization_link = f"https://www.strava.com/oauth/authorize?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read_all,activity:read"
 CONFIG = {"displaylogo": False,
           "displayModeBar": False,}
 CONFIG2 = {"displaylogo": False,
