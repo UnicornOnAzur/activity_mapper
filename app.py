@@ -101,6 +101,7 @@ def main():
 
         # MAIN PAGE
         with st.container():
+            st.header("TITLE")
             # st.subheader(": ".join([TITLE, welcome_text]))
             st.markdown("""# TITLE
                         title""")
