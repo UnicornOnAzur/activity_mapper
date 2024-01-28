@@ -16,7 +16,7 @@ import backend.utils as bu
 
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
-BOTTOM_ROW_HEIGHT = 500
+BOTTOM_ROW_HEIGHT = 600
 APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
@@ -101,10 +101,7 @@ def main():
 
         # MAIN PAGE
         with st.container():
-            left, right = st.columns(spec=[3,9],
-                                     gap="small")
-            left.markdown(f"# {TITLE}")
-            right.markdown(f"## {welcome_text}")
+            st.markdown(f"# {TITLE}: {welcome_text}")
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT),
