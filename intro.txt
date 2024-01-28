@@ -1,1 +1,1 @@
-To use this dashboard click on "Connect with Strava". This will redirect you to the Strava page. Then select to view both public and private activities, and click "Authorize". This provides the dashboard with your data for the duration of your use.
+To use this dashboard click on "Connect with Strava". This will redirect you to the Strava page. Then select to view public and/or private activities, and click "Authorize". This provides the dashboard with your data for the duration of your use.
