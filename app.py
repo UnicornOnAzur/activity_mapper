@@ -101,7 +101,7 @@ def main():
 
         # MAIN PAGE
         with st.container():
-            left, right = st.columns(spec=[1,11],
+            left, right = st.columns(spec=[3,9],
                                      gap="small")
             left.markdown(f"# **{TITLE}**:")
             right.markdown(f"## {welcome_text}")
