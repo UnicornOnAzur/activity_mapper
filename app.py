@@ -101,9 +101,9 @@ def main():
 
         # MAIN PAGE
         with st.container():
-            left, right = st.columns(spec=[2,10],
+            left, right = st.columns(spec=[3,9],
                                      gap="small")
-            left.markdown(f"# {TITLE}:")
+            left.markdown(f"# {TITLE}")
             right.markdown(f"## {welcome_text}")
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
