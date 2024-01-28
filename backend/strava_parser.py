@@ -6,11 +6,11 @@
 
 # Standard library
 import os
-import requests
 import typing
 # Third party
 import pandas as pd
 import polyline
+import requests
 # Local imports
 import backend.utils as bu
 

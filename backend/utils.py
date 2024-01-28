@@ -6,9 +6,9 @@
 # Standard library
 import base64
 import datetime
-import requests
 # Third party
 import pandas as pd
+import requests
 
 def post_request(url: str,
                  data: dict = None,
