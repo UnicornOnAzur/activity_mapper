@@ -101,10 +101,7 @@ def main():
 
         # MAIN PAGE
         with st.container():
-            st.header("TITLE")
-            # st.subheader(": ".join([TITLE, welcome_text]))
-            st.markdown("""# TITLE
-                        ## title""")
+            st.markdown(f"""# {TITLE}""")
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT),
