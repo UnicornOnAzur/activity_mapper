@@ -113,7 +113,7 @@ def main():
             cols = st.columns(spec=[6,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=bpc.days(df,
-                                                         BOTTOM_ROW_HEIGHT/2),
+                                                         BOTTOM_ROW_HEIGHT//3),
                                   use_container_width=True,
                                   config=CONFIG)
             cols[1].plotly_chart(figure_or_data=bpc.locations(df,
@@ -122,11 +122,11 @@ def main():
                                  config=CONFIG2)
             subcols = cols[0].columns(spec=[3,3], gap="small")
             subcols[0].plotly_chart(figure_or_data=bpc.types(df,
-                                                             BOTTOM_ROW_HEIGHT/2),
+                                                             BOTTOM_ROW_HEIGHT//2),
                                   use_container_width=True,
                                   config=CONFIG)
             subcols[1].plotly_chart(figure_or_data=bpc.hours(df,
-                                                             BOTTOM_ROW_HEIGHT/2),
+                                                             BOTTOM_ROW_HEIGHT//2),
                                   use_container_width=True,
                                   config=CONFIG)
             # SLIDER
