@@ -113,7 +113,7 @@ def main():
             cols = st.columns(spec=[6,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=bpc.days(df,
-                                                         BOTTOM_ROW_HEIGHT//3),
+                                                         BOTTOM_ROW_HEIGHT//3-50),
                                   use_container_width=True,
                                   config=CONFIG)
             cols[1].plotly_chart(figure_or_data=bpc.locations(df,
