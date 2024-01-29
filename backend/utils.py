@@ -12,7 +12,7 @@ import requests
 
 def post_request(url: str,
                  data: dict = None,
-                 timeout: int = 5) -> dict:
+                 timeout: int = 60) -> dict:
     """
     Wrapper for the post request that always returns a dictionary.
 
@@ -45,7 +45,7 @@ def post_request(url: str,
 def get_request(url: str,
                 params: dict = None,
                 headers: dict = None,
-                timeout: int = 5) -> dict:
+                timeout: int = 60) -> dict:
     """
     Wrapper for the get request that always returns a dictionary.
 
@@ -138,60 +138,6 @@ def hr2ang(hour: int) -> int:
     """
     angle = (hour * 15) % 360
     return angle
-
-
-def get_time_range(dataframe: pd.DataFrame) -> tuple[datetime.datetime]:
-    """
-
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
-
-    Returns
-    -------
-    dates : TYPE
-        DESCRIPTION.
-
-    """
-    # get the current date
-    today = datetime.datetime.today()
-    if dataframe is None or dataframe.empty:
-        # if no date can be derived take a week as the period
-        begin_date = today - datetime.timedelta(days=9)
-    else:
-        begin_date = dataframe.date.min()
-
-    # make a date range in steps of weeks
-    date_range = pd.date_range(start=begin_date,
-                               end=today,
-                               freq="W", # calendar frequency by week
-                               inclusive="both", # include begin and end date in the range
-                               )
-    # convert list of DatetimeIndexes to a list of datetime objects
-    dates = list(map(lambda d:d.date(),
-                     date_range))
-    return dates
-
-
-def get_min_max_time(dataframe: pd.DataFrame) -> tuple[datetime.datetime]:
-    """
-    Return a tuple of the minimum and maximum date
-
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
-
-    Returns
-    -------
-    tuple
-        DESCRIPTION.
-
-    """
-    date_range = get_time_range(dataframe)
-    return min(date_range), max(date_range)
 
 
 if __name__ == "__main__":
