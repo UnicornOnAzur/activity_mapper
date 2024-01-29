@@ -69,7 +69,8 @@ def get_request(url: str,
     result: dict = {}
     response = requests.get(url=url,
                             params=params,
-                            headers=headers)
+                            headers=headers,
+                            timeout=timeout)
     if response.ok:
         result: dict = response.json()
     else:
