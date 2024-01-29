@@ -53,8 +53,7 @@ def connect_strava(code):
         # if an error occur stop the function
         error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
         return
-    st.session_state["dataframe"] = (dataframe:= bsp.parse(data))
-    st.session_state["time_range"] = bu.get_min_max_time(dataframe)
+    st.session_state["dataframe"] = bsp.parse(data)
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     # dataframe = st.session_state.get("dataframe")
