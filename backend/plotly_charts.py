@@ -307,16 +307,16 @@ def pie_figure(aggregated_data: pd.DataFrame,
 
     """
     figure = px.pie(data_frame=aggregated_data,
-                    names="sport_type",
-                    values="counts",
-                    color="sport_type",
+                    names=kwargs.get("names"),
+                    values=kwargs.get("values"),
+                    color=kwargs.get("color"),
                     color_discrete_sequence=DISCRETE_COLOR,
                     title=title,
                     template=TEMPLATE,
                     height=height,
                     **kwargs
                     )
-    figure.update_traces(textposition='inside', # set the percentage inside the chart
+    figure.update_traces(textposition="inside", # set the percentage inside the chart
                          # show the category and the amount in the chart
                          textinfo="label+percent",
                          hovertemplate="<b>%{label}</b><br>%{value}"
@@ -502,6 +502,9 @@ def types(dataframe: pd.DataFrame,
                      inplace=True)
     # create figure
     pie = pie_figure(data,
+                     {"names":"sport_type",
+                     "values":"counts",
+                     "color":"sport_type",},
                      title=plot_title,
                      height=plot_height,
                      **kwargs)
