@@ -10,7 +10,6 @@ import typing
 # Third party
 import pandas as pd
 import polyline
-import requests
 # Local imports
 import backend.utils as bu
 
@@ -78,29 +77,15 @@ def request_data_from_api(access_token: str) -> list[dict]:
         response = bu.get_request(url=activities_url,
                                   headers=header,
                                   params=param)
-        all_activities.extend(response)
+        # if an invalid response is received return the message and stop the loop
         if isinstance(response, dict):
             all_activities.append(response)
             break
-        elif len(response) < 200 or response == []:
+        # otherwise add the response to the list
+        all_activities.extend(response)
+        # if the page is empty or less than 200 records stop the loop
+        if len(response) < 200 or response == []:
             break
-
-    #     response = requests.get(activities_url,
-    #                             headers=header,
-    #                             params=param)
-    #     data_set = response.json()
-    #     if not response.ok:
-    #         all_activities.append(data_set)
-    #         return all_activities
-    #     # break out of the loop if the response is empty
-    #     if len(data_set) == 0:
-    #         break
-    #     # add onto the list
-    #     if all_activities:
-    #         all_activities.extend(data_set)
-    #     # populate the list if it is empty
-    #     else:
-    #         all_activities = data_set
         # increment to get the next page
         request_page_num += 1
     return all_activities
