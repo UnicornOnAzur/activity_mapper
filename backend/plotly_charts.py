@@ -307,9 +307,9 @@ def pie_figure(aggregated_data: pd.DataFrame,
 
     """
     figure = px.pie(data_frame=aggregated_data,
-                    names=kwargs.get("names"),
-                    values=kwargs.get("values"),
-                    color=kwargs.get("color"),
+                    names="sport_type",
+                    values="counts",
+                    color="sport_type",
                     color_discrete_sequence=DISCRETE_COLOR,
                     title=title,
                     template=TEMPLATE,
@@ -504,9 +504,6 @@ def types(dataframe: pd.DataFrame,
     pie = pie_figure(data,
                      title=plot_title,
                      height=plot_height,
-                     **{"names":"sport_type",
-                     "values":"counts",
-                     "color":"sport_type",},
                      **kwargs)
     return pie
 
