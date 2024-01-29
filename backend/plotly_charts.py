@@ -502,11 +502,11 @@ def types(dataframe: pd.DataFrame,
                      inplace=True)
     # create figure
     pie = pie_figure(data,
-                     {"names":"sport_type",
-                     "values":"counts",
-                     "color":"sport_type",},
                      title=plot_title,
                      height=plot_height,
+                     **{"names":"sport_type",
+                     "values":"counts",
+                     "color":"sport_type",},
                      **kwargs)
     return pie
 
