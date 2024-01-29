@@ -309,16 +309,20 @@ def pie_figure(aggregated_data: pd.DataFrame,
     figure = px.sunburst(data_frame=aggregated_data,
                          path=["type","sport_type"],
                          values="counts",
-                         color_discrete_sequence=DISCRETE_COLOR)
+                         color_discrete_sequence=DISCRETE_COLOR,
+                         title=title,
+                         template=TEMPLATE,
+                         height=height,
+                         **kwargs)
     # figure = px.pie(data_frame=aggregated_data,
     #                 names="sport_type",
     #                 values="counts",
     #                 color="sport_type",
     #                 color_discrete_sequence=DISCRETE_COLOR,
-    #                 title=title,
-    #                 template=TEMPLATE,
-    #                 height=height,
-    #                 **kwargs
+                    # title=title,
+                    # template=TEMPLATE,
+                    # height=height,
+                    # **kwargs
     #                 )
     # figure.update_traces(textposition="inside", # set the percentage inside the chart
     #                      # show the category and the amount in the chart
@@ -603,6 +607,7 @@ def days(dataframe: pd.DataFrame,
     if dataframe.empty:
         weekdays = _add_annotation(weekdays)
     return weekdays
+
 
 def process_data(data,
                  **kwargs: typing.Any) -> list[dict]:
