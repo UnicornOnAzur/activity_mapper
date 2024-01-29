@@ -306,21 +306,25 @@ def pie_figure(aggregated_data: pd.DataFrame,
         DESCRIPTION.
 
     """
-    figure = px.pie(data_frame=aggregated_data,
-                    names="sport_type",
-                    values="counts",
-                    color="sport_type",
-                    color_discrete_sequence=DISCRETE_COLOR,
-                    title=title,
-                    template=TEMPLATE,
-                    height=height,
-                    **kwargs
-                    )
-    figure.update_traces(textposition="inside", # set the percentage inside the chart
-                         # show the category and the amount in the chart
-                         textinfo="label+percent",
-                         hovertemplate="<b>%{label}</b><br>%{value}"
-                         )
+    figure = px.sunburst(data_frame=aggregated_data,
+                         path=["type","sport_type"],
+                         values="counts",
+                         color_discrete_sequence=DISCRETE_COLOR)
+    # figure = px.pie(data_frame=aggregated_data,
+    #                 names="sport_type",
+    #                 values="counts",
+    #                 color="sport_type",
+    #                 color_discrete_sequence=DISCRETE_COLOR,
+    #                 title=title,
+    #                 template=TEMPLATE,
+    #                 height=height,
+    #                 **kwargs
+    #                 )
+    # figure.update_traces(textposition="inside", # set the percentage inside the chart
+    #                      # show the category and the amount in the chart
+    #                      textinfo="label+percent",
+    #                      hovertemplate="<b>%{label}</b><br>%{value}"
+    #                      )
     figure = _update_layout(figure)
     return figure
 
@@ -495,7 +499,7 @@ def types(dataframe: pd.DataFrame,
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
-    data = dataframe.groupby(["sport_type"])["timestamp"]\
+    data = dataframe.groupby(["type","sport_type"])["timestamp"]\
         .count().reset_index().rename({"timestamp": "counts"}, axis=1)
     data.sort_values(by="counts",
                      ascending=False,
