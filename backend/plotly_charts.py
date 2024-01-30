@@ -507,6 +507,7 @@ def types(dataframe: pd.DataFrame,
     mapper = bu.load_mapper()
     data["type"] = data["type"].map(mapper)
     data["counts"] = 1
+    print(data)
     # create figure
     pie = pie_figure(data,
                      title=plot_title,
