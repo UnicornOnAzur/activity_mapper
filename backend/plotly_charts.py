@@ -504,6 +504,7 @@ def types(dataframe: pd.DataFrame,
                             plot_height)
     # prepare data
     data = dataframe.copy()
+    data["type"] = "sport"
     data["counts"] = 1
     # data = dataframe.groupby(["type","sport_type"])["timestamp"]\
     #     .count().reset_index().rename({"timestamp": "counts"}, axis=1)
