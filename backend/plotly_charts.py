@@ -504,14 +504,9 @@ def types(dataframe: pd.DataFrame,
                             plot_height)
     # prepare data
     data = dataframe.copy()
-    data["type"] = "sport"
+    mapper = bu.load_mapper()
+    data["type"] = data["type"].map(mapper)
     data["counts"] = 1
-    # data = dataframe.groupby(["type","sport_type"])["timestamp"]\
-    #     .count().reset_index().rename({"timestamp": "counts"}, axis=1)
-    # data.sort_values(by="counts",
-    #                  ascending=False,
-    #                  inplace=True)
-    # print(data)
     # create figure
     pie = pie_figure(data,
                      title=plot_title,

@@ -1,0 +1,69 @@
+Foot Sports
+
+        Run
+        Trail Run
+        Walk
+        Hike
+        Virtual Run
+
+
+Cycle Sports
+
+        Ride
+        Mountain Bike Ride
+        Gravel Bike Ride
+        E-Bike Ride
+        E-Mountain Bike Ride
+        Velomobile
+        Virtual Ride
+
+
+Water Sports
+
+        Canoe
+        Kayak
+        Kitesurf Session
+        Row
+        Stand Up Paddle
+        Surf
+        Swim
+        Windsurf Session
+
+
+Winter Sports
+
+        Ice Skate
+        Alpine Ski
+        Backcountry Ski
+        Nordic Ski
+        Snowboard
+        Snowshoe
+
+
+Other Sports
+
+        Badminton
+        Golf
+        Handcycle
+        Inline Skate
+        Rock Climb
+        Roller Ski
+        Wheelchair
+        Crossfit
+        Elliptical
+        Sailing
+        Skateboarding
+        Soccer
+        Stair Stepper
+        Weight Training
+        Yoga
+        Workout
+        Tennis
+        Pickleball
+        Racquetball
+        Squash
+        Badminton
+        Table Tennis
+        HIIT
+        Pilates
+        Virtual Row

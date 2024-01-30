@@ -8,6 +8,16 @@ import base64
 # Third party
 import requests
 
+
+def load_mapper() -> dict:
+    with open("../strava_categories.txt", mode="r") as file:
+        mapper: dict = {value.strip():main
+                        for main, values in [[el for el in part.split("\n\n")]
+                                             for part in file.read().split("\n\n\n") ]
+                        for value in values.split("\n") if value.strip() != ""}
+    return mapper
+
+
 def post_request(url: str,
                  data: dict = None,
                  timeout: int = 60) -> dict:
