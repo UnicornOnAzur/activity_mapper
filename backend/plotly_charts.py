@@ -503,11 +503,14 @@ def types(dataframe: pd.DataFrame,
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
-    data = dataframe.groupby(["type","sport_type"])["timestamp"]\
-        .count().reset_index().rename({"timestamp": "counts"}, axis=1)
-    data.sort_values(by="counts",
-                     ascending=False,
-                     inplace=True)
+    data = dataframe.copy()
+    data["counts"] = 1
+    # data = dataframe.groupby(["type","sport_type"])["timestamp"]\
+    #     .count().reset_index().rename({"timestamp": "counts"}, axis=1)
+    # data.sort_values(by="counts",
+    #                  ascending=False,
+    #                  inplace=True)
+    # print(data)
     # create figure
     pie = pie_figure(data,
                      title=plot_title,
