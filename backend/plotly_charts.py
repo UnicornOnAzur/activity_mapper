@@ -4,6 +4,7 @@
 
 """
 # Standard library
+import collections
 import typing
 # Third party
 import pandas as pd
@@ -27,16 +28,16 @@ MAPPER = {'Run': 'Foot Sports',
  'Ride': 'Cycle Sports',
  'Mountain Bike Ride': 'Cycle Sports',
  'Gravel Bike Ride': 'Cycle Sports',
- 'E-Bike Ride': 'Cycle Sports',
- 'E-Mountain Bike Ride': 'Cycle Sports',
+ 'E Bike Ride': 'Cycle Sports',# changed
+ 'E Mountain Bike Ride': 'Cycle Sports',# changed
  'Velomobile': 'Cycle Sports',
  'Virtual Ride': 'Cycle Sports',
  'Canoe': 'Water Sports',
- 'Kayak': 'Water Sports',
+ 'Kayak': 'Water Sports',# changed
  'Kitesurf Session': 'Water Sports',
  'Row': 'Water Sports',
  'Stand Up Paddle': 'Water Sports',
- 'Surf': 'Water Sports',
+ 'Surf': 'Water Sports', # changed
  'Swim': 'Water Sports',
  'Windsurf Session': 'Water Sports',
  'Ice Skate': 'Winter Sports',
@@ -58,7 +59,7 @@ MAPPER = {'Run': 'Foot Sports',
  'Skateboarding': 'Other Sports',
  'Soccer': 'Other Sports',
  'Stair Stepper': 'Other Sports',
- 'Weight Training': 'Other Sports',
+ 'WeightTraining': 'Other Sports',# changed
  'Yoga': 'Other Sports',
  'Workout': 'Other Sports',
  'Tennis': 'Other Sports',
@@ -69,6 +70,7 @@ MAPPER = {'Run': 'Foot Sports',
  'HIIT': 'Other Sports',
  'Pilates': 'Other Sports',
  'Virtual Row': 'Other Sports'}
+MAPPER = collections.defaultdict(str, MAPPER)
 
 
 def _add_annotation(fig: go.Figure,
