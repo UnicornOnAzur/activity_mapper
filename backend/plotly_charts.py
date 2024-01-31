@@ -556,7 +556,7 @@ def types(dataframe: pd.DataFrame,
     # prepare data
     data = dataframe.copy()
     # mapper = bu.load_mapper("../strava_categories.txt")
-    # data["type"] = data["type"].map(MAPPER)
+    data["type"] = data["type"].map(MAPPER)
     data["counts"] = 1
     print(data)
     # create figure
