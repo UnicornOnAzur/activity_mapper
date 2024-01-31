@@ -19,6 +19,57 @@ TEMPLATE = "plotly_dark"
 LEFT_RIGHT_MARGIN = 20
 TOP_BOTTOM_MARGIN = 25
 
+MAPPER = {'Run': 'Foot Sports',
+ 'Trail Run': 'Foot Sports',
+ 'Walk': 'Foot Sports',
+ 'Hike': 'Foot Sports',
+ 'Virtual Run': 'Foot Sports',
+ 'Ride': 'Cycle Sports',
+ 'Mountain Bike Ride': 'Cycle Sports',
+ 'Gravel Bike Ride': 'Cycle Sports',
+ 'E-Bike Ride': 'Cycle Sports',
+ 'E-Mountain Bike Ride': 'Cycle Sports',
+ 'Velomobile': 'Cycle Sports',
+ 'Virtual Ride': 'Cycle Sports',
+ 'Canoe': 'Water Sports',
+ 'Kayak': 'Water Sports',
+ 'Kitesurf Session': 'Water Sports',
+ 'Row': 'Water Sports',
+ 'Stand Up Paddle': 'Water Sports',
+ 'Surf': 'Water Sports',
+ 'Swim': 'Water Sports',
+ 'Windsurf Session': 'Water Sports',
+ 'Ice Skate': 'Winter Sports',
+ 'Alpine Ski': 'Winter Sports',
+ 'Backcountry Ski': 'Winter Sports',
+ 'Nordic Ski': 'Winter Sports',
+ 'Snowboard': 'Winter Sports',
+ 'Snowshoe': 'Winter Sports',
+ 'Badminton': 'Other Sports',
+ 'Golf': 'Other Sports',
+ 'Handcycle': 'Other Sports',
+ 'Inline Skate': 'Other Sports',
+ 'Rock Climb': 'Other Sports',
+ 'Roller Ski': 'Other Sports',
+ 'Wheelchair': 'Other Sports',
+ 'Crossfit': 'Other Sports',
+ 'Elliptical': 'Other Sports',
+ 'Sailing': 'Other Sports',
+ 'Skateboarding': 'Other Sports',
+ 'Soccer': 'Other Sports',
+ 'Stair Stepper': 'Other Sports',
+ 'Weight Training': 'Other Sports',
+ 'Yoga': 'Other Sports',
+ 'Workout': 'Other Sports',
+ 'Tennis': 'Other Sports',
+ 'Pickleball': 'Other Sports',
+ 'Racquetball': 'Other Sports',
+ 'Squash': 'Other Sports',
+ 'Table Tennis': 'Other Sports',
+ 'HIIT': 'Other Sports',
+ 'Pilates': 'Other Sports',
+ 'Virtual Row': 'Other Sports'}
+
 
 def _add_annotation(fig: go.Figure,
                     **kwargs: typing.Any) -> go.Figure:
@@ -504,8 +555,8 @@ def types(dataframe: pd.DataFrame,
                             plot_height)
     # prepare data
     data = dataframe.copy()
-    mapper = bu.load_mapper("../strava_categories.txt")
-    data["type"] = data["type"].map(mapper)
+    # mapper = bu.load_mapper("../strava_categories.txt")
+    data["type"] = data["type"].map(MAPPER)
     data["counts"] = 1
     print(data)
     # create figure
