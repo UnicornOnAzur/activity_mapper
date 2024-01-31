@@ -70,7 +70,7 @@ MAPPER = {'Run': 'Foot Sports',
  'HIIT': 'Other Sports',
  'Pilates': 'Other Sports',
  'Virtual Row': 'Other Sports'}
-MAPPER = collections.defaultdict(str, MAPPER)
+mapper = collections.defaultdict(str, MAPPER)
 
 
 def _add_annotation(fig: go.Figure,
@@ -367,16 +367,6 @@ def pie_figure(aggregated_data: pd.DataFrame,
                          template=TEMPLATE,
                          height=height,
                          **kwargs)
-    # figure = px.pie(data_frame=aggregated_data,
-    #                 names="sport_type",
-    #                 values="counts",
-    #                 color="sport_type",
-    #                 color_discrete_sequence=DISCRETE_COLOR,
-                    # title=title,
-                    # template=TEMPLATE,
-                    # height=height,
-                    # **kwargs
-    #                 )
     # figure.update_traces(textposition="inside", # set the percentage inside the chart
     #                      # show the category and the amount in the chart
     #                      textinfo="label+percent",
@@ -558,9 +548,10 @@ def types(dataframe: pd.DataFrame,
     # prepare data
     data = dataframe.copy()
     # mapper = bu.load_mapper("../strava_categories.txt")
-    data["type"] = data["type"].map(MAPPER)
+    import glob
+    print(glob.glob("*"))
+    data["type"] = data["type"].map(mapper)
     data["counts"] = 1
-    print(data)
     # create figure
     pie = pie_figure(data,
                      title=plot_title,
