@@ -504,7 +504,7 @@ def types(dataframe: pd.DataFrame,
                             plot_height)
     # prepare data
     data = dataframe.copy()
-    mapper = bu.load_mapper()
+    mapper = bu.load_mapper("strava_categories.txt")
     data["type"] = data["type"].map(mapper)
     data["counts"] = 1
     print(data)

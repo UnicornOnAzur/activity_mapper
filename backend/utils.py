@@ -9,8 +9,8 @@ import base64
 import requests
 
 
-def load_mapper() -> dict:
-    with open("../strava_categories.txt", mode="r") as file:
+def load_mapper(path: str) -> dict:
+    with open(path, mode="r") as file:
         mapper: dict = {value.strip():main
                         for main, values in [[el for el in part.split("\n\n")]
                                              for part in file.read().split("\n\n\n") ]
