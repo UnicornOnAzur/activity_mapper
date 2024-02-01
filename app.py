@@ -2,6 +2,7 @@
 """
 @author: QtyPython2020
 
+<>
 """
 # Standard library
 import os
@@ -13,6 +14,7 @@ import backend.plotly_charts as bpc
 import backend.strava_parser as bsp
 import backend.test as bt
 import backend.utils as bu
+
 
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
@@ -35,8 +37,23 @@ CONFIG2 = {"displaylogo": False,
                                       "zoom2d",
                                       "autoscale"]}
 PATH_INTRO = "intro.txt"
+ERROR_MESSAGE = "An error occurred while retrieving the data. Please try to authorize again."
 
-def connect_strava(code):
+
+def connect_strava(code: str):
+    """
+    <>
+
+    Parameters
+    ----------
+    code : str
+        The authorization code from the previous request to the Strava API.
+
+    Returns
+    -------
+    None.
+
+    """
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
@@ -49,28 +66,43 @@ def connect_strava(code):
     data = bsp.request_data_from_api(st.session_state["access_token"])
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
-    # st.warning(data[0])
+    # if an error occur stop the function
     if data[0] == {'401': 'Unauthorized'}:
-        # if an error occur stop the function
-        error_message = st.error("An error occurred while retrieving the data. Please try to authorize again.")
+        error_message = st.error(ERROR_MESSAGE)
         return
     st.session_state["dataframe"] = bsp.parse(data)
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
-    # dataframe = st.session_state.get("dataframe")
     progress_bar.empty()
     wrap_up()
     return
 
 def wrap_up():
+    """
+    <>
+
+    Returns
+    -------
+    None.
+
+    """
+    # set the sidebar to collapse after the rerun
     st.session_state["sidebar_state"] = "collapsed"
-    # raise flag that data has been loaded
+    # signal that data has been loaded
     st.session_state["loaded"] = True
     # rerun the page to have header and sidebar be updated
     st.rerun()
 
 
 def main():
+    """
+    <>
+
+    Returns
+    -------
+    None.
+
+    """
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
