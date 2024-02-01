@@ -19,14 +19,8 @@ import backend.utils as bu
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 600
-APP_URL = os.environ.get("APP_URL")
-STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
-authorization_link = "https://www.strava.com/oauth/authorize"+\
-    f"?client_id={STRAVA_CLIENT_ID}&response_type=code&"+\
-    f"redirect_uri={APP_URL}&approval_prompt=force&"+\
-    "scope=activity:read,activity:read_all"
 CONFIG = {"displaylogo": False,
           "displayModeBar": False,}
 CONFIG2 = {"displaylogo": False,
@@ -38,6 +32,13 @@ CONFIG2 = {"displaylogo": False,
                                       "autoscale"]}
 PATH_INTRO = "intro.txt"
 ERROR_MESSAGE = "An error occurred while retrieving the data. Please try to authorize again."
+
+APP_URL = os.environ.get("APP_URL")
+STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
+authorization_link = "https://www.strava.com/oauth/authorize"+\
+    f"?client_id={STRAVA_CLIENT_ID}&response_type=code&"+\
+    f"redirect_uri={APP_URL}&approval_prompt=force&"+\
+    "scope=activity:read,activity:read_all"
 
 
 def connect_strava(code: str):
@@ -76,6 +77,7 @@ def connect_strava(code: str):
     progress_bar.empty()
     wrap_up()
     return
+
 
 def wrap_up():
     """
