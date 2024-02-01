@@ -5,6 +5,7 @@
 """
 # Standard library
 import base64
+import collections
 # Third party
 import requests
 
@@ -15,7 +16,7 @@ def load_mapper(path: str) -> dict:
                         for main, values in [[el for el in part.split("\n\n")]
                                              for part in file.read().split("\n\n\n") ]
                         for value in values.split("\n") if value.strip() != ""}
-    return mapper
+    return collections.defaultdict(str, mapper)
 
 
 def post_request(url: str,
