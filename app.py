@@ -34,7 +34,7 @@ CONFIG2 = {"displaylogo": False,
                                       "toImage",
                                       "zoom2d",
                                       "autoscale"]}
-
+PATH_INTRO = "intro.txt"
 
 def connect_strava(code):
     error_message = st.empty()
@@ -94,7 +94,7 @@ def main():
             else:
                 st.error("connected")
             st.divider()
-            st.markdown(body=open("intro.txt").read())
+            st.markdown(body=open(PATH_INTRO).read())
             if st.button("Show with demo data"):
                 st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
                 wrap_up()
