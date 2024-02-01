@@ -49,8 +49,8 @@ def connect_strava(code):
     data = bsp.request_data_from_api(st.session_state["access_token"])
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
-    st.warning(data[0])
-    if list(data[0].keys()) == ["message","errors"]:
+    # st.warning(data[0])
+    if list(data[0]) == {'401': 'Unauthorized'}:
         # if an error occur stop the function
         error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
         return
