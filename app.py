@@ -177,6 +177,7 @@ def main():
                                         "See this activity on the Strava website")
                                         }
                          )
+        st.caption("This page was created by QtyPython2020. The code can be found on https://github.com/QtyPython2020/activity_mapper")
 
 
 if __name__ == "__main__":
