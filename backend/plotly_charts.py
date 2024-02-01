@@ -350,22 +350,21 @@ def worldmap_figure(data: pd.DataFrame,
     """
     lats = kwargs.get("lat", [])
     lons = kwargs.get("lon", [])
-    colors = kwargs.get("color", [])
     names = kwargs.get("name", [])
-    dates = kwargs.get("date", [])
-    times = kwargs.get("time", [])
-    zoom = kwargs.get("zoom", 0)
+    center = {} if data.empty else {"lat": data.lat.median(),
+                                    "lon": data.lon.median()}
+
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
                             lon=lons,
-                            color=colors,
+                            color=kwargs.get("color", []),
                             hover_name=names,
-                            custom_data=[names, dates, times],
+                            custom_data=[names,
+                                         kwargs.get("date", []),
+                                         kwargs.get("time", [])],
                             color_discrete_map=COLOR_MAP,
-                            zoom=zoom,
-                            center={"lat": data.lat.median(),
-                                    "lon": data.lon.median()
-                                    },
+                            zoom=kwargs.get("zoom", 0),
+                            center=center,
                             mapbox_style="carto-darkmatter",
                             title=title,
                             template=TEMPLATE,
@@ -680,21 +679,21 @@ def locations(dataframe: pd.DataFrame,
 
     # show empty figure if no data is provided
     plot_title = "Locations"
-    if dataframe.empty:
-        return empty_figure(plot_title,
-                            plot_height)
     # prepare data
-    data = dataframe.loc[(~dataframe["lat"].isna()) &
-                         (~dataframe["lon"].isna())
-                         ].astype({"year": str})
-
+    data = dataframe.copy()
+    if "lat" in data.columns:
+        data = data.loc[(~dataframe["lat"].isna()) &
+                        (~dataframe["lon"].isna()),
+                        :]#.astype({"year": str})
     # create figure
-    worldmap = worldmap_figure(dataframe,
+    worldmap = worldmap_figure(data,
                                title=plot_title,
                                height=plot_height,
                                **process_data(data),
                                zoom=1,
                                **kwargs)
+    if data.empty:
+        worldmap = _add_annotation(worldmap)
     return worldmap
 
 
