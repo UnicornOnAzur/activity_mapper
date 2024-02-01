@@ -30,7 +30,7 @@ CONFIG2 = {"displaylogo": False,
                                       "toImage",
                                       "zoom2d",
                                       "autoscale"]}
-PATH_INTRO = "intro.txt"
+EXPLANATION = """To use this dashboard click on "Connect with Strava". This will redirect you to the Strava page. Then select to view public and/or private activities, and click "Authorize". This provides the dashboard with your data for the duration of your use."""
 ERROR_MESSAGE = "An error occurred while retrieving the data. Please try to authorize again."
 
 APP_URL = os.environ.get("APP_URL")
@@ -128,7 +128,7 @@ def main():
             else:
                 st.error("connected")
             st.divider()
-            st.markdown(body=open(PATH_INTRO).read())
+            st.markdown(EXPLANATION)
             if st.button("Show with demo data"):
                 st.session_state["dataframe"] = bsp.parse(bt.load_test_data())
                 wrap_up()
