@@ -13,7 +13,8 @@ import requests
 def load_mapper(path: str) -> collections.defaultdict:
     ""
     def corrected(key: str):
-        corrections = {"E-Mountain Bike Ride": "EMountainBikeRide",
+        corrections = {"E-Bike Ride": "EBikeRide",
+                       "E-Mountain Bike Ride": "EMountainBikeRide",
                        "Kayak": "Kayaking",
                        "Stair Stepper": "StairStepper",
                        "Surf": "Surfing",
