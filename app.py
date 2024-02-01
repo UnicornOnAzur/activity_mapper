@@ -52,7 +52,7 @@ def connect_strava(code):
     # st.warning(data[0])
     if data[0] == {'401': 'Unauthorized'}:
         # if an error occur stop the function
-        error_message = st.error(f"An error occurred while retrieving the data. {data[0]}")
+        error_message = st.error("An error occurred while retrieving the data. Please try to authorize again.")
         return
     st.session_state["dataframe"] = bsp.parse(data)
     # FINALIZE THE PROCESS
@@ -85,7 +85,7 @@ def main():
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
             st.header("Menu")
-            if not st.session_state.get("athlete_name"):
+            if not st.session_state.get("loaded"):
                 image_connect = bu.load_image("logos/btn_strava_connectwith_orange@2x.png")
                 st.markdown(f'<a href="{authorization_link}">'
                             f'<img src="data:image/png;base64,{image_connect}" width="100%">'
