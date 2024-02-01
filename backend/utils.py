@@ -10,13 +10,23 @@ import collections
 import requests
 
 
-def load_mapper(path: str) -> dict:
+def load_mapper(path: str) -> collections.defaultdict:
+    ""
+    def corrected(key: str):
+        corrections = {"E-Mountain Bike Ride": "EMountainBikeRide",
+                       "Kayak": "Kayaking",
+                       "Stair Stepper": "StairStepper",
+                       "Surf": "Surfing",
+                       "Weight Training": "WeightTraining"}
+        return corrections.get(key, key)
+
     with open(path, mode="r") as file:
-        mapper: dict = {value.strip():main
-                        for main, values in [[el for el in part.split("\n\n")]
-                                             for part in file.read().split("\n\n\n") ]
-                        for value in values.split("\n") if value.strip() != ""}
-    return collections.defaultdict(str, mapper)
+        original: dict = {corrected(value.strip()):main
+                          for main, values in [[el for el in part.split("\n\n")]
+                                               for part in file.read().split("\n\n\n") ]
+                          for value in values.split("\n") if value.strip() != ""}
+    mapper: collections.defaultdict = collections.defaultdict(str, original)
+    return mapper
 
 
 def post_request(url: str,
