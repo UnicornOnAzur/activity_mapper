@@ -12,7 +12,7 @@ helper functions:
 timeline -> timeline_figure
 days -> weekdays_figure
 hours -> clock_figure
-types -> pie_figure
+types -> sunburst_figure
 locations -> process_data -> worldmap_figure
 
 """
@@ -76,7 +76,7 @@ def _update_layout(fig: go.Figure,
 
     Returns
     -------
-    fig : TYPE
+    fig : go.Figure
         The plotly figure with updated layout.
 
     """
@@ -109,7 +109,7 @@ def empty_figure(title: str,
 
     Returns
     -------
-    figure : TYPE
+    figure : go.Figure
         An empty figure with the title of the original plot and an annotation.
 
     """
@@ -122,7 +122,7 @@ def empty_figure(title: str,
 
 
 def timeline_figure(aggregated_data: pd.DataFrame,
-                    dataframe: pd.DataFrame,
+                    data: pd.DataFrame,
                     title:str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
@@ -132,13 +132,13 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     Parameters
     ----------
     aggregated_data : pd.DataFrame
-        The dataframe containing the data for the plots.
+        The dataframe containing the grouped data for the plots.
     dataframe : pd.DataFrame
-        DESCRIPTION.
+        The dataframe containing the data for the plots.
     title : str
-        DESCRIPTION.
+        The title of the plot.
     height : int, optional
-        DESCRIPTION. The default is None.
+        The height of the plot. The default is None.
     **kwargs : typing.Any
         Key word arguments.
 
@@ -162,7 +162,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                  yaxis: False
                                  },
                      custom_data=[app],
-                     labels={xaxis: "Year"},
+                     labels={xaxis: "Year"}, # change the label on the plot
                      color_discrete_map=COLOR_MAP,
                      orientation="v", # orient the chart
                      line_shape="spline", # smoothes out the line
@@ -172,14 +172,14 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                      **kwargs.get("area", {})
                      )
     figure.update_traces(hovertemplate="Activity on %{customdata[0]}")
-    figure.add_scatter(customdata=dataframe.loc[:,["name","date"]].values,
+    figure.add_scatter(customdata=data.loc[:,["name","date"]].values,
                        hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]}",
                        marker={"size": 3},
                        mode="markers", # select drawing mode
                        name="", # set trace name to empty
                        opacity=1,
-                       x=dataframe["cw"], # position the dots by week
-                       y=dataframe["pos"],
+                       x=data["cw"], # position the dots by week
+                       y=data["pos"],
                        **kwargs.get("scatter", {})
                        )
     figure = _update_layout(figure)
@@ -196,17 +196,17 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
     Parameters
     ----------
     aggregated_data : pd.DataFrame
-        DESCRIPTION.
+        The dataframe containing the grouped data for the plots.
     title : str
-        DESCRIPTION.
+        The title of the plot.
     height : int, optional
-        DESCRIPTION. The default is None.
+        The height of the plot. The default is None.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    figure : TYPE
+    figure : go.Figure
         The plotly bar figure.
 
     """
@@ -248,7 +248,7 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
     return figure
 
 
-def clock_figure(aggregated_data: pd.DataFrame,
+def clock_figure(preprocessed_data: pd.DataFrame,
                  title:str,
                  height: int = None,
                  **kwargs: typing.Any) -> go.Figure:
@@ -257,22 +257,22 @@ def clock_figure(aggregated_data: pd.DataFrame,
 
     Parameters
     ----------
-    aggregated_data : pd.DataFrame
-        DESCRIPTION.
+    preprocessed_data : pd.DataFrame
+        The dataframe containing the grouped data for the plots.
     title : str
-        DESCRIPTION.
+        The title of the plot.
     height : int, optional
-        DESCRIPTION. The default is None.
+        The height of the plot. The default is None.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    figure : TYPE
-        DESCRIPTION.
+    figure : go.Figure
+        The plotly polar scatter plot.
 
     """
-    figure = px.scatter_polar(data_frame=aggregated_data,
+    figure = px.scatter_polar(data_frame=preprocessed_data,
                               r="count",
                               theta="timestep",
                               color="app",
@@ -287,7 +287,7 @@ def clock_figure(aggregated_data: pd.DataFrame,
                               **kwargs
                               )
     figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]}")
-    max_axis = 0 if aggregated_data.empty else int(aggregated_data["count"].max())
+    max_axis = 0 if preprocessed_data.empty else int(preprocessed_data["count"].max())
     figure = _update_layout(figure)
     figure.update_layout(polar={"radialaxis": {"tickvals":
                                                list(range(0, max_axis+1, 5))},
@@ -300,28 +300,28 @@ def clock_figure(aggregated_data: pd.DataFrame,
     return figure
 
 
-def pie_figure(aggregated_data: pd.DataFrame,
-               title:str,
-               height: int = None,
-               **kwargs: typing.Any) -> go.Figure:
+def sunburst_figure(aggregated_data: pd.DataFrame,
+                    title:str,
+                    height: int = None,
+                    **kwargs: typing.Any) -> go.Figure:
     """
 
 
     Parameters
     ----------
     aggregated_data : pd.DataFrame
-        DESCRIPTION.
+        The dataframe containing the grouped data for the plots.
     title : str
-        DESCRIPTION.
+       The title of the plot.
     height : int, optional
-        DESCRIPTION. The default is None.
+        The height of the plot. The default is None.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    figure : TYPE
-        DESCRIPTION.
+    figure : go.Figure
+        The plotly sunburst figure.
 
     """
     figure = px.sunburst(data_frame=aggregated_data,
@@ -351,18 +351,18 @@ def worldmap_figure(data: pd.DataFrame,
     Parameters
     ----------
     data : pd.DataFrame
-        DESCRIPTION.
+        The dataframe containing the data for the plots.
     title : str
-        DESCRIPTION.
+        The title of the plot.
     height : int, optional
-        DESCRIPTION. The default is None.
+        The height of the plot. The default is None.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    figure : TYPE
-        DESCRIPTION.
+    figure : go.Figure
+        The plotly line mapbox of the locations and routes overlayed with the scatter plot.
 
     """
     lats = kwargs.get("lat", [])
@@ -422,15 +422,15 @@ def timeline(original: pd.DataFrame,
     Parameters
     ----------
     original : pd.DataFrame
-        DESCRIPTION.
+        The entire dataframe.
     plot_height : int
-        DESCRIPTION.
+        The height of the plot.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    TYPE
+    time_line: go.Figure
         DESCRIPTION.
 
     """
@@ -484,7 +484,7 @@ def timeline(original: pd.DataFrame,
     return time_line
 
 
-def days(dataframe: pd.DataFrame,
+def days(original: pd.DataFrame,
          plot_height: int,
          **kwargs: typing.Any) -> go.Figure:
     """
@@ -492,16 +492,16 @@ def days(dataframe: pd.DataFrame,
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
+    original : pd.DataFrame
+        The entire dataframe.
     plot_height : int
-        DESCRIPTION.
+        The height of the plot.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    weekdays : TYPE
+    weekdays : go.Figure
         DESCRIPTION.
 
     """
@@ -509,24 +509,24 @@ def days(dataframe: pd.DataFrame,
 
     plot_title = "Weekdays"
     # prepare data
-    data = dataframe.groupby(["app","weekday"])["time"]\
+    data = original.groupby(["app","weekday"])["time"]\
             .count()\
             .reset_index()\
             .rename({"time": "counts"},
                     axis=1)
-    data["percentage"] = data["counts"] / dataframe.shape[0]
+    data["percentage"] = data["counts"] / original.shape[0]
     # create figure
     weekdays = weekdays_figure(data,
                                title=plot_title,
                                height=plot_height,
                                **kwargs)
     # show empty figure if no data is provided
-    if dataframe.empty:
+    if original.empty:
         weekdays = _add_annotation(weekdays)
     return weekdays
 
 
-def hours(dataframe: pd.DataFrame,
+def hours(original: pd.DataFrame,
           plot_height: int,
           **kwargs: typing.Any) -> go.Figure:
     """
@@ -534,50 +534,50 @@ def hours(dataframe: pd.DataFrame,
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
+    original : pd.DataFrame
+        The entire dataframe.
     plot_height : int
-        DESCRIPTION.
+        The height of the plot.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    clock : TYPE
+    clock : go.Figure
         DESCRIPTION.
 
     """
     plot_title = "Hours"
     # prepare data
-    dataframe["timestep"] = dataframe["hour"]*60+dataframe["minutes"]//10
-    dataframe["timestep"] = dataframe["timestep"].apply(bu.min2ang)
-    dataframe.sort_values(by="timestep",
+    original["timestep"] = original["hour"]*60 + original["minutes"]//10
+    original["timestep"] = original["timestep"].apply(bu.min2ang)
+    original.sort_values(by="timestep",
                           ascending=True,
                           inplace=True)
-    dataframe["count"] = 1
+    original["count"] = 1
     last = None
     count = None
-    for index, row in dataframe.loc[:].iterrows():
+    for index, row in original.loc[:].iterrows():
         step = row["timestep"]
         if step != last:
             last = step
             count = 1
             continue
         count += 1
-        dataframe.loc[index,"count"] = count
+        original.loc[index,"count"] = count
     # create figure
-    clock = clock_figure(dataframe,
+    clock = clock_figure(original,
                          title=plot_title,
                          height=plot_height,
                          **kwargs)
     # show empty figure if no data is provided
-    if dataframe.empty:
+    if original.empty:
         # TODO: add annotation
         pass
     return clock
 
 
-def types(dataframe: pd.DataFrame,
+def types(original: pd.DataFrame,
           plot_height: int,
           **kwargs: typing.Any) -> go.Figure:
     """
@@ -585,54 +585,53 @@ def types(dataframe: pd.DataFrame,
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
+    original : pd.DataFrame
+        The entire dataframe.
     plot_height : int
-        DESCRIPTION.
+        The height of the plot.
     **kwargs : typing.Any
         Key word arguments.
 
     Returns
     -------
-    TYPE
+    types_plot : go.Figure
         DESCRIPTION.
 
     """
     plot_title = "Activity types"
     # show empty figure if no data is provided
-    if dataframe.empty:
+    if original.empty:
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
-    data = dataframe.copy()
+    data = original.copy()
     mapper = bu.load_mapper(PATH_MAPPER)
     data["type"] = data["type"].map(mapper)
     data["counts"] = 1
     # create figure
-    pie = pie_figure(data,
-                     title=plot_title,
-                     height=plot_height,
-                     **kwargs)
-    return pie
+    types_plot = sunburst_figure(data,
+                                 title=plot_title,
+                                 height=plot_height,
+                                 **kwargs)
+    return types_plot
 
 
-def process_data(data,
-                 **kwargs: typing.Any) -> list[dict]:
+def process_data(data: pd.DataFrame,
+                 **kwargs: typing.Any) -> dict[list]:
     """
 
 
     Parameters
     ----------
-    data : TYPE
-        DESCRIPTION.
+    data : pd.DataFrame
+        The dataframe containing rows with a lat and a lon coordinate.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
-    list[dict]
-        DESCRIPTION.
+    list: dict[list]
+        A dictionary with the lists of values for the line mapbox.
 
     """
     _ = kwargs
@@ -671,7 +670,7 @@ def process_data(data,
     return lists
 
 
-def locations(dataframe: pd.DataFrame,
+def locations(original: pd.DataFrame,
               plot_height: int,
               **kwargs: typing.Any) -> go.Figure:
     """
@@ -679,28 +678,27 @@ def locations(dataframe: pd.DataFrame,
 
     Parameters
     ----------
-    dataframe : pd.DataFrame
-        DESCRIPTION.
+    original : pd.DataFrame
+        The entire dataframe.
     plot_height : int
-        DESCRIPTION.
+        The height of the plot.
     **kwargs : typing.Any
         Key word arguments.
-        DESCRIPTION.
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
+    worldmap : go.Figure
+        The world map with the start and locations, and routes.
 
     """
 
     # show empty figure if no data is provided
     plot_title = "Locations"
     # prepare data
-    data = dataframe.copy()
+    data = original.copy()
     if "lat" in data.columns:
-        data = data.loc[(~dataframe["lat"].isna()) &
-                        (~dataframe["lon"].isna()),
+        data = data.loc[(~original["lat"].isna()) &
+                        (~original["lon"].isna()),
                         :]#.astype({"year": str})
     # create figure
     worldmap = worldmap_figure(data,
