@@ -72,6 +72,8 @@ def _update_layout(fig: go.Figure,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
                               "b": TOP_BOTTOM_MARGIN},
+                      xaxis={"fixedrange": True},
+                      yaxis={"fixedrange": True},
                       **kwargs)
     return fig
 
