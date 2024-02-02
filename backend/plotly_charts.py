@@ -9,7 +9,8 @@ helper functions:
     _update_layout
     empty_figure
 
-timeline -> timeline_figure
+preprocessing and graph functions:
+    timeline -> timeline_figure
 days -> weekdays_figure
 hours -> clock_figure
 types -> sunburst_figure
@@ -127,7 +128,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
-    Create an area plot
+    Create an area plot to display the training intensity per calender week and
+    overlay the data of the actual activities.
 
     Parameters
     ----------
@@ -177,9 +179,9 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        marker={"size": 3},
                        mode="markers", # select drawing mode
                        name="", # set trace name to empty
-                       opacity=1,
-                       x=data["cw"], # position the dots by week
-                       y=data["pos"],
+                       opacity=1, # make points non-transparant
+                       x=data[kwargs.get("scatter_x")], # position the dots by week
+                       y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
     figure = _update_layout(figure)
@@ -417,7 +419,8 @@ def timeline(original: pd.DataFrame,
              plot_height: int,
              **kwargs: typing.Any) -> go.Figure:
     """
-
+    Create an area plot to display the training intensity per calender week and
+    overlay the data of the actual activities.
 
     Parameters
     ----------
@@ -480,6 +483,8 @@ def timeline(original: pd.DataFrame,
                                 x=name,
                                 y=summarize_name,
                                 group="app",
+                                scatter_x="cw",
+                                scatter_y="pos",
                                 **kwargs)
     return time_line
 
