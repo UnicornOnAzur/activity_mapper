@@ -127,12 +127,12 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
-
+    Create an area plot
 
     Parameters
     ----------
     aggregated_data : pd.DataFrame
-        DESCRIPTION.
+        The dataframe containing the data for the plots.
     dataframe : pd.DataFrame
         DESCRIPTION.
     title : str
@@ -150,17 +150,18 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     """
     xaxis = kwargs.get("x")
     yaxis = kwargs.get("y")
+    app = kwargs.get("group")
     figure = px.area(data_frame=aggregated_data,
                      x=xaxis,
                      y=yaxis,
-                     line_group="app",
-                     color="app",
+                     line_group=app,
+                     color=app,
                      hover_name=None,
-                     hover_data={"app": False,
+                     hover_data={app: False,
                                  xaxis: False,
                                  yaxis: False
                                  },
-                     custom_data=["app"],
+                     custom_data=[app],
                      labels={xaxis: "Year"},
                      color_discrete_map=COLOR_MAP,
                      orientation="v", # orient the chart
@@ -478,6 +479,7 @@ def timeline(original: pd.DataFrame,
                                 height=plot_height,
                                 x=name,
                                 y=summarize_name,
+                                group="app",
                                 **kwargs)
     return time_line
 
