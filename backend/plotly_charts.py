@@ -161,6 +161,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                  yaxis: False
                                  },
                      custom_data=["app"],
+                     labels={xaxis: "Year"},
                      color_discrete_map=COLOR_MAP,
                      orientation="v", # orient the chart
                      line_shape="spline", # smoothes out the line
