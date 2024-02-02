@@ -2,6 +2,19 @@
 """
 @author: QtyPython2020
 
+All the plotly graph functions with the preprocessing and helper functions.
+
+helper functions:
+    _add_annotation
+    _update_layout
+    empty_figure
+
+timeline -> timeline_figure
+days -> weekdays_figure
+hours -> clock_figure
+types -> pie_figure
+locations -> process_data -> worldmap_figure
+
 """
 # Standard library
 import typing
@@ -72,8 +85,8 @@ def _update_layout(fig: go.Figure,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
                               "b": TOP_BOTTOM_MARGIN},
-                      xaxis={"fixedrange": True},
-                      yaxis={"fixedrange": True},
+                      xaxis={"fixedrange": True}, # prevent scrolling on the graphs
+                      yaxis={"fixedrange": True}, # prevent scrolling on the graphs
                       **kwargs)
     return fig
 
@@ -468,9 +481,9 @@ def timeline(original: pd.DataFrame,
     return time_line
 
 
-def types(dataframe: pd.DataFrame,
-          plot_height: int,
-          **kwargs: typing.Any) -> go.Figure:
+def days(dataframe: pd.DataFrame,
+         plot_height: int,
+         **kwargs: typing.Any) -> go.Figure:
     """
 
 
@@ -485,26 +498,29 @@ def types(dataframe: pd.DataFrame,
 
     Returns
     -------
-    TYPE
+    weekdays : TYPE
         DESCRIPTION.
 
     """
-    plot_title = "Activity types"
+
+
+    plot_title = "Weekdays"
+    # prepare data
+    data = dataframe.groupby(["app","weekday"])["time"]\
+            .count()\
+            .reset_index()\
+            .rename({"time": "counts"},
+                    axis=1)
+    data["percentage"] = data["counts"] / dataframe.shape[0]
+    # create figure
+    weekdays = weekdays_figure(data,
+                               title=plot_title,
+                               height=plot_height,
+                               **kwargs)
     # show empty figure if no data is provided
     if dataframe.empty:
-        return empty_figure(plot_title,
-                            plot_height)
-    # prepare data
-    data = dataframe.copy()
-    mapper = bu.load_mapper(PATH_MAPPER)
-    data["type"] = data["type"].map(mapper)
-    data["counts"] = 1
-    # create figure
-    pie = pie_figure(data,
-                     title=plot_title,
-                     height=plot_height,
-                     **kwargs)
-    return pie
+        weekdays = _add_annotation(weekdays)
+    return weekdays
 
 
 def hours(dataframe: pd.DataFrame,
@@ -558,9 +574,9 @@ def hours(dataframe: pd.DataFrame,
     return clock
 
 
-def days(dataframe: pd.DataFrame,
-         plot_height: int,
-         **kwargs: typing.Any) -> go.Figure:
+def types(dataframe: pd.DataFrame,
+          plot_height: int,
+          **kwargs: typing.Any) -> go.Figure:
     """
 
 
@@ -575,29 +591,26 @@ def days(dataframe: pd.DataFrame,
 
     Returns
     -------
-    weekdays : TYPE
+    TYPE
         DESCRIPTION.
 
     """
-
-
-    plot_title = "Weekdays"
-    # prepare data
-    data = dataframe.groupby(["app","weekday"])["time"]\
-            .count()\
-            .reset_index()\
-            .rename({"time": "counts"},
-                    axis=1)
-    data["percentage"] = data["counts"] / dataframe.shape[0]
-    # create figure
-    weekdays = weekdays_figure(data,
-                               title=plot_title,
-                               height=plot_height,
-                               **kwargs)
+    plot_title = "Activity types"
     # show empty figure if no data is provided
     if dataframe.empty:
-        weekdays = _add_annotation(weekdays)
-    return weekdays
+        return empty_figure(plot_title,
+                            plot_height)
+    # prepare data
+    data = dataframe.copy()
+    mapper = bu.load_mapper(PATH_MAPPER)
+    data["type"] = data["type"].map(mapper)
+    data["counts"] = 1
+    # create figure
+    pie = pie_figure(data,
+                     title=plot_title,
+                     height=plot_height,
+                     **kwargs)
+    return pie
 
 
 def process_data(data,
@@ -653,7 +666,6 @@ def process_data(data,
              "date": dates,
              "time": times}
     return lists
-
 
 
 def locations(dataframe: pd.DataFrame,
