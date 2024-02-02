@@ -161,7 +161,6 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                  yaxis: False
                                  },
                      custom_data=["app"],
-                     labels={xaxis: "Year"},
                      color_discrete_map=COLOR_MAP,
                      orientation="v", # orient the chart
                      line_shape="spline", # smoothes out the line
@@ -440,8 +439,8 @@ def timeline(original: pd.DataFrame,
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
-    summarize_name = "times per week"
-    name = "calender-week"
+    summarize_name = "Times per week"
+    name = "Year"
     dataframe = original.copy()
     dataframe["pos"] = 0
     last = None
