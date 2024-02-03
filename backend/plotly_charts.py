@@ -578,7 +578,7 @@ def hours(original: pd.DataFrame,
     # show empty figure if no data is provided
     if original.empty:
         # TODO: add annotation
-        pass
+        clock = _add_annotation(clock)
     return clock
 
 
