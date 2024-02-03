@@ -27,7 +27,7 @@ import plotly.graph_objects as go
 import backend.utils as bu
 
 PATH_MAPPER = "strava_categories.txt"
-COLOR_MAP = {"Strava": "#FC4C02", # the color of the Strava app
+COLOR_MAP = {"Strava": "#FC4C02",  # the color of the Strava app
              }
 DISCRETE_COLOR = px.colors.sequential.Oranges_r
 TEMPLATE = "plotly_dark"
@@ -86,8 +86,9 @@ def _update_layout(fig: go.Figure,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
                               "b": TOP_BOTTOM_MARGIN},
-                      xaxis={"fixedrange": True}, # prevent scrolling on the graphs
-                      yaxis={"fixedrange": True}, # prevent scrolling on the graphs
+                      # prevent scrolling on the graphs
+                      xaxis={"fixedrange": True},
+                      yaxis={"fixedrange": True},
                       **kwargs)
     return fig
 
@@ -96,8 +97,8 @@ def empty_figure(title: str,
                  height: int = None,
                  **kwargs: typing.Any) -> go.Figure:
     """
-    Create an empty figure with the title and a text label to show that no data is
-    available to display.
+    Create an empty figure with the title and a text label to show that no data
+    is available to display.
 
     Parameters
     ----------
@@ -124,7 +125,7 @@ def empty_figure(title: str,
 
 def timeline_figure(aggregated_data: pd.DataFrame,
                     data: pd.DataFrame,
-                    title:str,
+                    title: str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
@@ -164,23 +165,23 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                  yaxis: False
                                  },
                      custom_data=[app],
-                     labels={xaxis: "Year"}, # change the label on the plot
+                     labels={xaxis: "Year"},  # change the label on the plot
                      color_discrete_map=COLOR_MAP,
-                     orientation="v", # orient the chart
-                     line_shape="spline", # smoothes out the line
+                     orientation="v",  # orient the chart
+                     line_shape="spline",  # smoothes out the line
                      title=title,
                      template=TEMPLATE,
                      height=height,
                      **kwargs.get("area", {})
                      )
     figure.update_traces(hovertemplate="Activity on %{customdata[0]}")
-    figure.add_scatter(customdata=data.loc[:,["name","date"]].values,
+    figure.add_scatter(customdata=data.loc[:, ["name", "date"]].values,
                        hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]}",
                        marker={"size": 3},
-                       mode="markers", # select drawing mode
-                       name="", # set trace name to empty
-                       opacity=1, # make points non-transparant
-                       x=data[kwargs.get("scatter_x")], # position the dots by week
+                       mode="markers",  # select drawing mode
+                       name="",  # set trace name to empty
+                       opacity=1,  # make points non-transparant
+                       x=data[kwargs.get("scatter_x")],  # position the dots by week
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
@@ -189,7 +190,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
 
 
 def weekdays_figure(aggregated_data: pd.DataFrame,
-                    title:str,
+                    title: str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
@@ -213,12 +214,13 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
 
     """
     hover_data = [day for num, day in enumerate(["Monday",
-                                             "Tuesday",
-                                             "Wednesday",
-                                             "Thursday",
-                                             "Friday",
-                                             "Saturday",
-                                             "Sunday"]) if num in aggregated_data.weekday]
+                                                 "Tuesday",
+                                                 "Wednesday",
+                                                 "Thursday",
+                                                 "Friday",
+                                                 "Saturday",
+                                                 "Sunday"])
+                  if num in aggregated_data.weekday]
     figure = px.bar(data_frame=aggregated_data,
                     x="weekday",
                     y="percentage",
@@ -234,24 +236,25 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
                     )
     figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{y}"
                          )
-    figure.update_layout(xaxis = {"tickmode":"array",
-                                  "tickvals": list(range(7)),
-                                  # relabel the xaxis ticks
-                                  "ticktext": ["M","T","W","T","F","S","S"],
-                                  # fix that all labels are shown even if the column is empty
-                                  "range":[-.5,6.5]
-                                  },
-                         yaxis = {"tickmode": "linear",
-                                  "tick0": 0,
-                                  "dtick": 0.05,
-                                  "tickformat": ".0%"}
+    figure.update_layout(xaxis={"tickmode": "array",
+                                "tickvals": list(range(7)),
+                                # relabel the xaxis ticks
+                                "ticktext":
+                                    ["M", "T", "W", "T", "F", "S", "S"],
+                                # fix that all labels are shown even if the column is empty
+                                "range": [-.5, 6.5]
+                                },
+                         yaxis={"tickmode": "linear",
+                                "tick0": 0,
+                                "dtick": 0.05,
+                                "tickformat": ".0%"}
                          )
     figure = _update_layout(figure)
     return figure
 
 
 def clock_figure(preprocessed_data: pd.DataFrame,
-                 title:str,
+                 title: str,
                  height: int = None,
                  **kwargs: typing.Any) -> go.Figure:
     """
@@ -279,10 +282,10 @@ def clock_figure(preprocessed_data: pd.DataFrame,
                               theta="timestep",
                               color="app",
                               hover_name="name",
-                              custom_data=["name","time"],
+                              custom_data=["name", "time"],
                               color_discrete_map=COLOR_MAP,
                               direction="clockwise",
-                              start_angle=90, #start at due north
+                              start_angle=90,  # start at due north
                               title=title,
                               template=TEMPLATE,
                               height=height,
@@ -296,14 +299,14 @@ def clock_figure(preprocessed_data: pd.DataFrame,
                                 "angularaxis": {"tickvals":
                                                 [bu.hr2ang(hr) for hr in range(24)],
                                                 "ticktext":
-                                                [str(24 if hr==0 else hr) for hr in range(24)]}
+                                                [str(24 if hr == 0 else hr) for hr in range(24)]}
                                 }
                          )
     return figure
 
 
 def sunburst_figure(aggregated_data: pd.DataFrame,
-                    title:str,
+                    title: str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
@@ -327,7 +330,7 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
 
     """
     figure = px.sunburst(data_frame=aggregated_data,
-                         path=["type","sport_type"],
+                         path=["type", "sport_type"],
                          values="counts",
                          color_discrete_sequence=DISCRETE_COLOR,
                          title=title,
@@ -344,7 +347,7 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
 
 
 def worldmap_figure(data: pd.DataFrame,
-                    title:str,
+                    title: str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
     """
@@ -395,23 +398,25 @@ def worldmap_figure(data: pd.DataFrame,
                                                     "%{customdata[2]}",
                                                     "(%{lat},%{lon})",
                                                     ],
-                                                    ),
-                          )
+                                                   ),
+                         )
     figure = _update_layout(figure)
-    for app in (groups:=data.groupby("app").groups):
+    for app in (groups := data.groupby("app").groups):
         app_data = data.loc[groups[app].values]
         figure.add_scattermapbox(below="traces",
-                                  customdata=app_data.loc[:,["name", "date", "time"]].values,
-                                  lat=data["lat"],
-                                  lon=data["lon"],
-                                  marker={"size": 5,
-                                          "color": COLOR_MAP.get(app),
-                                          "symbol": "circle",
-                                          },
-                                  mode="markers",
-                                  name=app,
-                                  **kwargs.get("scatter", {})
-                                  )
+                                 customdata=app_data.loc[:,
+                                                         ["name", "date", "time"]
+                                                         ].values,
+                                 lat=data["lat"],
+                                 lon=data["lon"],
+                                 marker={"size": 5,
+                                         "color": COLOR_MAP.get(app),
+                                         "symbol": "circle",
+                                         },
+                                 mode="markers",
+                                 name=app,
+                                 **kwargs.get("scatter", {})
+                                 )
     return figure
 
 
@@ -457,10 +462,10 @@ def timeline(original: pd.DataFrame,
             count = 0
             continue
         count += 1
-        dataframe.loc[index,"pos"] = count
+        dataframe.loc[index, "pos"] = count
     # rework the calender-week column to be the first day of the week
     # TODO: update use of .loc
-    dataframe["cw"] = dataframe.loc[:,["year","week"]]\
+    dataframe["cw"] = dataframe.loc[:, ["year", "week"]]\
         .apply(lambda row: f"{row[0]}-{row[1]}-1",
                axis=1)
     dataframe["cw"] = pd.to_datetime(dataframe["cw"],
@@ -470,11 +475,12 @@ def timeline(original: pd.DataFrame,
         .count().reset_index().rename({"timestamp": summarize_name}, axis=1)
     # rework the calender-week column to be the first day of the week
     # TODO: update use of .loc
-    data[name] = data.loc[:,["year","week"]].apply(lambda row: f"{row[0]}-{row[1]}-1",
-                                                              axis=1)
+    data[name] = data.loc[:, ["year", "week"]].apply(
+        lambda row: f"{row[0]}-{row[1]}-1",
+                                                    axis=1)
     # TODO: update use of pd.to_datetime
     data[name] = pd.to_datetime(data[name],
-                                            format="%Y-%W-%w")
+                                format="%Y-%W-%w")
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
@@ -511,10 +517,9 @@ def days(original: pd.DataFrame,
 
     """
 
-
     plot_title = "Weekdays"
     # prepare data
-    data = original.groupby(["app","weekday"])["time"]\
+    data = original.groupby(["app", "weekday"])["time"]\
             .count()\
             .reset_index()\
             .rename({"time": "counts"},
@@ -557,8 +562,8 @@ def hours(original: pd.DataFrame,
     original["timestep"] = original["hour"]*60 + original["minutes"]//10
     original["timestep"] = original["timestep"].apply(bu.min2ang)
     original.sort_values(by="timestep",
-                          ascending=True,
-                          inplace=True)
+                         ascending=True,
+                         inplace=True)
     original["count"] = 1
     last = None
     count = None
@@ -569,7 +574,7 @@ def hours(original: pd.DataFrame,
             count = 1
             continue
         count += 1
-        original.loc[index,"count"] = count
+        original.loc[index, "count"] = count
     # create figure
     clock = clock_figure(original,
                          title=plot_title,
@@ -577,7 +582,6 @@ def hours(original: pd.DataFrame,
                          **kwargs)
     # show empty figure if no data is provided
     if original.empty:
-        # TODO: add annotation
         clock = _add_annotation(clock)
     return clock
 
@@ -647,8 +651,8 @@ def process_data(data: pd.DataFrame,
     dates = []
     times = []
     for _, row in data.iterrows():
-        segment_length = len(coords:= row["coords"])+1
-        lat, lon = zip(*coords) # unpack a list of tuples to two lists
+        segment_length = len(coords := row["coords"])+1
+        lat, lon = zip(*coords)  # unpack a list of tuples to two lists
         lat = [row["lat"]]+list(lat)
         lon = [row["lon"]]+list(lon)
         lats.extend(lat)
@@ -704,7 +708,7 @@ def locations(original: pd.DataFrame,
     if "lat" in data.columns:
         data = data.loc[(~original["lat"].isna()) &
                         (~original["lon"].isna()),
-                        :]#.astype({"year": str})
+                        :]
     # create figure
     worldmap = worldmap_figure(data,
                                title=plot_title,
@@ -717,5 +721,5 @@ def locations(original: pd.DataFrame,
     return worldmap
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     pass
