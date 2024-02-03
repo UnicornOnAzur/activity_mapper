@@ -234,8 +234,7 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
                     height=height,
                     **kwargs
                     )
-    figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{y}"
-                         )
+    figure.update_traces(hovertemplate="<b>%{customdata[0]}</b><br>%{y}")
     figure.update_layout(xaxis={"tickmode": "array",
                                 "tickvals": list(range(7)),
                                 # relabel the xaxis ticks
@@ -337,11 +336,7 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
                          template=TEMPLATE,
                          height=height,
                          **kwargs)
-    figure.update_traces(#textposition="inside", # set the percentage inside the chart
-    #                      # show the category and the amount in the chart
-    #                      textinfo="label+percent",
-                          hovertemplate="<b>%{label}</b><br>%{value}"
-                          )
+    figure.update_traces(hovertemplate="<b>%{label}</b><br>%{value}")
     figure = _update_layout(figure)
     return figure
 
