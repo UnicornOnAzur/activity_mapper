@@ -337,11 +337,11 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
                          template=TEMPLATE,
                          height=height,
                          **kwargs)
-    # figure.update_traces(textposition="inside", # set the percentage inside the chart
+    figure.update_traces(textposition="inside", # set the percentage inside the chart
     #                      # show the category and the amount in the chart
     #                      textinfo="label+percent",
-    #                      hovertemplate="<b>%{label}</b><br>%{value}"
-    #                      )
+                          hovertemplate="<b>%{label}</b><br>%{value}"
+                          )
     figure = _update_layout(figure)
     return figure
 
