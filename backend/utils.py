@@ -11,14 +11,27 @@ import requests
 
 
 def load_mapper(path: str) -> collections.defaultdict:
-    ""
+    """
+
+
+    Parameters
+    ----------
+    path : str
+        Filepath of the textfile with the categories.
+
+    Returns
+    -------
+    mapper: collections.defaultdict
+        A dictionary to map all activities to their categories.
+
+    """
     def corrected(key: str):
-        corrections = {"E-Bike Ride": "EBikeRide",
-                       "E-Mountain Bike Ride": "EMountainBikeRide",
-                       "Kayak": "Kayaking",
-                       "Stair Stepper": "StairStepper",
-                       "Surf": "Surfing",
-                       "Weight Training": "WeightTraining"}
+        corrections: dict = {"E-Bike Ride": "EBikeRide",
+                             "E-Mountain Bike Ride": "EMountainBikeRide",
+                             "Kayak": "Kayaking",
+                             "Stair Stepper": "StairStepper",
+                             "Surf": "Surfing",
+                             "Weight Training": "WeightTraining"}
         return corrections.get(key, key)
 
     with open(path, mode="r") as file:
