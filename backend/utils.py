@@ -35,10 +35,14 @@ def load_mapper(path: str) -> collections.defaultdict:
         return corrections.get(key, key)
 
     with open(path, mode="r") as file:
-        original: dict = {corrected(value.strip()):main
-                          for main, values in [[el for el in part.split("\n\n")]
-                                               for part in file.read().split("\n\n\n") ]
-                          for value in values.split("\n") if value.strip() != ""}
+        original: dict = {corrected(value.strip()): main
+                          for main, values in [
+                                  [el for el in part.split("\n\n")]
+                                  for part in file.read().split("\n\n\n")
+                                               ]
+                          for value in values.split("\n")
+                          if value.strip() != ""
+                          }
     mapper: collections.defaultdict = collections.defaultdict(str, original)
     return mapper
 
@@ -149,7 +153,7 @@ def min2ang(time: int) -> int:
         DESCRIPTION.
 
     """
-    hour, minute = time//60, time%60
+    hour, minute = time//60, time % 60
     angle = (hour * 15) % 360 + minute * 2.5
     return angle
 
