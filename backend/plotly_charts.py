@@ -442,9 +442,9 @@ def timeline(original: pd.DataFrame,
         DESCRIPTION.
 
     """
-
+    print(kwargs)
     # show empty figure if no data is provided
-    plot_title = "Timeline" + kwargs.get("creation", "")
+    plot_title = "Timeline"
     if original.empty:
         return empty_figure(plot_title,
                             plot_height)
