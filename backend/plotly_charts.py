@@ -170,7 +170,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                      color_discrete_map=COLOR_MAP,
                      orientation="v",  # orient the chart
                      line_shape="spline",  # smoothes out the line
-                     title=title + kwargs.get("creation", ""),
+                     title=title,
                      template=TEMPLATE,
                      height=height,
                      **kwargs.get("area", {})
@@ -444,7 +444,7 @@ def timeline(original: pd.DataFrame,
     """
 
     # show empty figure if no data is provided
-    plot_title = "Timeline"
+    plot_title = "Timeline" + kwargs.get("creation", "")
     if original.empty:
         return empty_figure(plot_title,
                             plot_height)
