@@ -36,9 +36,8 @@ def load_mapper(path: str) -> collections.defaultdict:
 
     with open(path, mode="r") as file:
         original: dict = {corrected(value.strip()): main
-                          for main, values in [
-                                  [el for el in part.split("\n\n")]
-                                  for part in file.read().split("\n\n\n")
+                          for main, values in [part.split("\n\n")
+                                               for part in file.read().split("\n\n\n")
                                                ]
                           for value in values.split("\n")
                           if value.strip() != ""
