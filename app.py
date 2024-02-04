@@ -139,7 +139,8 @@ def main():
             st.markdown(f"## {TITLE}: {welcome_text}")
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
-                                                        TOP_ROW_HEIGHT),
+                                                        TOP_ROW_HEIGHT,
+                                                        creation=st.session_state.get("creation")),
                                use_container_width=True,
                                config=CONFIG)
 
