@@ -185,6 +185,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
+    figure.add_vline(0, line_width=5, line_color="green")
+    figure.add_vline(10, line_width=5, line_color="green")
     figure = _update_layout(figure)
     return figure
 
@@ -467,12 +469,12 @@ def timeline(original: pd.DataFrame,
                                      format="%Y-%W-%w")
     # summarize the amount of activities per week
     data = dataframe.groupby(["app", "year", "week"])["timestamp"]\
-        .count().reset_index().rename({"timestamp": summarize_name}, axis=1)
+        .count().reset_index().rename({"timestamp": summarize_name},
+                                      axis=1)
     # rework the calender-week column to be the first day of the week
     # TODO: update use of .loc
     data[name] = data.loc[:, ["year", "week"]].apply(
-        lambda row: f"{row[0]}-{row[1]}-1",
-                                                    axis=1)
+        lambda row: f"{row[0]}-{row[1]}-1", axis=1)
     # TODO: update use of pd.to_datetime
     data[name] = pd.to_datetime(data[name],
                                 format="%Y-%W-%w")
@@ -514,11 +516,9 @@ def days(original: pd.DataFrame,
 
     plot_title = "Weekdays"
     # prepare data
-    data = original.groupby(["app", "weekday"])["time"]\
-            .count()\
-            .reset_index()\
-            .rename({"time": "counts"},
-                    axis=1)
+    data = original.groupby(["app", "weekday"])["time"].count().reset_index\
+        .rename({"time": "counts"},
+                axis=1)
     data["percentage"] = data["counts"] / original.shape[0]
     # create figure
     weekdays = weekdays_figure(data,
