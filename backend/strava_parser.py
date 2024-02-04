@@ -49,7 +49,7 @@ def get_access_token(authorization_code: str) -> tuple[str]:
                             )
     refresh_token = res.get("refresh_token")
     access_token = res.get("access_token")
-    created_at = res.get("created_at", "Not found")
+    created_at = res.get("athlete", {}).get("created_at")
     return athlete_name, access_token, refresh_token, created_at
 
 
