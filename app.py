@@ -63,6 +63,7 @@ def connect_strava(code: str):
     st.session_state["access_token"] = results[1]
     st.session_state["refresh_token"] = results[2]
     st.session_state["creation"] = results[3]
+    st.write(f"results")
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
     data = bsp.request_data_from_api(st.session_state["access_token"])
