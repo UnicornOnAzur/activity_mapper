@@ -185,8 +185,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
-    figure.add_vline(0, line_width=5, line_color="green")
-    figure.add_vline(10, line_width=5, line_color="green")
+    figure.add_vline(0, line_width=1, line_color="green")
+    figure.add_vline(10, line_width=1, line_color="green")
     figure = _update_layout(figure)
     return figure
 
