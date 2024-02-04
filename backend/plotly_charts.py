@@ -18,6 +18,7 @@ locations -> process_data -> worldmap_figure
 
 """
 # Standard library
+import datetime
 import typing
 # Third party
 import pandas as pd
@@ -185,8 +186,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
-    figure.add_vline(0, line_width=1, line_color="green")
-    figure.add_vline(10, line_width=1, line_color="green")
+    figure.add_vline(datetime.date(2020,1,1), line_width=1, line_color="green")
+    figure.add_vline(datetime.date(2024,1,1), line_width=1, line_color="green")
     figure = _update_layout(figure)
     return figure
 
