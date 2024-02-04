@@ -170,7 +170,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                      color_discrete_map=COLOR_MAP,
                      orientation="v",  # orient the chart
                      line_shape="spline",  # smoothes out the line
-                     title=title+kwargs.get("creation","_"),
+                     title=title,
                      template=TEMPLATE,
                      height=height,
                      **kwargs.get("area", {})
@@ -186,7 +186,9 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
-    figure.add_vline(datetime.date(2020,1,1), line_width=1, line_color="green")
+    figure.add_vline(datetime.datetime.strptime(kwargs.get("creation"),"%Y-%m-%dT%H:%M:%SZ").date(),
+                     line_width=1,
+                     line_color="green")
     figure.add_vline(datetime.datetime.now().date(),
                      line_width=1,
                      line_color="green")
