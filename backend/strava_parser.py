@@ -17,27 +17,29 @@ AUTH_LINK = "https://www.strava.com/oauth/token"
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
-def get_access_token(authorization_code):
+
+def get_access_token(authorization_code: str) -> tuple[str]:
     """
 
 
     Parameters
     ----------
-    authorization_code : TYPE
+    authorization_code : str
         DESCRIPTION.
 
     Returns
     -------
-    athlete_name : TYPE
+    athlete_name : str
         DESCRIPTION.
-    access_token : TYPE
+    access_token : str
         DESCRIPTION.
-    refresh_token : TYPE
+    refresh_token : str
         DESCRIPTION.
-
+    created_at : str
+        DESCRIPTION.
     """
     res = bu.post_request(AUTH_LINK,
-                          data={"client_id":STRAVA_CLIENT_ID,
+                          data={"client_id": STRAVA_CLIENT_ID,
                                 "client_secret": STRAVA_CLIENT_SECRET,
                                 "code": authorization_code,
                                 "grant_type": "authorization_code"})
@@ -47,13 +49,14 @@ def get_access_token(authorization_code):
                             )
     refresh_token = res.get("refresh_token")
     access_token = res.get("access_token")
-    return athlete_name, access_token, refresh_token
+    created_at = res.get("created_at")
+    return athlete_name, access_token, refresh_token, created_at
 
 
 def request_data_from_api(access_token: str) -> list[dict]:
     """
-    Send get requests in a loop to retreive all the activities. Loop will stop if
-    the result is empty implying that all activities have been retrieved.
+    Send get requests in a loop to retreive all the activities. Loop will stop
+    if the result is empty implying that all activities have been retrieved.
 
     Parameters
     ----------
@@ -77,7 +80,8 @@ def request_data_from_api(access_token: str) -> list[dict]:
         response = bu.get_request(url=activities_url,
                                   headers=header,
                                   params=param)
-        # if an invalid response is received return the message and stop the loop
+        # if an invalid response is received
+        # return the message and stop looping
         if isinstance(response, dict):
             all_activities.append(response)
             break
@@ -91,7 +95,7 @@ def request_data_from_api(access_token: str) -> list[dict]:
     return all_activities
 
 
-def get_lat_long(value: list[float]) -> list[typing.Union[None,float]]:
+def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     """
 
 
@@ -133,7 +137,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         timestamp = pd.to_datetime(activity.get("start_date_local"),
                                    # format="%Y%m%dT%H:%MZ"
                                    )
-        elements = {"view on Strava": f"https://www.strava.com/activities/{activity.get('id')}",
+        elements = {"view on Strava":
+                    f"https://www.strava.com/activities/{activity.get('id')}",
                     "name": activity.get("name"),
                     "timestamp": timestamp,
                     "year": timestamp.year,
@@ -147,11 +152,16 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "moving_time": activity.get("moving_time"),
                     "type": activity.get("type"),
                     "sport_type": activity.get("sport_type"),
-                    "polyline": activity.get("map", {}).get("summary_polyline"),
+                    "polyline": activity.get("map", {}
+                                             ).get("summary_polyline"),
                     }
         if elements.get("polyline"):
-            elements.update({"coords": polyline.decode(elements.get("polyline"), 5)})
-        elements.update(dict(zip(["lat","lon"],
+            elements.update({"coords": polyline.decode(elements.get("polyline"
+                                                                    ),
+                                                       5)
+                             }
+                            )
+        elements.update(dict(zip(["lat", "lon"],
                                  get_lat_long(activity.get("start_latlng",
                                                            [])))))
         parsed_activities.append(elements)
