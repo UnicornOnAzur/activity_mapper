@@ -123,7 +123,7 @@ def _update_layout(fig: go.Figure,
         xaxis.update(kwargs.get("xaxis"))
         kwargs.pop("xaxis")
     fig.update_layout(showlegend=False,
-                      # TODO: add useful comment
+                      # set the margins of the graph to optimize visable area
                       margin={"l": LEFT_RIGHT_MARGIN,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
