@@ -82,13 +82,17 @@ def _update_layout(fig: go.Figure,
         The plotly figure with updated layout.
 
     """
+    xaxis = {"fixedrange": True}
+    if "xaxis" in kwargs:
+        xaxis.update(kwargs.get("xaxis"))
     fig.update_layout(showlegend=False,
+                      # TODO: add useful comment
                       margin={"l": LEFT_RIGHT_MARGIN,
                               "r": LEFT_RIGHT_MARGIN,
                               "t": TOP_BOTTOM_MARGIN,
                               "b": TOP_BOTTOM_MARGIN},
                       # prevent scrolling on the graphs
-                      xaxis={"fixedrange": True},
+                      xaxis=xaxis,
                       yaxis={"fixedrange": True},
                       **kwargs)
     return fig
@@ -199,8 +203,8 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                           y=5,
                           text="Today")
     # TODO: constraint x-axis
-    figure = _update_layout(figure)
-    figure.update_layout(xaxis={"range": [creation_date, today]})
+    figure = _update_layout(figure, xaxis={"range": [creation_date-2, today+2]})
+    # figure.update_layout(xaxis={"range": [creation_date-2, today+2]})
     return figure
 
 
