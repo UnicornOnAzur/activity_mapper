@@ -483,9 +483,10 @@ def timeline(original: pd.DataFrame,
     data[name] = pd.to_datetime(data[name],
                                 format="%Y-%W-%w")
 
-    #
-    creation_date = datetime.datetime.strptime(kwargs.get("creation"),
-                                               "%Y-%m-%dT%H:%M:%SZ").date()
+    # make creation_
+    creation_date: datetime.date = datetime.datetime.strptime(kwargs.get("creation",
+                                                                         datetime.datetime.strftime(original.date.min(), "%Y-%m-%dT%H:%M:%SZ")),
+                                                              "%Y-%m-%dT%H:%M:%SZ").date()
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
