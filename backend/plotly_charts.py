@@ -429,7 +429,6 @@ def worldmap_figure(data: pd.DataFrame,
     names = kwargs.get("name", [])
     center = {} if data.empty else {"lat": data.lat.median(),
                                     "lon": data.lon.median()}
-    # TODO: color countries
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
                             lon=lons,
@@ -765,6 +764,7 @@ def locations(original: pd.DataFrame,
         data = data.loc[(~original["lat"].isna()) &
                         (~original["lon"].isna()),
                         :]
+    # TODO: color countries https://www.geeksforgeeks.org/get-the-city-state-and-country-names-from-latitude-and-longitude-using-python/
     # create figure
     worldmap = worldmap_figure(data,
                                title=plot_title,
