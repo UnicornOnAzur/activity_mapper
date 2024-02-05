@@ -142,7 +142,7 @@ def main():
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT,
                                                         creation=st.session_state.get("creation",
-                                                                                      dt.datetime.strftime(df.date.min(),            "%Y-%m-%dT%H:%M:%SZ"))
+                                                                                      "" if df.empty else dt.datetime.strftime(df.date.min(),            "%Y-%m-%dT%H:%M:%SZ"))
 
                                                         ),
                                use_container_width=True,
