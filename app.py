@@ -20,7 +20,7 @@ import backend.utils as bu
 TITLE = "Activity Mapper"
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 600
-STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name"]
+STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name", "date",]
 DISPLAY_COLS = ["name", "date", "type", "sport_type", "view on Strava"]
 CONFIG = {"displaylogo": False,
           "displayModeBar": False,}
