@@ -85,6 +85,7 @@ def _update_layout(fig: go.Figure,
     xaxis = {"fixedrange": True}
     if "xaxis" in kwargs:
         xaxis.update(kwargs.get("xaxis"))
+    print(xaxis)
     fig.update_layout(showlegend=False,
                       # TODO: add useful comment
                       margin={"l": LEFT_RIGHT_MARGIN,
