@@ -186,12 +186,16 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
-    figure.add_vline(kwargs.get("creation_date"),
+    figure.add_vline((creation_date := kwargs.get("creation_date")),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
+    figure.add_annotation(x=creation_date,
+                          y=5,
+                          text="Strava profile created")
     figure.add_vline(datetime.datetime.now().date(),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
+    # TODO: constraint x-axis
     figure = _update_layout(figure)
     return figure
 
@@ -377,7 +381,7 @@ def worldmap_figure(data: pd.DataFrame,
     names = kwargs.get("name", [])
     center = {} if data.empty else {"lat": data.lat.median(),
                                     "lon": data.lon.median()}
-
+    # TODO: color countries
     figure = px.line_mapbox(data_frame=data,
                             lat=lats,
                             lon=lons,
