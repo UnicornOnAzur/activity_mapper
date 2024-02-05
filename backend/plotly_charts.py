@@ -63,6 +63,20 @@ def _add_annotation(fig: go.Figure,
                        **kwargs)
     return fig
 
+def _add_annotation_color(fig: go.Figure,
+                          x_pos: dt.date,
+                          text: str) -> go.Figure:
+    # TODO: position text inside lines
+    fig.add_annotation(x=x_pos,
+                       y=5,
+                       text=text,
+                       font={"color": COLOR_MAP.get("Strava"),
+                             "family": "Arial",
+                             "size": 12},
+                       showarrow=True,
+                       arrowcolor=COLOR_MAP.get("Strava"))
+    return fig
+
 
 def _update_layout(fig: go.Figure,
                    **kwargs: typing.Any) -> go.Figure:
@@ -194,15 +208,15 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     figure.add_vline((creation_date := kwargs.get("creation_date")),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
-    figure.add_annotation(x=creation_date,
-                          y=5,
-                          text="Strava profile created")
     figure.add_vline((today := dt.datetime.now().date()),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
-    figure.add_annotation(x=today,
-                          y=5,
-                          text="Today")
+    figure = _add_annotation_color(figure,
+                                   creation_date,
+                                   "Strava profile created")
+    figure = _add_annotation_color(figure,
+                                   today,
+                                   "Today")
     figure = _update_layout(figure,
                             xaxis={"range": [creation_date - dt.timedelta(days=2),
                                              today + dt.timedelta(days=2)]}
