@@ -2,6 +2,7 @@
 """
 @author: QtyPython2020
 
+Helper functions for the activity mapper app.
 """
 # Standard library
 import base64
@@ -12,7 +13,7 @@ import requests
 
 def load_mapper(path: str) -> collections.defaultdict:
     """
-    <>
+    Load the different sport types with their categories into a dictionary.
 
     Parameters
     ----------
@@ -25,7 +26,7 @@ def load_mapper(path: str) -> collections.defaultdict:
         A dictionary to map all activities to their categories.
 
     """
-    def corrected(key: str):
+    def corrected(key: str) -> str:
         corrections: dict = {"E-Bike Ride": "EBikeRide",
                              "E-Mountain Bike Ride": "EMountainBikeRide",
                              "Kayak": "Kayaking",
@@ -60,18 +61,18 @@ def post_request(url: str,
     params : dict, optional
         The payload. The default is None.
     timeout : int, optional
-        The amount of seconds before closing the connection. The default is 5.
+        The amount of seconds before closing the connection. The default is 60.
 
     Returns
     -------
-    dict
-        DESCRIPTION.
+    result: dict
+        The json response as a dictionary or an empty dictionary.
 
     """
     result: dict = {}
-    response = requests.post(url=url,
-                             data=data,
-                             timeout=timeout)
+    response: requests.Response = requests.post(url=url,
+                                                data=data,
+                                                timeout=timeout)
     if response.ok:
         result: dict = response.json()
     else:
@@ -95,19 +96,19 @@ def get_request(url: str,
     headers : dict, optional
         The HTTP headers. The default is None.
     timeout : int, optional
-        The amount of seconds before closing the connection. The default is 5.
+        The amount of seconds before closing the connection. The default is 60.
 
     Returns
     -------
     dict
-        DESCRIPTION.
+        The json response as a dictionary or an empty dictionary.
 
     """
     result: dict = {}
-    response = requests.get(url=url,
-                            params=params,
-                            headers=headers,
-                            timeout=timeout)
+    response: requests.Response = requests.get(url=url,
+                                               params=params,
+                                               headers=headers,
+                                               timeout=timeout)
     if response.ok:
         result: dict = response.json()
     else:
@@ -117,17 +118,17 @@ def get_request(url: str,
 
 def load_image(path: str) -> str:
     """
-
+    Load an image into a string representation for use in markdown.
 
     Parameters
     ----------
     path : str
-        DESCRIPTION.
+        The filepath of the image.
 
     Returns
     -------
-    str
-        DESCRIPTION.
+    image_as_str: str
+        The string representation.
 
     """
     with open(path, "rb") as file:
@@ -136,44 +137,42 @@ def load_image(path: str) -> str:
     return image_as_str
 
 
-def min2ang(time: int) -> int:
+def min2ang(time: int) -> float:
     """
-
+    Calculate the angle of the time in minutes for the polar plot.
 
     Parameters
     ----------
-    hour : int
-        DESCRIPTION.
-    minute : int
-        DESCRIPTION.
+    time : int
+        The time of the activity.
 
     Returns
     -------
-    int
-        DESCRIPTION.
+    angle: float
+        The angle.
 
     """
     hour, minute = time//60, time % 60
-    angle = (hour * 15) % 360 + minute * 2.5
+    angle: float = (hour * 15) % 360 + minute * 2.5
     return angle
 
 
 def hr2ang(hour: int) -> int:
     """
-
+    Calculate the angle of the time in hours for the polar plot.
 
     Parameters
     ----------
-    hour : int
-        DESCRIPTION.
+    time : int
+        The time of the activity.
 
     Returns
     -------
-    int
-        DESCRIPTION.
+    angle: float
+        The angle.
 
     """
-    angle = (hour * 15) % 360
+    angle: int = (hour * 15) % 360
     return angle
 
 
