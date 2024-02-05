@@ -5,6 +5,7 @@
 <>
 """
 # Standard library
+import datetime as dt
 import os
 # Third party
 import pandas as pd
@@ -140,7 +141,10 @@ def main():
             # top row
             st.plotly_chart(figure_or_data=bpc.timeline(df,
                                                         TOP_ROW_HEIGHT,
-                                                        creation=st.session_state.get("creation")),
+                                                        creation=st.session_state.get("creation",
+                                                                                      dt.datetime.strftime(df.date.min(),            "%Y-%m-%dT%H:%M:%SZ"))
+
+                                                        ),
                                use_container_width=True,
                                config=CONFIG)
 
