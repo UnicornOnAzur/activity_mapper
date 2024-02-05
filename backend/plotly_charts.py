@@ -186,9 +186,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        y=data[kwargs.get("scatter_y")],
                        **kwargs.get("scatter", {})
                        )
-    figure.add_vline(datetime.datetime.strptime(kwargs.get("creation",
-                                                           aggregated_data.date.min().strftime("%Y-%m-%dT%H:%M:%SZ")),
-                                                "%Y-%m-%dT%H:%M:%SZ").date(),
+    figure.add_vline(kwargs.get("creation_date"),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
     figure.add_vline(datetime.datetime.now().date(),
@@ -484,6 +482,10 @@ def timeline(original: pd.DataFrame,
     # TODO: update use of pd.to_datetime
     data[name] = pd.to_datetime(data[name],
                                 format="%Y-%W-%w")
+
+    #
+    creation_date = datetime.datetime.strptime(kwargs.get("creation"),
+                                               "%Y-%m-%dT%H:%M:%SZ").date()
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
@@ -492,6 +494,7 @@ def timeline(original: pd.DataFrame,
                                 x=name,
                                 y=summarize_name,
                                 group="app",
+                                creation_date=creation_date,
                                 scatter_x="cw",
                                 scatter_y="pos",
                                 **kwargs)
