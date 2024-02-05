@@ -18,7 +18,7 @@ locations -> process_data -> worldmap_figure
 
 """
 # Standard library
-import datetime
+import datetime as dt
 import typing
 # Third party
 import pandas as pd
@@ -196,15 +196,16 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     figure.add_annotation(x=creation_date,
                           y=5,
                           text="Strava profile created")
-    figure.add_vline((today := datetime.datetime.now().date()),
+    figure.add_vline((today := dt.datetime.now().date()),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
     figure.add_annotation(x=today,
                           y=5,
                           text="Today")
-    # TODO: constraint x-axis
-    figure = _update_layout(figure, xaxis={"range": [creation_date-2, today+2]})
-    # figure.update_layout(xaxis={"range": [creation_date-2, today+2]})
+    figure = _update_layout(figure,
+                            xaxis={"range": [creation_date - dt.timedelta(days=2),
+                                             today + dt.timedelta(days=2)]}
+                            )
     return figure
 
 
@@ -496,9 +497,9 @@ def timeline(original: pd.DataFrame,
                                 format="%Y-%W-%w")
 
     # make creation_
-    creation_date: datetime.date = datetime.datetime.strptime(kwargs.get("creation",
-                                                                         datetime.datetime.strftime(original.date.min(), "%Y-%m-%dT%H:%M:%SZ")),
-                                                              "%Y-%m-%dT%H:%M:%SZ").date()
+    creation_date: dt.date = dt.datetime.strptime(kwargs.get("creation",
+                                                             dt.datetime.strftime(original.date.min(), "%Y-%m-%dT%H:%M:%SZ")),
+                                                  "%Y-%m-%dT%H:%M:%SZ").date()
     # create figure
     time_line = timeline_figure(data,
                                 dataframe,
