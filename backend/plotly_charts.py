@@ -192,9 +192,12 @@ def timeline_figure(aggregated_data: pd.DataFrame,
     figure.add_annotation(x=creation_date,
                           y=5,
                           text="Strava profile created")
-    figure.add_vline(datetime.datetime.now().date(),
+    figure.add_vline((today := datetime.datetime.now().date()),
                      line_width=1,
                      line_color=COLOR_MAP.get("Strava"))
+    figure.add_annotation(x=today,
+                          y=5,
+                          text="Today")
     # TODO: constraint x-axis
     figure = _update_layout(figure)
     return figure
