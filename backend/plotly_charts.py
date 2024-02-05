@@ -199,7 +199,7 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                           y=5,
                           text="Today")
     # TODO: constraint x-axis
-    figure = _update_layout(figure, xaxis={"range", [creation_date, today]})
+    figure = _update_layout(figure, xaxis={"range": [creation_date, today]})
     return figure
 
 
