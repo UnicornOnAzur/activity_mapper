@@ -11,43 +11,6 @@ import collections
 import requests
 
 
-def load_mapper(path: str) -> collections.defaultdict:
-    """
-    Load the different sport types with their categories into a dictionary.
-
-    Parameters
-    ----------
-    path : str
-        Filepath of the textfile with the categories.
-
-    Returns
-    -------
-    mapper: collections.defaultdict
-        A dictionary to map all activities to their categories.
-
-    """
-    def corrected(key: str) -> str:
-        corrections: dict = {"E-Bike Ride": "EBikeRide",
-                             "E-Mountain Bike Ride": "EMountainBikeRide",
-                             "Kayak": "Kayaking",
-                             "Stair Stepper": "StairStepper",
-                             "Surf": "Surfing",
-                             "Weight Training": "WeightTraining"}
-        return corrections.get(key, key)
-
-    with open(path, mode="r") as file:
-        original: dict = {corrected(value.strip()): main
-                          for main, values in [part.split("\n\n")
-                                               for part
-                                               in file.read().split("\n\n\n")
-                                               ]
-                          for value in values.split("\n")
-                          if value.strip() != ""
-                          }
-    mapper: collections.defaultdict = collections.defaultdict(str, original)
-    return mapper
-
-
 def post_request(url: str,
                  data: dict = None,
                  timeout: int = 60) -> dict:
@@ -114,6 +77,43 @@ def get_request(url: str,
     else:
         result.update({str(response.status_code): response.reason})
     return result
+
+
+def load_mapper(path: str) -> collections.defaultdict:
+    """
+    Load the different sport types with their categories into a dictionary.
+
+    Parameters
+    ----------
+    path : str
+        Filepath of the textfile with the categories.
+
+    Returns
+    -------
+    mapper: collections.defaultdict
+        A dictionary to map all activities to their categories.
+
+    """
+    def corrected(key: str) -> str:
+        corrections: dict = {"E-Bike Ride": "EBikeRide",
+                             "E-Mountain Bike Ride": "EMountainBikeRide",
+                             "Kayak": "Kayaking",
+                             "Stair Stepper": "StairStepper",
+                             "Surf": "Surfing",
+                             "Weight Training": "WeightTraining"}
+        return corrections.get(key, key)
+
+    with open(path, mode="r") as file:
+        original: dict = {corrected(value.strip()): main
+                          for main, values in [part.split("\n\n")
+                                               for part
+                                               in file.read().split("\n\n\n")
+                                               ]
+                          for value in values.split("\n")
+                          if value.strip() != ""
+                          }
+    mapper: collections.defaultdict = collections.defaultdict(str, original)
+    return mapper
 
 
 def load_image(path: str) -> str:
