@@ -440,23 +440,16 @@ def worldmap_figure(data: pd.DataFrame,
                                   featureidkey="properties.ADMIN",
                                   locations=countries["country"],
                                   color="count",
+                                  # remover hover label for choropleth plot
                                   hover_data={"country": False,
                                               "count": False},
                                   color_continuous_scale=px.colors.sequential.Oranges,
                                   opacity=.1,
                                   zoom=1,
-                                  mapbox_style="carto-darkmatter"
+                                  mapbox_style="carto-darkmatter",
+                                  title=title,
+                                  height=height
                                   )
-    # add the begin location
-    # figure.add_scattermapbox(below="traces",
-    #                          lat=data["lat"],
-    #                          lon=data["lon"],
-    #                          marker={"size": 5,
-    #                                  "color": "#FC4C02",
-    #                                  "symbol": "circle",
-    #                                  },
-    #                          mode="markers",
-    #                          )
     # add the routes of the activities
     figure.add_scattermapbox(below="traces",
                              lat=lats,
