@@ -5,9 +5,11 @@
 """
 
 # Standard library
+import functools
 import os
 import typing
 # Third party
+import geopy.geocoders
 import pandas as pd
 import polyline
 # Local imports
@@ -115,6 +117,26 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
+@functools.cache
+def retreive_country(coords, geolocator):
+    location = geolocator.reverse(coords,
+                                  language="en",
+                                  addressdetails=False,
+                                  zoom=0)
+    country = location.raw.get("name")
+    return country
+
+
+def locate_country(row, locator):
+    coords = ", ".join(map(str,
+                            map(lambda x:round(x,2),
+                                [row.lat, row.lon])
+                            )
+                        )
+    country_name = retreive_country(coords, locator)
+    return country_name
+
+
 def parse(activities: list[dict]) -> pd.DataFrame:
     """
 
@@ -130,6 +152,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         DESCRIPTION.
 
     """
+    geolocator = geopy.geocoders.Nominatim(user_agent="Activity Mapper")
     if activities == [{}]:
         return pd.DataFrame()
     parsed_activities = []
