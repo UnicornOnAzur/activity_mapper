@@ -9,7 +9,7 @@ import functools
 import os
 import typing
 # Third party
-import geopy.geocoders
+# import geopy.geocoders
 import pandas as pd
 import polyline
 # Local imports
