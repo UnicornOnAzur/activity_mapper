@@ -431,8 +431,9 @@ def worldmap_figure(data: pd.DataFrame,
         The plotly line mapbox of the locations and routes overlayed with the scatter plot.
 
     """
-    lats = kwargs.get("lat", [])
-    lons = kwargs.get("lon", [])
+    lats: list = kwargs.get("lat", [])
+    lons: list = kwargs.get("lon", [])
+    # color the countries by (log of) the amount of activities
     figure = px.choropleth_mapbox(data_frame=countries,
                                   geojson=geojson,
                                   featureidkey="properties.ADMIN",
@@ -443,6 +444,7 @@ def worldmap_figure(data: pd.DataFrame,
                                   zoom=1,
                                   mapbox_style="carto-darkmatter"
                                   )
+
     # figure.add_scattermapbox(below="traces",
     #                          lat=data["lat"],
     #                          lon=data["lon"],
@@ -452,15 +454,16 @@ def worldmap_figure(data: pd.DataFrame,
     #                                  },
     #                          mode="markers",
     #                          )
+    # add the routes of the activities
     figure.add_scattermapbox(below="traces",
-                              lat=lats,
-                              lon=lons,
-                              marker={"size": 5,
-                                      "color": "#FC4C02",
-                                      "symbol": "circle",
-                                      },
-                              mode="lines",
-                              )
+                             lat=lats,
+                             lon=lons,
+                             marker={"size": 5,
+                                     "color": "#FC4C02",
+                                     "symbol": "circle",
+                                     },
+                             mode="lines",
+                             )
     figure = _update_layout(figure)
     return figure
 
