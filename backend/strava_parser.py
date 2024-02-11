@@ -152,7 +152,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         DESCRIPTION.
 
     """
-    geolocator = geopy.geocoders.Nominatim(user_agent="Activity Mapper")
+    # geolocator = geopy.geocoders.Nominatim(user_agent="Activity Mapper")
     if activities == [{}]:
         return pd.DataFrame()
     parsed_activities = []
