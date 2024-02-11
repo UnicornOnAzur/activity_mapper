@@ -756,7 +756,7 @@ def locations(original: pd.DataFrame,
                         (~original["lon"].isna()),
                         :]
     countries_count = data.country.value_counts().reset_index()
-    countries["count"] = countries["count"].apply(math.log)
+    countries_count["count"] = countries_count["count"].apply(math.log)
     geojson_file = bu.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
     # create figure
     worldmap = worldmap_figure(data,
