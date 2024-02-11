@@ -452,15 +452,15 @@ def worldmap_figure(data: pd.DataFrame,
                                      },
                              mode="markers",
                              )
-    figure.add_scattermapbox(below="traces",
-                             lat=lats,
-                             lon=lons,
-                             marker={"size": 5,
-                                     "color": "#FC4C02",
-                                     "symbol": "circle",
-                                     },
-                             mode="lines",
-                             )
+    # figure.add_scattermapbox(below="traces",
+    #                          lat=lats,
+    #                          lon=lons,
+    #                          marker={"size": 5,
+    #                                  "color": "#FC4C02",
+    #                                  "symbol": "circle",
+    #                                  },
+    #                          mode="lines",
+    #                          )
     return figure
 
 
