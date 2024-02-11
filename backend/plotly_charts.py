@@ -443,24 +443,24 @@ def worldmap_figure(data: pd.DataFrame,
                                   zoom=1,
                                   mapbox_style="carto-darkmatter"
                                   )
-    figure.add_scattermapbox(below="traces",
-                             lat=data["lat"],
-                             lon=data["lon"],
-                             marker={"size": 5,
-                                     "color": "#FC4C02",
-                                     "symbol": "circle",
-                                     },
-                             mode="markers",
-                             )
     # figure.add_scattermapbox(below="traces",
-    #                          lat=lats,
-    #                          lon=lons,
+    #                          lat=data["lat"],
+    #                          lon=data["lon"],
     #                          marker={"size": 5,
     #                                  "color": "#FC4C02",
     #                                  "symbol": "circle",
     #                                  },
-    #                          mode="lines",
+    #                          mode="markers",
     #                          )
+    figure.add_scattermapbox(below="traces",
+                              lat=lats,
+                              lon=lons,
+                              marker={"size": 5,
+                                      "color": "#FC4C02",
+                                      "symbol": "circle",
+                                      },
+                              mode="lines",
+                              )
     return figure
 
 
