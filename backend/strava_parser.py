@@ -154,7 +154,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}
                                              ).get("summary_polyline"),
-                    "country": None,
+                    "country": "Canada",
                     }
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
