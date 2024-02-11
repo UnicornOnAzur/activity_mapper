@@ -461,6 +461,7 @@ def worldmap_figure(data: pd.DataFrame,
                                       },
                               mode="lines",
                               )
+    figure = _update_layout(figure)
     return figure
 
 
