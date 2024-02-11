@@ -19,6 +19,7 @@ locations -> process_data -> worldmap_figure
 """
 # Standard library
 import datetime as dt
+import math
 import typing
 # Third party
 import pandas as pd
@@ -401,6 +402,8 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
 
 
 def worldmap_figure(data: pd.DataFrame,
+                    countries: pd.DataFrame,
+                    geojson: dict,
                     title: str,
                     height: int = None,
                     **kwargs: typing.Any) -> go.Figure:
@@ -411,6 +414,10 @@ def worldmap_figure(data: pd.DataFrame,
     ----------
     data : pd.DataFrame
         The dataframe containing the data for the plots.
+    countries: pd.DataFrame
+        <>
+    geojson: dict
+        <>
     title : str
         The title of the plot.
     height : int, optional
@@ -426,50 +433,34 @@ def worldmap_figure(data: pd.DataFrame,
     """
     lats = kwargs.get("lat", [])
     lons = kwargs.get("lon", [])
-    names = kwargs.get("name", [])
-    center = {} if data.empty else {"lat": data.lat.median(),
-                                    "lon": data.lon.median()}
-    figure = px.line_mapbox(data_frame=data,
-                            lat=lats,
-                            lon=lons,
-                            color=kwargs.get("color", []),
-                            hover_name=names,
-                            custom_data=[names,
-                                         kwargs.get("date", []),
-                                         kwargs.get("time", [])],
-                            color_discrete_map=COLOR_MAP,
-                            zoom=kwargs.get("zoom", 0),
-                            center=center,
-                            mapbox_style="carto-darkmatter",
-                            title=title,
-                            template=TEMPLATE,
-                            height=height,
-                            **kwargs.get("mapbox", {})
-                            )
-    figure.update_traces(hovertemplate="<br>".join(["<b>%{customdata[0]}</b>",
-                                                    "%{customdata[1]}",
-                                                    "%{customdata[2]}",
-                                                    "(%{lat},%{lon})",
-                                                    ],
-                                                   ),
-                         )
-    figure = _update_layout(figure)
-    for app in (groups := data.groupby("app").groups):
-        app_data = data.loc[groups[app].values]
-        figure.add_scattermapbox(below="traces",
-                                 customdata=app_data.loc[:,
-                                                         ["name", "date", "time"]
-                                                         ].values,
-                                 lat=data["lat"],
-                                 lon=data["lon"],
-                                 marker={"size": 5,
-                                         "color": COLOR_MAP.get(app),
-                                         "symbol": "circle",
-                                         },
-                                 mode="markers",
-                                 name=app,
-                                 **kwargs.get("scatter", {})
-                                 )
+    figure = px.choropleth_mapbox(data_frame=countries,
+                                  geojson=geojson,
+                                  featureidkey="properties.ADMIN",
+                                  locations=countries["country"],
+                                  color="count",
+                                  color_continuous_scale=px.colors.sequential.Oranges,
+                                  opacity=.1,
+                                  zoom=1,
+                                  mapbox_style="carto-darkmatter"
+                                  )
+    figure.add_scattermapbox(below="traces",
+                             lat=data["lat"],
+                             lon=data["lon"],
+                             marker={"size": 5,
+                                     "color": "#FC4C02",
+                                     "symbol": "circle",
+                                     },
+                             mode="markers",
+                             )
+    figure.add_scattermapbox(below="traces",
+                             lat=lats,
+                             lon=lons,
+                             marker={"size": 5,
+                                     "color": "#FC4C02",
+                                     "symbol": "circle",
+                                     },
+                             mode="lines",
+                             )
     return figure
 
 
@@ -764,9 +755,13 @@ def locations(original: pd.DataFrame,
         data = data.loc[(~original["lat"].isna()) &
                         (~original["lon"].isna()),
                         :]
-    # TODO: color countries https://www.geeksforgeeks.org/get-the-city-state-and-country-names-from-latitude-and-longitude-using-python/
+    countries_count = data.country.value_counts().reset_index()
+    countries["count"] = countries["count"].apply(math.log)
+    geojson_file = bu.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
     # create figure
     worldmap = worldmap_figure(data,
+                               countries_count,
+                               geojson_file,
                                title=plot_title,
                                height=plot_height,
                                **process_data(data),
