@@ -11,7 +11,6 @@ import typing
 # Third party
 import pandas as pd
 import polyline
-import shapely
 # Local imports
 import backend.utils as bu
 import backend.resources as br
