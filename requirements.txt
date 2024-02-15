@@ -1,5 +1,5 @@
-geopandas
 json5==0.9.6
 plotly==5.9.0
 polyline==2.0.1
+shapely
 streamlit==1.30.0
