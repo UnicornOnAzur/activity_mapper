@@ -9,16 +9,18 @@ import functools
 import os
 import typing
 # Third party
-# import geopy.geocoders
+import geopandas as gpd
 import pandas as pd
 import polyline
 # Local imports
 import backend.utils as bu
+import backend.resources as br
 
 AUTH_LINK = "https://www.strava.com/oauth/token"
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
+gdf = gpd.GeoDataFrame.from_features(br.geojson_file)
 
 def get_access_token(authorization_code: str) -> tuple[str]:
     """
@@ -152,7 +154,6 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         DESCRIPTION.
 
     """
-    # geolocator = geopy.geocoders.Nominatim(user_agent="Activity Mapper")
     if activities == [{}]:
         return pd.DataFrame()
     parsed_activities = []
