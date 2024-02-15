@@ -9,7 +9,6 @@ import functools
 import os
 import typing
 # Third party
-import geopandas as gpd
 import pandas as pd
 import polyline
 import shapely
@@ -20,8 +19,6 @@ import backend.resources as br
 AUTH_LINK = "https://www.strava.com/oauth/token"
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
-
-gdf = gpd.GeoDataFrame.from_features(br.geojson_file)
 
 def get_access_token(authorization_code: str) -> tuple[str]:
     """
@@ -120,15 +117,15 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-@functools.cache
-def locate_country(coords, dataframe=gdf):
-    point = shapely.geometry.Point(coords)
-    mask = gdf.geometry.apply(lambda c:c.contains(point))
-    try:
-        country = gdf.loc[mask, "ADMIN"].values[0]
-    except:
-        country = "Undefined"
-    return country
+# @functools.cache
+# def locate_country(coords, dataframe=gdf):
+#     point = shapely.geometry.Point(coords)
+#     mask = gdf.geometry.apply(lambda c:c.contains(point))
+#     try:
+#         country = gdf.loc[mask, "ADMIN"].values[0]
+#     except:
+#         country = "Undefined"
+#     return country
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
