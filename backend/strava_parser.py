@@ -12,6 +12,7 @@ import typing
 import geopandas as gpd
 import pandas as pd
 import polyline
+import shapely
 # Local imports
 import backend.utils as bu
 import backend.resources as br
@@ -120,23 +121,14 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
 
 
 @functools.cache
-def retreive_country(coords, geolocator):
-    location = geolocator.reverse(coords,
-                                  language="en",
-                                  addressdetails=False,
-                                  zoom=0)
-    country = location.raw.get("name")
+def locate_country(coords, dataframe=gdf):
+    point = shapely.geometry.Point(coords)
+    mask = gdf.geometry.apply(lambda c:c.contains(point))
+    try:
+        country = gdf.loc[mask, "ADMIN"].values[0]
+    except:
+        country = "Undefined"
     return country
-
-
-def locate_country(row, locator):
-    coords = ", ".join(map(str,
-                            map(lambda x:round(x,2),
-                                [row.lat, row.lon])
-                            )
-                        )
-    country_name = retreive_country(coords, locator)
-    return country_name
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
@@ -177,18 +169,17 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "type": activity.get("type"),
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}
-                                             ).get("summary_polyline"),
-                    "country": "Canada",
+                                             ).get("summary_polyline")
                     }
+        elements.update(dict(zip(["lat", "lon"],
+                                 get_lat_long(activity.get("start_latlng",
+                                                           [])))))
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5)
                              }
                             )
-        elements.update(dict(zip(["lat", "lon"],
-                                 get_lat_long(activity.get("start_latlng",
-                                                           [])))))
         parsed_activities.append(elements)
     dataframe = pd.DataFrame(parsed_activities)
     dataframe["app"] = "Strava"
