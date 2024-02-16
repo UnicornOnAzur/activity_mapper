@@ -13,9 +13,8 @@ import pandas as pd
 import polyline
 # Local imports
 import backend.utils as bu
-# import backend.resources as br
+import backend.resources as br
 
-AUTH_LINK = "https://www.strava.com/oauth/token"
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
@@ -39,7 +38,7 @@ def get_access_token(authorization_code: str) -> tuple[str]:
     created_at : str
         DESCRIPTION.
     """
-    res = bu.post_request(AUTH_LINK,
+    res = bu.post_request(br.AUTH_LINK,
                           data={"client_id": STRAVA_CLIENT_ID,
                                 "client_secret": STRAVA_CLIENT_SECRET,
                                 "code": authorization_code,
