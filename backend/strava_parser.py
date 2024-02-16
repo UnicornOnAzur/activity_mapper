@@ -11,7 +11,6 @@ import typing
 # Third party
 import pandas as pd
 import polyline
-# import shapely
 # Local imports
 import backend.utils as bu
 # import backend.resources as br
@@ -148,10 +147,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         return pd.DataFrame()
     parsed_activities = []
     for activity in activities:
-        timestamp = pd.to_datetime(activity.get("start_date_local"),
-                                   # format="%Y%m%dT%H:%MZ"
-                                   )
-        # TODO: change view on strava to id
+        timestamp = pd.to_datetime(activity.get("start_date_local"))
         elements = {"view on Strava":
                     f"https://www.strava.com/activities/{activity.get('id')}",
                     "name": activity.get("name"),
