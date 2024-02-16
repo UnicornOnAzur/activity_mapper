@@ -112,7 +112,6 @@ def main():
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
-    st.dataframe(st.session_state.get("dataframe",))
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=STRAVA_COLS))
     with st.spinner("Making visualizations..."):

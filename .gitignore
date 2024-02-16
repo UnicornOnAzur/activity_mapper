@@ -1,3 +1,4 @@
 # folders
 .spyproject/
 __pycache__/
+test.py

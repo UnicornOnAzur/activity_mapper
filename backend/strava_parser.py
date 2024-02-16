@@ -177,9 +177,12 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                             "country": locate_country(tuple(map(lambda x:round(x,3),
-                                                              [elements.lon, elements.lat])
-                                                 ))
+                              "country": locate_country(tuple(map(lambda x:round(x,3),
+                                                                  [elements.get("lon"),
+                                                                   elements.get("lat")]
+                                                                  )
+                                                              )
+                                                        )
                              }
                             )
         parsed_activities.append(elements)
