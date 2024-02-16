@@ -118,14 +118,15 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
 
 
 # @functools.cache
-# def locate_country(coords, dataframe=gdf):
-#     point = shapely.geometry.Point(coords)
-#     mask = gdf.geometry.apply(lambda c:c.contains(point))
-#     try:
-#         country = gdf.loc[mask, "ADMIN"].values[0]
-#     except:
-#         country = "Undefined"
-#     return country
+def locate_country(coords, dataframe=None):
+    # point = shapely.geometry.Point(coords)
+    # mask = gdf.geometry.apply(lambda c:c.contains(point))
+    # try:
+    #     country = gdf.loc[mask, "ADMIN"].values[0]
+    # except:
+    #     country = "Undefined"
+    # return country
+    return "Belgium"
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
@@ -176,7 +177,9 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                             "country": "Italy"
+                             "country": locate_country(tuple(map(lambda x:round(x,3),
+                                                              [row.lon, row.lat])
+                                                 ))
                              }
                             )
         parsed_activities.append(elements)
