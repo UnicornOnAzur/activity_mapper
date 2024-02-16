@@ -752,6 +752,7 @@ def locations(original: pd.DataFrame,
     plot_title = "Locations"
     # prepare data
     data = original.copy()
+    print("DEBUG",data.columns)
     if "lat" in data.columns:
         data = data.loc[(~original["lat"].isna()) &
                         (~original["lon"].isna()),
