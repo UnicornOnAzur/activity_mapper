@@ -14,7 +14,7 @@ import polyline
 import shapely
 # Local imports
 import backend.utils as bu
-import backend.resources as br
+# import backend.resources as br
 
 AUTH_LINK = "https://www.strava.com/oauth/token"
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
@@ -166,7 +166,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "type": activity.get("type"),
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}
-                                             ).get("summary_polyline")
+                                             ).get("summary_polyline"),
+                    "country": "Italy"
                     }
         elements.update(dict(zip(["lat", "lon"],
                                  get_lat_long(activity.get("start_latlng",
@@ -174,8 +175,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
-                                                       5),
-                             "country": "Italy"
+                                                       5)
                              }
                             )
         parsed_activities.append(elements)
