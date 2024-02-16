@@ -178,7 +178,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                                                                     ),
                                                        5),
                              "country": locate_country(tuple(map(lambda x:round(x,3),
-                                                              [row.lon, row.lat])
+                                                              [elements.lon, elements.lat])
                                                  ))
                              }
                             )
