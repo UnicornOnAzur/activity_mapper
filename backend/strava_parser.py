@@ -174,7 +174,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
-                                                       5)
+                                                       5),
+                             "country": "Italy"
                              }
                             )
         parsed_activities.append(elements)
