@@ -150,6 +150,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         timestamp = pd.to_datetime(activity.get("start_date_local"),
                                    # format="%Y%m%dT%H:%MZ"
                                    )
+        # TODO: change view on strava to id
         elements = {"view on Strava":
                     f"https://www.strava.com/activities/{activity.get('id')}",
                     "name": activity.get("name"),
@@ -166,8 +167,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "type": activity.get("type"),
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}
-                                             ).get("summary_polyline"),
-                    "country": "Italy"
+                                             ).get("summary_polyline")
                     }
         elements.update(dict(zip(["lat", "lon"],
                                  get_lat_long(activity.get("start_latlng",
@@ -175,7 +175,8 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
-                                                       5)
+                                                       5),
+                             "country": "Italy"
                              }
                             )
         parsed_activities.append(elements)
