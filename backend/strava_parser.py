@@ -115,16 +115,14 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-# @functools.cache
-def locate_country(coords, dataframe=None):
-    # point = shapely.geometry.Point(coords)
-    # mask = gdf.geometry.apply(lambda c:c.contains(point))
-    # try:
-    #     country = gdf.loc[mask, "ADMIN"].values[0]
-    # except:
-    #     country = "Undefined"
-    # return country
-    return "Belgium"
+@functools.lru_cache(maxsize=25)
+def locate_country(lat, lon, dataframe=None):
+    response = bu.get_request(br.NOMINATIM,
+                              params={"lat": lat,
+                                      "lon": lon,
+                                      "format": "json"})
+    country_code = response.get("address").get("country_code")
+    return country_code
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
@@ -172,11 +170,11 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                              "country": locate_country(tuple(map(lambda x:round(x,3),
-                                                                  [elements.get("lon"),
-                                                                   elements.get("lat")]
-                                                                  )
-                                                              )
+                              "country": locate_country(*tuple(map(lambda x:round(x,3),
+                                                                   [elements.get("lat"),
+                                                                    elements.get("lon")]
+                                                                   )
+                                                               )
                                                         )
                              }
                             )

@@ -32,6 +32,7 @@ CONFIG2 = {"displaylogo": False,
                                       "autoscale"]}
 
 # paths
+PATH_CODES = "country_codes.txt"
 PATH_MAPPER = "strava_categories.txt"
 # colors and themes
 COLOR_MAP = {"Strava": "#FC4C02",  # the color of the Strava app
@@ -45,6 +46,7 @@ TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 600
 # urls
 AUTH_LINK = "https://www.strava.com/oauth/token"
+NOMINATIM = "https://nominatim.openstreetmap.org/reverse"
 # external data
 geojson_file = bu.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
 

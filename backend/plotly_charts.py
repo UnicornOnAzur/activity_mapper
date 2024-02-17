@@ -654,7 +654,7 @@ def types(original: pd.DataFrame,
                             plot_height)
     # prepare data
     data = original.copy()
-    mapper = bu.load_mapper(br.PATH_MAPPER)
+    mapper = bu.load_category_mapper(br.PATH_MAPPER)
     data["type"] = data["type"].map(mapper)
     data["counts"] = 1
     # create figure

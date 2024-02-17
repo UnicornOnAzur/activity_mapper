@@ -79,7 +79,7 @@ def get_request(url: str,
     return result
 
 
-def load_mapper(path: str) -> collections.defaultdict:
+def load_category_mapper(path: str) -> collections.defaultdict:
     """
     Load the different sport types with their categories into a dictionary.
 
@@ -114,6 +114,10 @@ def load_mapper(path: str) -> collections.defaultdict:
                           }
     mapper: collections.defaultdict = collections.defaultdict(str, original)
     return mapper
+
+
+def load_country_code_mapper(path):
+    pass
 
 
 def load_image(path: str) -> str:
