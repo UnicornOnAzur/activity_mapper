@@ -95,13 +95,29 @@ def load_category_mapper(path: str) -> collections.defaultdict:
 
     """
     def corrected(key: str) -> str:
+        """
+
+
+        Parameters
+        ----------
+        key : str
+            DESCRIPTION.
+
+        Returns
+        -------
+        str
+            DESCRIPTION.
+
+        """
         corrections: dict = {"E-Bike Ride": "EBikeRide",
                              "E-Mountain Bike Ride": "EMountainBikeRide",
                              "Kayak": "Kayaking",
                              "Stair Stepper": "StairStepper",
                              "Surf": "Surfing",
                              "Weight Training": "WeightTraining"}
-        return corrections.get(key, key)
+        correction: str = corrections.get(key, key)
+        return correction
+
 
     with open(path, mode="r") as file:
         original: dict = {corrected(value.strip()): main
@@ -116,9 +132,28 @@ def load_category_mapper(path: str) -> collections.defaultdict:
     return mapper
 
 
-def load_country_code_mapper(path):
-    pass
+def load_country_code_mapper(path: str):
+    """
 
+
+    Parameters
+    ----------
+    path : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    mapper : TYPE
+        DESCRIPTION.
+
+    """
+    with open(path, mode="r") as file:
+        mapper: dict = {row[1]: row[0]
+                        for row in map(lambda line: line.split("\t"),
+                                      file.readlines()
+                                      )
+                        }
+    return mapper
 
 def load_image(path: str) -> str:
     """

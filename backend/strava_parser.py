@@ -17,6 +17,7 @@ import backend.resources as br
 
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
+country_codes = bu.load_country_code_mapper(br.PATH_CODES)
 
 def get_access_token(authorization_code: str) -> tuple[str]:
     """
@@ -116,13 +117,15 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
 
 
 @functools.lru_cache(maxsize=25)
-def locate_country(lat, lon, dataframe=None):
-    response = bu.get_request(br.NOMINATIM,
-                              params={"lat": lat,
-                                      "lon": lon,
-                                      "format": "json"})
-    country_code = response.get("address").get("country_code")
-    return country_code
+def locate_country(lat, lon, mapper=country_codes):
+    response: dict = bu.get_request(br.NOMINATIM,
+                                    params={"lat": lat,
+                                            "lon": lon,
+                                            "format": "json"})
+    country_code: str = response.get("address").get("country_code")
+    country: str = country_codes.get(country_code.upper(),
+                                     "undefined")
+    return country
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
