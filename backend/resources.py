@@ -18,8 +18,19 @@ TITLE = "Activity Mapper"
 DISPLAY_COLS = ["name",
                 "view on Strava",
                 "date",
-                "type", "sport_type", "country"]
-STRAVA_COLS = ["app", "weekday", "time", "hour", "minutes", "name", "date","country"]
+                "type",
+                "sport_type",
+                "country"]
+STRAVA_COLS = ["app",
+               "weekday",
+               "time",
+               "hour",
+               "minutes",
+               "name",
+               "date",
+               "country",
+               "lat",
+               "lon"]
 # config dicts
 CONFIG = {"displaylogo": False,
           "displayModeBar": False,}
