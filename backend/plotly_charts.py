@@ -454,6 +454,14 @@ def worldmap_figure(data: pd.DataFrame,
                                      },
                              mode="lines",
                              )
+    figure.add_scattermapbox(below="traces",
+                             lat=data["lat"],
+                             lon=data["lon"],
+                             marker={"size": 5,
+                                     "color": br.COLOR_MAP.get("Strava"),
+                                     "symbol": "circle",
+                                     },
+                             mode="markers")
     figure = _update_layout(figure)
     figure.update_layout(coloraxis_showscale=False)
     return figure
