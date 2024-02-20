@@ -148,7 +148,7 @@ def load_country_code_mapper(path: str):
 
     """
     with open(path, mode="r") as file:
-        mapper: dict = {row[1]: row[0]
+        mapper: dict = {row[1].strip(): row[0].strip()
                         for row in map(lambda line: line.split("\t"),
                                       file.readlines()
                                       )
