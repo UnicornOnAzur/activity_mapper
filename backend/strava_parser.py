@@ -116,7 +116,7 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-@functools.lru_cache(maxsize=25)
+@functools.lru_cache(maxsize=None)
 def locate_country(lat, lon, mapper=country_codes):
     response: dict = bu.get_request(br.NOMINATIM,
                                     params={"lat": lat,

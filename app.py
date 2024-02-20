@@ -18,11 +18,10 @@ import backend.test as bt
 import backend.utils as bu
 
 
-APP_URL = os.environ.get("APP_URL")
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 authorization_link = "https://www.strava.com/oauth/authorize"+\
     f"?client_id={STRAVA_CLIENT_ID}&response_type=code&"+\
-    f"redirect_uri={APP_URL}&approval_prompt=force&"+\
+    f"redirect_uri={br.APP_URL}&approval_prompt=force&"+\
     "scope=activity:read,activity:read_all"
 
 
@@ -43,6 +42,7 @@ def connect_strava(code: str):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
+    # TODO: make a get refresg token function
     results = bsp.get_access_token(code)
     st.session_state["athlete_name"]: str = results[0]
     st.session_state["access_token"]: str = results[1]

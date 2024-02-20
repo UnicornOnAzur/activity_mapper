@@ -56,6 +56,7 @@ TOP_BOTTOM_MARGIN = 25
 TOP_ROW_HEIGHT = 200
 BOTTOM_ROW_HEIGHT = 600
 # urls
+APP_URL = "https://strava-activity-mapper.streamlit.app/"
 AUTH_LINK = "https://www.strava.com/oauth/token"
 NOMINATIM = "https://nominatim.openstreetmap.org/reverse"
 # external data
