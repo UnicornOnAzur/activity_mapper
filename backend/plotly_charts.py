@@ -437,7 +437,8 @@ def worldmap_figure(data: pd.DataFrame,
                                   hover_data={"country": False,
                                               "count": False},
                                   color_continuous_scale=px.colors.sequential.Oranges,
-                                  opacity=.1,
+                                  range_color=[0,countries["count"].max()],
+                                  opacity=.5,
                                   zoom=1,
                                   mapbox_style="carto-darkmatter",
                                   title=title,
@@ -750,8 +751,9 @@ def locations(original: pd.DataFrame,
                         (~original["lon"].isna()),
                         :]
     countries_count = data.country.value_counts().reset_index()
-    countries_count["count"] = countries_count["count"].apply(math.log)
-    geojson_file = bu.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
+    # get the colors closer together by taking the log of the value
+    countries_count["count"] = countries_count["count"].apply(math.log) + 3
+    geojson_file = br.geojson_file
     # create figure
     worldmap = worldmap_figure(data,
                                countries_count,
