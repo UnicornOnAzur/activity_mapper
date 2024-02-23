@@ -116,8 +116,22 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
+def get_county(row):
+    print(pd.isna(row.get("lat")), f"{row.get('lat')=}", f"{row.get('lon')=}")
+    if pd.isna(row.get("lat")):
+        return None
+    located_country = locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
+                                                [row.get("lat"),
+                                                 row.get("lon")]
+                                                )
+                                            )
+                                     )
+    return located_country
+
+
 @functools.lru_cache(maxsize=None)
 def locate_country(lat, lon, mapper=country_codes):
+    print(lat, lon)
     response: dict = bu.get_request(br.NOMINATIM,
                                     params={"lat": lat,
                                             "lon": lon,
@@ -146,6 +160,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     if activities == [{}]:
         return pd.DataFrame()
     parsed_activities = []
+    # <>
     for activity in activities:
         timestamp = pd.to_datetime(activity.get("start_date_local"))
         elements = {"view on Strava":
@@ -173,17 +188,15 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                              "country": locate_country(*tuple(map(lambda x:round(x,3),
-                                                                   [elements.get("lat"),
-                                                                    elements.get("lon")]
-                                                                   )
-                                                               )
-                                                        )
                              }
                             )
         parsed_activities.append(elements)
+    # <>
     dataframe = pd.DataFrame(parsed_activities)
     dataframe["app"] = "Strava"
+    dataframe.sort_values(by=["lat","lon"],
+                          inplace=True)
+    dataframe["country"] = dataframe.apply(get_county, axis=1)
     return dataframe
 
 
