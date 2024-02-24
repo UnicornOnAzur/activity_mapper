@@ -10,9 +10,19 @@ import backend.utils as bu
 
 # text
 CAPTION = \
-    "This page was created by QtyPython2020 and the code can be found on https://github.com/QtyPython2020/activity_mapper ."
-EXPLANATION = """To use this dashboard click on "Connect with Strava". This will redirect you to the Strava page. Then select to view public and/or private activities, and click "Authorize". This provides the dashboard with your data for the duration of your use."""
-ERROR_MESSAGE = "An error occurred while retrieving the data. Please try to authorize again."
+"""
+This page was created by QtyPython2020 and the code can be found on
+https://github.com/QtyPython2020/activity_mapper .
+"""
+EXPLANATION =\
+"""
+To use this dashboard click on "Connect with Strava". This will redirect you to
+the Strava page. Then select to view public and/or private activities, and click
+"Authorize". This provides the dashboard with your data for the duration of
+your use.
+"""
+ERROR_MESSAGE =\
+"""An error occurred while retrieving the data. Please try to authorize again."""
 TITLE = "Activity Mapper"
 # column lists
 DISPLAY_COLS = ["name",
