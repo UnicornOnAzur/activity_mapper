@@ -3,31 +3,20 @@
 @author: QtyPython2020
 
 """
-
+import time
 import json
-import geopy.geocoders
-import plotly.express as px
-import tqdm
 import backend.strava_parser as bsp
-import backend.utils as bu
+import backend.plotly_charts as bpc
 
-tqdm.tqdm.pandas()
+start_time = time.time()
 path = "C:/Users/joost/Python/activity_mapper_v2/strava.txt"
-
 with open(path, mode="r") as file:
-    df = bsp.parse([json.loads(l)
-                    for l in file.readlines()]
-                   )
-
-
-geolocator = geopy.geocoders.Nominatim(user_agent="appje")
+    df = bsp.parse_coords(bsp.parse([json.loads(l)
+                          for l in file.readlines()][-25:]
+                         )
+               )
 locs = df.loc[~df.lat.isna()]
-
-def locate_country(row):
-    coords = ", ".join(map(str,[row.lat, row.lon]))
-    location = geolocator.reverse(coords)
-    country = location.raw.get("address").get("country")
-    return country
-
-locs["country"] = locs.progress_apply(locate_country, axis="columns")
 print(locs.country.value_counts())
+print(time.time() - start_time)
+fig = bpc.locations(locs, 400)
+fig.show(renderer="browser")
