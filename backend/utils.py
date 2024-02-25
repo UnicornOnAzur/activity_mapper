@@ -9,6 +9,7 @@ import base64
 import collections
 # Third party
 import requests
+import urllib3
 
 
 def post_request(url: str,
@@ -68,7 +69,15 @@ def get_request(url: str,
 
     """
     result: dict = {}
-    response: requests.Response = requests.get(url=url,
+    session = requests.Session()
+    retry = urllib3.Retry(total=4,
+                          backoff_factor=1,
+                          allowed_methods=None,
+                          status_forcelist=[429, 500, 502, 503, 504]
+                          )
+    adapter = requests.adapters.HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    response: requests.Response = session.get(url=url,
                                                params=params,
                                                headers=headers,
                                                timeout=timeout)

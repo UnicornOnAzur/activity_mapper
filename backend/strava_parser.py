@@ -5,6 +5,7 @@
 """
 
 # Standard library
+import concurrent
 import functools
 import os
 import typing
@@ -12,12 +13,11 @@ import typing
 import pandas as pd
 import polyline
 # Local imports
-import backend.utils as bu
-import backend.resources as br
+import backend
 
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
-country_codes = bu.load_country_code_mapper(br.PATH_CODES)
+COUNTRIES = backend.load_country_code_mapper(backend.PATH_CODES)
 
 def get_access_token(authorization_code: str) -> tuple[str]:
     """
@@ -39,7 +39,7 @@ def get_access_token(authorization_code: str) -> tuple[str]:
     created_at : str
         DESCRIPTION.
     """
-    res = bu.post_request(br.AUTH_LINK,
+    res = backend.post_request(backend.AUTH_LINK,
                           data={"client_id": STRAVA_CLIENT_ID,
                                 "client_secret": STRAVA_CLIENT_SECRET,
                                 "code": authorization_code,
@@ -78,7 +78,7 @@ def request_data_from_api(access_token: str) -> list[dict]:
     while True:
         param = {"per_page": 200,
                  "page": request_page_num}
-        response = bu.get_request(url=activities_url,
+        response = backend.get_request(url=activities_url,
                                   headers=header,
                                   params=param)
         # if an invalid response is received
@@ -116,7 +116,7 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-def get_county(row):
+def get_country(row):
     print(pd.isna(row.get("lat")), f"{row.get('lat')=}", f"{row.get('lon')=}")
     if pd.isna(row.get("lat")):
         return None
@@ -129,15 +129,15 @@ def get_county(row):
     return located_country
 
 
-@functools.lru_cache(maxsize=None)
-def locate_country(lat, lon, mapper=country_codes):
+# @functools.lru_cache(maxsize=None)
+def locate_country(lat, lon, mapper=COUNTRIES):
     print(lat, lon)
-    response: dict = bu.get_request(br.NOMINATIM,
+    response: dict = backend.get_request(backend.NOMINATIM,
                                     params={"lat": lat,
                                             "lon": lon,
                                             "format": "json"})
-    country_code: str = response.get("address").get("country_code")
-    country: str = country_codes.get(country_code.upper(),
+    country_code: str = response.get("address", {}).get("country_code", "")
+    country: str = COUNTRIES.get(country_code.upper(),
                                      "undefined")
     return country
 
@@ -196,7 +196,20 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     dataframe["app"] = "Strava"
     dataframe.sort_values(by=["lat","lon"],
                           inplace=True)
-    dataframe["country"] = dataframe.apply(get_county, axis=1)
+    return dataframe
+
+
+def parse_coords(dataframe):
+    import tqdm
+    rows = [row for _, row in dataframe.iterrows()]
+    with concurrent.futures.ThreadPoolExecutor() as threadpool:
+        countries = list(tqdm.tqdm(threadpool.map(get_country, rows, chunksize=1),
+                                   total=len(rows))
+                         )
+    # for _, row in dataframe.iterrows():
+    #     countries.append(get_country(row))
+    # dataframe["country"] = dataframe.apply(get_county, axis=1)
+    dataframe["country"] = countries
     return dataframe
 
 

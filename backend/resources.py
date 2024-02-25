@@ -6,7 +6,7 @@
 # Third party
 import plotly.express as px
 # Local imports
-import backend.utils as bu
+import backend
 
 # text
 CAPTION = \
@@ -68,9 +68,9 @@ BOTTOM_ROW_HEIGHT = 600
 # urls
 APP_URL = "https://strava-activity-mapper.streamlit.app/"
 AUTH_LINK = "https://www.strava.com/oauth/token"
-NOMINATIM = "https://nominatim.openstreetmap.org/reverse"
+NOMINATIM_LINK = "https://nominatim.openstreetmap.org/reverse"
 # external data
-geojson_file = bu.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
+GEOJSON = backend.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
 
 
 if __name__ == "__main__":

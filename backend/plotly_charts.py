@@ -26,8 +26,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 # Local imports
-import backend.resources as br
-import backend.utils as bu
+import backend
 
 
 def _add_annotation(fig: go.Figure,
@@ -86,11 +85,11 @@ def _add_annotation_color(fig: go.Figure,
                        ax=ax,
                        y=5,
                        text=text,
-                       font={"color": br.COLOR_MAP.get("Strava"),
+                       font={"color": backend.COLOR_MAP.get("Strava"),
                              "family": "Arial",
                              "size": 12},
                        showarrow=True,
-                       arrowcolor=br.COLOR_MAP.get("Strava"))
+                       arrowcolor=backend.COLOR_MAP.get("Strava"))
     return fig
 
 
@@ -118,10 +117,10 @@ def _update_layout(fig: go.Figure,
         kwargs.pop("xaxis")
     fig.update_layout(showlegend=False,
                       # set the margins of the graph to optimize visable area
-                      margin={"l": br.LEFT_RIGHT_MARGIN,
-                              "r": br.LEFT_RIGHT_MARGIN,
-                              "t": br.TOP_BOTTOM_MARGIN,
-                              "b": br.TOP_BOTTOM_MARGIN},
+                      margin={"l": backend.LEFT_RIGHT_MARGIN,
+                              "r": backend.LEFT_RIGHT_MARGIN,
+                              "t": backend.TOP_BOTTOM_MARGIN,
+                              "b": backend.TOP_BOTTOM_MARGIN},
                       # prevent scrolling on the graphs
                       xaxis=xaxis,
                       yaxis={"fixedrange": True},
@@ -202,11 +201,11 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                  },
                      custom_data=[app],
                      labels={xaxis: "Year"},  # change the label on the plot
-                     color_discrete_map=br.COLOR_MAP,
+                     color_discrete_map=backend.COLOR_MAP,
                      orientation="v",  # orient the chart
                      line_shape="spline",  # smoothes out the line
                      title=title,
-                     template=br.TEMPLATE,
+                     template=backend.TEMPLATE,
                      height=height,
                      **kwargs.get("area", {})
                      )
@@ -223,10 +222,10 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                        )
     figure.add_vline((creation_date := kwargs.get("creation_date")),
                      line_width=1,
-                     line_color=br.COLOR_MAP.get("Strava"))
+                     line_color=backend.COLOR_MAP.get("Strava"))
     figure.add_vline((today := dt.datetime.now().date()),
                      line_width=1,
-                     line_color=br.COLOR_MAP.get("Strava"))
+                     line_color=backend.COLOR_MAP.get("Strava"))
     figure = _add_annotation_color(figure,
                                    creation_date,
                                    100,
@@ -278,12 +277,12 @@ def weekdays_figure(aggregated_data: pd.DataFrame,
                     x="weekday",
                     y="percentage",
                     color="app",
-                    color_discrete_map=br.COLOR_MAP,
+                    color_discrete_map=backend.COLOR_MAP,
                     hover_data=[hover_data,
                                 ],
                     text_auto=".0%",
                     title=title,
-                    template=br.TEMPLATE,
+                    template=backend.TEMPLATE,
                     height=height,
                     **kwargs
                     )
@@ -335,11 +334,11 @@ def clock_figure(preprocessed_data: pd.DataFrame,
                               color="app",
                               hover_name="name",
                               custom_data=["name", "time"],
-                              color_discrete_map=br.COLOR_MAP,
+                              color_discrete_map=backend.COLOR_MAP,
                               direction="clockwise",
                               start_angle=90,  # start at due north
                               title=title,
-                              template=br.TEMPLATE,
+                              template=backend.TEMPLATE,
                               height=height,
                               **kwargs
                               )
@@ -349,7 +348,7 @@ def clock_figure(preprocessed_data: pd.DataFrame,
     figure.update_layout(polar={"radialaxis": {"tickvals":
                                                list(range(0, max_axis+1, 5))},
                                 "angularaxis": {"tickvals":
-                                                [bu.hr2ang(hr) for hr in range(24)],
+                                                [backend.hr2ang(hr) for hr in range(24)],
                                                 "ticktext":
                                                 [str(24 if hr == 0 else hr) for hr in range(24)]}
                                 }
@@ -384,9 +383,9 @@ def sunburst_figure(aggregated_data: pd.DataFrame,
     figure = px.sunburst(data_frame=aggregated_data,
                          path=["type", "sport_type"],
                          values="counts",
-                         color_discrete_sequence=br.DISCRETE_COLOR,
+                         color_discrete_sequence=backend.DISCRETE_COLOR,
                          title=title,
-                         template=br.TEMPLATE,
+                         template=backend.TEMPLATE,
                          height=height,
                          **kwargs)
     figure.update_traces(hovertemplate="<b>%{label}</b><br>%{value}")
@@ -450,7 +449,7 @@ def worldmap_figure(data: pd.DataFrame,
                              lat=lats,
                              lon=lons,
                              marker={"size": 1,
-                                     "color": br.COLOR_MAP.get("Strava"),
+                                     "color": backend.COLOR_MAP.get("Strava"),
                                      "symbol": "circle",
                                      },
                              mode="lines",
@@ -459,7 +458,7 @@ def worldmap_figure(data: pd.DataFrame,
                              lat=data["lat"],
                              lon=data["lon"],
                              marker={"size": 5,
-                                     "color": br.COLOR_MAP.get("Strava"),
+                                     "color": backend.COLOR_MAP.get("Strava"),
                                      "symbol": "circle",
                                      },
                              mode="markers"
@@ -611,7 +610,7 @@ def hours(original: pd.DataFrame,
     plot_title = "Hours"
     # prepare data
     original["timestep"] = original["hour"]*60 + original["minutes"]//10
-    original["timestep"] = original["timestep"].apply(bu.min2ang)
+    original["timestep"] = original["timestep"].apply(backend.min2ang)
     original.sort_values(by="timestep",
                          ascending=True,
                          inplace=True)
@@ -665,7 +664,7 @@ def types(original: pd.DataFrame,
                             plot_height)
     # prepare data
     data = original.copy()
-    mapper = bu.load_category_mapper(br.PATH_MAPPER)
+    mapper = backend.load_category_mapper(backend.PATH_MAPPER)
     data["type"] = data["type"].map(mapper)
     data["counts"] = 1
     # create figure
@@ -763,7 +762,7 @@ def locations(original: pd.DataFrame,
     countries_count = data.country.value_counts().reset_index()
     # get the colors closer together by taking the log of the value
     countries_count["count"] = countries_count["count"].apply(math.log) + 2
-    geojson_file = br.geojson_file
+    geojson_file = backend.GEOJSON
     # create figure
     worldmap = worldmap_figure(data,
                                countries_count,
