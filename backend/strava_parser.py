@@ -5,13 +5,14 @@
 """
 
 # Standard library
-import concurrent
-import functools
+# import concurrent
+# import functools
 import os
 import typing
 # Third party
 import pandas as pd
 import polyline
+import streamlit as st
 # Local imports
 import backend
 
@@ -129,7 +130,7 @@ def get_country(row):
     return located_country
 
 
-@functools.lru_cache(maxsize=None)
+@st.cache_data
 def nomatim_lookup(lat, lon):
     print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
