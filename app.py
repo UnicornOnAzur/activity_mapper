@@ -53,7 +53,9 @@ def connect_strava(code: str):
     if data[0] == {'401': 'Unauthorized'}:
         error_message = st.error(backend.ERROR_MESSAGE)
         return
-    st.session_state["dataframe"] = backend.parse(data)
+    dataframe = backend.parse(data)
+    dataframe = backend.parse_coords(dataframe)
+    st.session_state["dataframe"] = dataframe
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     progress_bar.empty()
