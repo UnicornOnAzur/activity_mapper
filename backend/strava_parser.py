@@ -132,7 +132,7 @@ def get_country(row):
 # @functools.lru_cache(maxsize=None)
 def locate_country(lat, lon, mapper=COUNTRIES):
     print(lat, lon)
-    response: dict = backend.get_request(backend.NOMINATIM,
+    response: dict = backend.get_request(backend.NOMINATIM_LINK,
                                     params={"lat": lat,
                                             "lon": lon,
                                             "format": "json"})
@@ -200,12 +200,9 @@ def parse(activities: list[dict]) -> pd.DataFrame:
 
 
 def parse_coords(dataframe):
-    import tqdm
     rows = [row for _, row in dataframe.iterrows()]
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
-        countries = list(tqdm.tqdm(threadpool.map(get_country, rows, chunksize=1),
-                                   total=len(rows))
-                         )
+        countries = list(threadpool.map(get_country, rows, chunksize=1))
     # for _, row in dataframe.iterrows():
     #     countries.append(get_country(row))
     # dataframe["country"] = dataframe.apply(get_county, axis=1)

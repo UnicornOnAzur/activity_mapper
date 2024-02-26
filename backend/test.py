@@ -18,9 +18,6 @@ def load_test_data() -> list[dict]:
     with open("api_test.txt", "rb") as file:
         data: list[dict] = json.loads(file.read())
     new_data = []
-    for element in data:
-        element.update({"country":None})
-        new_data.append(element)
     return data
 
 

@@ -755,13 +755,14 @@ def locations(original: pd.DataFrame,
     plot_title = "Locations"
     # prepare data
     data = original.copy()
-    if "lat" in data.columns:
-        data = data.loc[(~original["lat"].isna()) &
-                        (~original["lon"].isna()),
-                        :]
-    countries_count = data.country.value_counts().reset_index()
-    # get the colors closer together by taking the log of the value
-    countries_count["count"] = countries_count["count"].apply(math.log) + 2
+    countries_count = pd.DataFrame(columns=["country", "count"])
+    data = data.loc[(~original["lat"].isna()) &
+                    (~original["lon"].isna()),
+                    :]
+    if not data.empty:
+        countries_count = data.country.value_counts().reset_index()
+        # get the colors closer together by taking the log of the value
+        countries_count["count"] = countries_count["count"].apply(math.log) + 2
     geojson_file = backend.GEOJSON
     # create figure
     worldmap = worldmap_figure(data,
