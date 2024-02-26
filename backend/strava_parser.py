@@ -130,12 +130,17 @@ def get_country(row):
 
 
 @functools.lru_cache(maxsize=None)
-def locate_country(lat, lon, mapper=COUNTRIES):
-    print(lat, lon)
+def nomatim_lookup(lat, lon):
+    print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
                                     params={"lat": lat,
                                             "lon": lon,
                                             "format": "json"})
+    return response
+
+
+def locate_country(lat, lon, mapper=COUNTRIES):
+    response = nomatim_lookup(lat, lon)
     country_code: str = response.get("address", {}).get("country_code", "")
     country: str = COUNTRIES.get(country_code.upper(),
                                      "undefined")
