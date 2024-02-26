@@ -112,7 +112,9 @@ def main():
             st.divider()
             st.markdown(backend.EXPLANATION)
             if st.button("Show with demo data"):
-                st.session_state["dataframe"] = backend.parse(backend.load_test_data())
+                test_data = backend.parse(backend.load_test_data())
+                test_data = backend.parse_coords(test_data)
+                st.session_state["dataframe"] = test_data
                 wrap_up()
 
         # MAIN PAGE
