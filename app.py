@@ -54,7 +54,7 @@ def connect_strava(code: str):
         error_message = st.error(backend.ERROR_MESSAGE)
         return
     dataframe = backend.parse(data)
-    dataframe = backend.parse_coords(dataframe)
+    # dataframe = backend.parse_coords(dataframe)
     st.session_state["dataframe"] = dataframe
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
@@ -115,7 +115,7 @@ def main():
             st.markdown(backend.EXPLANATION)
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
-                test_data = backend.parse_coords(test_data)
+                # test_data = backend.parse_coords(test_data)
                 st.session_state["dataframe"] = test_data
                 wrap_up()
 

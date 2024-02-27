@@ -5,8 +5,7 @@
 """
 
 # Standard library
-# import concurrent
-# import functools
+import functools
 import os
 import typing
 # Third party
@@ -128,7 +127,7 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
 #                                      )
 #     return located_country
 
-
+@functools.lru_cache()
 def nomatim_lookup(lat, lon):
     print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
