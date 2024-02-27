@@ -10,19 +10,21 @@ import backend
 
 # text
 CAPTION = \
-"""
+    """
 This page was created by QtyPython2020 and the code can be found on
 https://github.com/QtyPython2020/activity_mapper .
 """
 EXPLANATION =\
-"""
+    """
 To use this dashboard click on "Connect with Strava". This will redirect you to
-the Strava page. Then select to view public and/or private activities, and click
-"Authorize". This provides the dashboard with your data for the duration of
-your use.
+the Strava page. Then select to view public and/or private activities, and
+click "Authorize". This provides the dashboard with your data for the duration
+of your use.
 """
 ERROR_MESSAGE =\
-"""An error occurred while retrieving the data. Please try to authorize again."""
+    """
+An error occurred while retrieving the data. Please try to authorize again.
+"""
 TITLE = "Activity Mapper"
 # column lists
 DISPLAY_COLS = ["name",
@@ -43,7 +45,7 @@ STRAVA_COLS = ["app",
                "lon"]
 # config dicts
 CONFIG = {"displaylogo": False,
-          "displayModeBar": False,}
+          "displayModeBar": False}
 CONFIG2 = {"displaylogo": False,
            "modeBarButtonsToRemove": ["pan2d",
                                       "lasso2d",
@@ -56,8 +58,7 @@ CONFIG2 = {"displaylogo": False,
 PATH_CODES = "country_codes.txt"
 PATH_MAPPER = "strava_categories.txt"
 # colors and themes
-COLOR_MAP = {"Strava": "#FC4C02",  # the color of the Strava app
-             }
+COLOR_MAP = {"Strava": "#FC4C02"}  # the color of the Strava app
 DISCRETE_COLOR = px.colors.sequential.Oranges_r
 TEMPLATE = "plotly_dark"
 # sizes
@@ -70,7 +71,9 @@ APP_URL = "https://strava-activity-mapper.streamlit.app/"
 AUTH_LINK = "https://www.strava.com/oauth/token"
 NOMINATIM_LINK = "https://nominatim.openstreetmap.org/reverse"
 # external data
-GEOJSON = backend.get_request("https://datahub.io/core/geo-countries/r/0.geojson")
+GEOJSON = backend.get_request(
+    "https://datahub.io/core/geo-countries/r/0.geojson"
+                              )
 
 
 if __name__ == "__main__":
