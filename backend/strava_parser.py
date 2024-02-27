@@ -115,18 +115,6 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-# def get_country(row):
-#     print(pd.isna(row.get("lat")), f"{row.get('lat')=}", f"{row.get('lon')=}")
-#     if pd.isna(row.get("lat")):
-#         return None
-#     located_country = locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
-#                                                 [row.get("lat"),
-#                                                  row.get("lon")]
-#                                                 )
-#                                             )
-#                                      )
-#     return located_country
-
 @functools.lru_cache()
 def nomatim_lookup(lat, lon):
     print(f"api_call with {lat=}, {lon=}")
@@ -143,20 +131,6 @@ def locate_country(lat, lon, mapper=COUNTRIES):
     country: str = COUNTRIES.get(country_code.upper(),
                                      "undefined")
     return country
-
-
-
-
-# def parse_coords(dataframe):
-#     # rows = [row for _, row in dataframe.iterrows()]
-#     # with concurrent.futures.ThreadPoolExecutor() as threadpool:
-#     #     countries = list(threadpool.map(get_country, rows, chunksize=1))
-#     countries = []
-#     for _, row in dataframe.iterrows():
-#         countries.append(get_country(row))
-#     # dataframe["country"] = dataframe.apply(get_country, axis=1)
-#     dataframe["country"] = countries
-#     return dataframe
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:

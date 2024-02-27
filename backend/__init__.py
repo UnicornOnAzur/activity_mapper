@@ -34,9 +34,7 @@ from backend.resources import (
 
 from backend.strava_parser import (
     get_access_token,
-    # get_country,
     parse,
-    # parse_coords,
     request_data_from_api
     )
 

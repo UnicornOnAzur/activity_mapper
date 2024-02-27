@@ -47,14 +47,13 @@ def connect_strava(code: str):
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
     data = backend.request_data_from_api(st.session_state["access_token"])
-    # PARSING THE DATA
-    progress_bar.progress(67, "Parsing data...")
     # if an error occur stop the function
     if data[0] == {'401': 'Unauthorized'}:
         error_message = st.error(backend.ERROR_MESSAGE)
         return
+    # PARSING THE DATA
+    progress_bar.progress(67, "Parsing data...")
     dataframe = backend.parse(data)
-    # dataframe = backend.parse_coords(dataframe)
     st.session_state["dataframe"] = dataframe
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
@@ -115,7 +114,6 @@ def main():
             st.markdown(backend.EXPLANATION)
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
-                # test_data = backend.parse_coords(test_data)
                 st.session_state["dataframe"] = test_data
                 wrap_up()
 
