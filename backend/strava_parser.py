@@ -12,7 +12,6 @@ import typing
 # Third party
 import pandas as pd
 import polyline
-import streamlit as st
 # Local imports
 import backend
 
@@ -117,20 +116,19 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-def get_country(row):
-    print(pd.isna(row.get("lat")), f"{row.get('lat')=}", f"{row.get('lon')=}")
-    if pd.isna(row.get("lat")):
-        return None
-    located_country = locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
-                                                [row.get("lat"),
-                                                 row.get("lon")]
-                                                )
-                                            )
-                                     )
-    return located_country
+# def get_country(row):
+#     print(pd.isna(row.get("lat")), f"{row.get('lat')=}", f"{row.get('lon')=}")
+#     if pd.isna(row.get("lat")):
+#         return None
+#     located_country = locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
+#                                                 [row.get("lat"),
+#                                                  row.get("lon")]
+#                                                 )
+#                                             )
+#                                      )
+#     return located_country
 
 
-@st.cache_data
 def nomatim_lookup(lat, lon):
     print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
@@ -146,6 +144,20 @@ def locate_country(lat, lon, mapper=COUNTRIES):
     country: str = COUNTRIES.get(country_code.upper(),
                                      "undefined")
     return country
+
+
+
+
+# def parse_coords(dataframe):
+#     # rows = [row for _, row in dataframe.iterrows()]
+#     # with concurrent.futures.ThreadPoolExecutor() as threadpool:
+#     #     countries = list(threadpool.map(get_country, rows, chunksize=1))
+#     countries = []
+#     for _, row in dataframe.iterrows():
+#         countries.append(get_country(row))
+#     # dataframe["country"] = dataframe.apply(get_country, axis=1)
+#     dataframe["country"] = countries
+#     return dataframe
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
@@ -194,26 +206,18 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
+                             "country": locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
+                                                                  [elements.get("lat"),
+                                                                   elements.get("lon")]
+                                                                  )
+                                                              )
+                                                       )
                              }
                             )
         parsed_activities.append(elements)
     # <>
     dataframe = pd.DataFrame(parsed_activities)
     dataframe["app"] = "Strava"
-    dataframe.sort_values(by=["lat","lon"],
-                          inplace=True)
-    return dataframe
-
-
-def parse_coords(dataframe):
-    # rows = [row for _, row in dataframe.iterrows()]
-    # with concurrent.futures.ThreadPoolExecutor() as threadpool:
-    #     countries = list(threadpool.map(get_country, rows, chunksize=1))
-    countries = []
-    for _, row in dataframe.iterrows():
-        countries.append(get_country(row))
-    # dataframe["country"] = dataframe.apply(get_country, axis=1)
-    dataframe["country"] = countries
     return dataframe
 
 
