@@ -13,11 +13,10 @@ def load_test_data() -> list[dict]:
     Returns
     -------
     data: dict
-        DESCRIPTION.
+        list[dict].
     """
     with open("api_test.txt", "rb") as file:
         data: list[dict] = json.loads(file.read())
-    new_data = []
     return data
 
 
