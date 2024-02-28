@@ -88,7 +88,7 @@ def request_data_from_api(access_token: str) -> list[dict]:
         # otherwise add the response to the list
         all_activities.extend(response)
         # if the page is empty or less than 200 records stop the loop
-        if len(response) < 200 or response == []:
+        if len(response) < 200:
             break
         # increment to get the next page
         request_page_num += 1
