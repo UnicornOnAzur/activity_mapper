@@ -27,6 +27,8 @@ from backend.resources import (
     NOMINATIM_LINK,
     PATH_CODES,
     PATH_MAPPER,
+    STRAVA_CLIENT_ID,
+    STRAVA_CLIENT_SECRET,
     STRAVA_COLS,
     TEMPLATE,
     TITLE,
