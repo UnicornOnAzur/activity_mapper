@@ -22,7 +22,7 @@ def post_request(url: str,
     ----------
     url : str
         The requested url.
-    params : dict, optional
+    data : dict, optional
         The payload. The default is None.
     timeout : int, optional
         The amount of seconds before closing the connection. The default is 60.
@@ -78,9 +78,9 @@ def get_request(url: str,
     adapter = requests.adapters.HTTPAdapter(max_retries=retry)
     session.mount("https://", adapter)
     response: requests.Response = session.get(url=url,
-                                               params=params,
-                                               headers=headers,
-                                               timeout=timeout)
+                                              params=params,
+                                              headers=headers,
+                                              timeout=timeout)
     if response.ok:
         result: dict = response.json()
     else:
@@ -105,17 +105,17 @@ def load_category_mapper(path: str) -> collections.defaultdict:
     """
     def corrected(key: str) -> str:
         """
-
+        Make corrections on some categories
 
         Parameters
         ----------
         key : str
-            DESCRIPTION.
+            The sport that is looked up.
 
         Returns
         -------
         str
-            DESCRIPTION.
+            The corrected or original sport.
 
         """
         corrections: dict = {"E-Bike Ride": "EBikeRide",
@@ -126,7 +126,6 @@ def load_category_mapper(path: str) -> collections.defaultdict:
                              "Weight Training": "WeightTraining"}
         correction: str = corrections.get(key, key)
         return correction
-
 
     with open(path, mode="r") as file:
         original: dict = {corrected(value.strip()): main
@@ -143,7 +142,7 @@ def load_category_mapper(path: str) -> collections.defaultdict:
 
 def load_country_code_mapper(path: str):
     """
-
+    Load a mapper of country codes to country names
 
     Parameters
     ----------
@@ -159,10 +158,11 @@ def load_country_code_mapper(path: str):
     with open(path, mode="r") as file:
         mapper: dict = {row[1].strip(): row[0].strip()
                         for row in map(lambda line: line.split("\t"),
-                                      file.readlines()
-                                      )
+                                       file.readlines()
+                                       )
                         }
     return mapper
+
 
 def load_image(path: str) -> str:
     """
@@ -211,8 +211,8 @@ def hr2ang(hour: int) -> int:
 
     Parameters
     ----------
-    time : int
-        The time of the activity.
+    hour : int
+        The hour of the activity.
 
     Returns
     -------
