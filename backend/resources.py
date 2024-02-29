@@ -3,10 +3,16 @@
 @author: QtyPython2020
 
 """
+#  Standard library
+import os
 # Third party
 import plotly.express as px
 # Local imports
 import backend
+
+#
+STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
+STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
 # TEXT
 CAPTION: str = \

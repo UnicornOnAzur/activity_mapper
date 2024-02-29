@@ -14,8 +14,8 @@ import polyline
 # Local imports
 import backend
 
-STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
-STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
+STRAVA_CLIENT_ID = backend.STRAVA_CLIENT_ID
+STRAVA_CLIENT_SECRET = backend.STRAVA_CLIENT_SECRET
 COUNTRIES = backend.load_country_code_mapper(backend.PATH_CODES)
 
 def get_access_token(authorization_code: str) -> tuple[str]:
@@ -178,7 +178,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                             "country": locate_country(*tuple(map(lambda x:(s:=str(round(x,3))).ljust(len(s.split(".")[0])+4, "0"),
+                             "country": locate_country(*tuple(map(lambda x:(s:=str(round(x,1))).ljust(len(s.split(".")[0])+2, "0"),
                                                                   [elements.get("lat"),
                                                                    elements.get("lon")]
                                                                   )
