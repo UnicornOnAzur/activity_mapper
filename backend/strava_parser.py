@@ -264,6 +264,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                 st.runtime.scriptrunner.add_script_run_ctx(thread)
             # push work into task 1
             while True:
+                st.write(f"{i=}")
                 task1_queue_in.put(i)
                 i += 1
                 if None in task1_queue_in.queue:
