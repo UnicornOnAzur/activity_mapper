@@ -286,6 +286,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                     break
                 # <>
                 results.append(data)
+                st.write(len(results), results[-1])
     total = pd.concat(results)
     return total
 
