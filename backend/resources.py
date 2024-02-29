@@ -84,6 +84,9 @@ AUTH_LINK: str = "https://www.strava.com/oauth/authorize"
 ACTIVITIES_LINK: str = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITIES_URL: str = "https://www.strava.com/activities/"
 NOMINATIM_LINK: str = "https://nominatim.openstreetmap.org/reverse"
+authorization_link = f"""
+{backend.AUTH_LINK}?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={backend.APP_URL}&approval_prompt=force&scope=activity:read,activity:read_all
+"""
 
 # JSON
 GEOJSON: dict = backend.get_request(

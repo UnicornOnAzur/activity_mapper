@@ -14,13 +14,6 @@ import streamlit as st
 import backend
 
 
-STRAVA_CLIENT_ID = backend.STRAVA_CLIENT_ID
-authorization_link = backend.AUTH_LINK +\
-    f"?client_id={STRAVA_CLIENT_ID}&response_type=code&"+\
-    f"redirect_uri={backend.APP_URL}&approval_prompt=force&"+\
-    "scope=activity:read,activity:read_all"
-
-
 def connect_strava(code: str):
     """
     <>
@@ -104,7 +97,7 @@ def main():
             st.header("Menu")
             if not st.session_state.get("loaded"):
                 image_connect = backend.load_image("logos/btn_strava_connectwith_orange@2x.png")
-                st.markdown(f'<a href="{authorization_link}">'
+                st.markdown(f'<a href="{backend.authorization_link}">'
                             f'<img src="data:image/png;base64,{image_connect}" width="100%">'
                             f'</a>',
                             unsafe_allow_html=True)

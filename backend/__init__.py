@@ -12,6 +12,7 @@ from backend.resources import (
     ACTIVITIES_LINK,
     ACTIVITIES_URL,
     APP_URL,
+    authorization_link,
     AUTH_LINK,
     BOTTOM_ROW_HEIGHT,
     CAPTION,
