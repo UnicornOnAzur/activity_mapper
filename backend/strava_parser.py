@@ -278,6 +278,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             while True:
                 # retrieve data
                 data = task2_queue_out.get()
+                st.write("Retrieved element from queue")
                 # check for the end of work
                 if data is None:
                     # stop processing
