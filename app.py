@@ -39,15 +39,15 @@ def connect_strava(code: str):
     st.session_state["creation"]: str = results[3]
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
-    data = backend.request_data_from_api(st.session_state["access_token"])
+    data = backend.thread_get_and_parse(st.session_state["access_token"])
     # if an error occur stop the function
     if data[0] == {'401': 'Unauthorized'}:
         error_message = st.error(backend.ERROR_MESSAGE)
         return
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
-    dataframe = backend.parse(data)
-    st.session_state["dataframe"] = dataframe
+    # dataframe = backend.parse(data)
+    st.session_state["dataframe"] = data#frame
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     progress_bar.empty()

@@ -5,7 +5,10 @@
 """
 
 # Standard library
+import concurrent
 import functools
+import queue
+import threading
 import typing
 # Third party
 import pandas as pd
@@ -191,6 +194,89 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     dataframe["app"] = "Strava"
     return dataframe
 
+
+def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
+    # loop forever
+    while True:
+        # read item from queue
+        request_page_num = queue_in.get()
+        header = {"Authorization": f"Bearer {access_token}"}
+        param = {"per_page": 200, "page": request_page_num}
+        response = backend.get_request(url=backend.ACTIVITIES_LINK,
+                                       headers=header,
+                                       params=param)
+        # check for shutdown
+        if len(response) == 0 or isinstance(response, dict):
+            # put signal back on queue
+            queue_in.put(None)
+        	# wait on the barrier for all other workers
+            barrier.wait()
+            # send signal on output queue
+            queue_out.put(None)
+            # stop processing
+            break
+        # push result onto queue
+        queue_out.put(response)
+
+
+def parse_page(queue_in, queue_out, barrier) -> None:
+    # loop forever
+    while True:
+        # read item from queue
+        data = queue_in.get()
+        # check for shutdown
+        if data is None:
+            # put signal back on queue
+            queue_in.put(None)
+        	# wait on the barrier for all other workers
+            barrier.wait()
+            # send signal on output queue
+            queue_out.put(None)
+            # stop processing
+            break
+        #
+        parsed_data = backend.parse(data)
+        # push result onto queue
+        queue_out.put(parsed_data)
+
+
+def thread_get_and_parse(token) -> pd.DataFrame:
+    # create the shared queues
+    task1_queue_in = queue.Queue()
+    task1_queue_out = queue.Queue()
+    task2_queue_out = queue.Queue()
+    #
+    barrier1 = threading.Barrier(5)
+    barrier2 = threading.Barrier(10)
+    #
+    results = []
+    i = 1
+    # create the thread pool
+    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as threadpool:
+        # issue task 1 workers
+        _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
+        # issue task 2 workers
+        _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+        # push work into task 1
+        while True:
+            task1_queue_in.put(i)
+            i += 1
+            if None in task1_queue_in.queue:
+                # signal that there is no more work
+                task1_queue_in.put(None)
+                break
+        # consume results
+        while True:
+            # retrieve data
+            data = task2_queue_out.get()
+            # check for the end of work
+            if data is None:
+                # stop processing
+                break
+            # <>
+            results.append(data)
+    total = pd.concat(results)
+    return total
 
 if __name__ == "__main__":
     pass

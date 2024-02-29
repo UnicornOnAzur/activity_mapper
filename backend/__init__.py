@@ -40,8 +40,11 @@ from backend.resources import (
 
 from backend.strava_parser import (
     get_access_token,
+    get_activities_page,
     parse,
-    request_data_from_api
+    parse_page,
+    request_data_from_api,
+    thread_get_and_parse
     )
 
 from backend.plotly_charts import (
