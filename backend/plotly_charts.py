@@ -425,7 +425,7 @@ def worldmap_figure(data: pd.DataFrame,
     """
     lats: list = kwargs.get("lat", [])
     lons: list = kwargs.get("lon", [])
-
+    # TODO: center map
     # color the countries by (log of) the amount of activities
     figure = px.choropleth_mapbox(data_frame=countries,
                                   geojson=geojson,

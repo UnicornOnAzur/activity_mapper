@@ -38,7 +38,7 @@ def get_access_token(authorization_code: str) -> tuple[str]:
     created_at : str
         DESCRIPTION.
     """
-    res = backend.post_request(backend.AUTH_LINK,
+    res = backend.post_request(backend.TOKEN_LINK,
                           data={"client_id": STRAVA_CLIENT_ID,
                                 "client_secret": STRAVA_CLIENT_SECRET,
                                 "code": authorization_code,
@@ -154,7 +154,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     for activity in activities:
         timestamp = pd.to_datetime(activity.get("start_date_local"))
         elements = {"view on Strava":
-                    f"https://www.strava.com/activities/{activity.get('id')}",
+                    f"{backend.ACTIVITIES_URL}{activity.get('id')}",
                     "name": activity.get("name"),
                     "timestamp": timestamp,
                     "year": timestamp.year,

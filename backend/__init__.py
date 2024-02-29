@@ -10,6 +10,7 @@ from backend.utils import (
 
 from backend.resources import (
     ACTIVITIES_LINK,
+    ACTIVITIES_URL,
     APP_URL,
     AUTH_LINK,
     BOTTOM_ROW_HEIGHT,
@@ -29,6 +30,7 @@ from backend.resources import (
     STRAVA_COLS,
     TEMPLATE,
     TITLE,
+    TOKEN_LINK,
     TOP_BOTTOM_MARGIN,
     TOP_ROW_HEIGHT
     )

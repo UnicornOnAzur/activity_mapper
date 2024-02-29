@@ -15,7 +15,7 @@ import backend
 
 
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
-authorization_link = "https://www.strava.com/oauth/authorize"+\
+authorization_link = backend.AUTH_LINK +\
     f"?client_id={STRAVA_CLIENT_ID}&response_type=code&"+\
     f"redirect_uri={backend.APP_URL}&approval_prompt=force&"+\
     "scope=activity:read,activity:read_all"
