@@ -281,6 +281,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                 # check for the end of work
                 if data is None:
                     # stop processing
+                    st.write("Breaking loop")
                     break
                 # <>
                 results.append(data)
