@@ -9,6 +9,7 @@ from backend.utils import (
     )
 
 from backend.resources import (
+    ACTIVITIES_LINK,
     APP_URL,
     AUTH_LINK,
     BOTTOM_ROW_HEIGHT,

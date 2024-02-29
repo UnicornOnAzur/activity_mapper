@@ -69,7 +69,6 @@ def request_data_from_api(access_token: str) -> list[dict]:
         DESCRIPTION.
 
     """
-    activities_url = "https://www.strava.com/api/v3/athlete/activities"
     header = {"Authorization": f"Bearer {access_token}"}
     request_page_num = 1
     all_activities = []
@@ -77,9 +76,9 @@ def request_data_from_api(access_token: str) -> list[dict]:
     while True:
         param = {"per_page": 200,
                  "page": request_page_num}
-        response = backend.get_request(url=activities_url,
-                                  headers=header,
-                                  params=param)
+        response = backend.get_request(url=backend.ACTIVITIES_LINK,
+                                       headers=header,
+                                       params=param)
         # if an invalid response is received
         # return the message and stop looping
         if isinstance(response, dict):

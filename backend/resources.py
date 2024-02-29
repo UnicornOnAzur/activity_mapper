@@ -74,6 +74,7 @@ BOTTOM_ROW_HEIGHT: int = 600
 # URLS
 APP_URL: str = "https://strava-activity-mapper.streamlit.app/"
 AUTH_LINK: str = "https://www.strava.com/oauth/token"
+ACTIVITIES_LINK: str = "https://www.strava.com/api/v3/athlete/activities"
 NOMINATIM_LINK: str = "https://nominatim.openstreetmap.org/reverse"
 
 # JSON
