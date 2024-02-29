@@ -9,6 +9,7 @@ import concurrent
 import functools
 import queue
 import threading
+import time
 import typing
 # Third party
 import pandas as pd
@@ -117,8 +118,8 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-# @functools.lru_cache()
-@st.cache_data()
+@functools.lru_cache()
+# @st.cache_data()
 def nomatim_lookup(lat, lon):
     print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
@@ -259,7 +260,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             # issue task 1 workers
             _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
             # issue task 2 workers
-            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+            # _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
             for thread in threadpool._threads:
                 st.runtime.scriptrunner.add_script_run_ctx(thread)
             # push work into task 1
@@ -267,22 +268,23 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                 st.write(f"{i=}")
                 task1_queue_in.put(i)
                 i += 1
+                time.sleep(1)
                 if None in task1_queue_in.queue:
                     # signal that there is no more work
                     task1_queue_in.put(None)
                     break
-            # consume results
-            while True:
-                # retrieve data
-                data = task2_queue_out.get()
-                # check for the end of work
-                if data is None:
-                    # stop processing
-                    break
-                # <>
-                results.append(data)
-    total = pd.concat(results)
-    return total
+            # # consume results
+            # while True:
+            #     # retrieve data
+            #     data = task2_queue_out.get()
+            #     # check for the end of work
+            #     if data is None:
+            #         # stop processing
+            #         break
+            #     # <>
+            #     results.append(data)
+    # total = pd.concat(results)
+    # return total
 
 if __name__ == "__main__":
     pass
