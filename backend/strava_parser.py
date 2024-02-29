@@ -6,7 +6,6 @@
 
 # Standard library
 import functools
-import os
 import typing
 # Third party
 import pandas as pd
