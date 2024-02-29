@@ -41,7 +41,7 @@ def connect_strava(code: str):
     progress_bar.progress(33, "Retreiving data...")
     data = backend.thread_get_and_parse(st.session_state["access_token"])
     # if an error occur stop the function
-    if data[0] == {'401': 'Unauthorized'}:
+    if data == []: #[0] == {'401': 'Unauthorized'}:
         error_message = st.error(backend.ERROR_MESSAGE)
         return
     # PARSING THE DATA
