@@ -254,31 +254,32 @@ def thread_get_and_parse(token) -> pd.DataFrame:
     results = []
     i = 1
     # create the thread pool
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as threadpool:
-        # issue task 1 workers
-        _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
-        # issue task 2 workers
-        _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
-        for thread in threadpool._threads:
-            st.runtime.scriptrunner.add_script_run_ctx(thread)
-        # push work into task 1
-        while True:
-            task1_queue_in.put(i)
-            i += 1
-            if None in task1_queue_in.queue:
-                # signal that there is no more work
-                task1_queue_in.put(None)
-                break
-        # consume results
-        while True:
-            # retrieve data
-            data = task2_queue_out.get()
-            # check for the end of work
-            if data is None:
-                # stop processing
-                break
-            # <>
-            results.append(data)
+    with st.spinner():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=15) as threadpool:
+            # issue task 1 workers
+            _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
+            # issue task 2 workers
+            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+            for thread in threadpool._threads:
+                st.runtime.scriptrunner.add_script_run_ctx(thread)
+            # push work into task 1
+            while True:
+                task1_queue_in.put(i)
+                i += 1
+                if None in task1_queue_in.queue:
+                    # signal that there is no more work
+                    task1_queue_in.put(None)
+                    break
+            # consume results
+            while True:
+                # retrieve data
+                data = task2_queue_out.get()
+                # check for the end of work
+                if data is None:
+                    # stop processing
+                    break
+                # <>
+                results.append(data)
     total = pd.concat(results)
     return total
 
