@@ -140,19 +140,19 @@ def load_category_mapper(path: str) -> collections.defaultdict:
     return mapper
 
 
-def load_country_code_mapper(path: str):
+def load_country_code_mapper(path: str) -> dict:
     """
     Load a mapper of country codes to country names
 
     Parameters
     ----------
     path : str
-        DESCRIPTION.
+        Filepath of the textfile with the country names and codes.
 
     Returns
     -------
-    mapper : TYPE
-        DESCRIPTION.
+    mapper : dict
+        A dictionary to map country names to the country code.
 
     """
     with open(path, mode="r") as file:
