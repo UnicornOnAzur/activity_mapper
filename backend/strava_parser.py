@@ -272,6 +272,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                 if None in task1_queue_in.queue:
                     # signal that there is no more work
                     task1_queue_in.put(None)
+                    st.write("Breaking loop")
                     break
             # consume results
             while True:
