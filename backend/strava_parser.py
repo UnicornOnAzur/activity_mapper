@@ -260,7 +260,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             # issue task 1 workers
             _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
             # issue task 2 workers
-            # _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
             for thread in threadpool._threads:
                 st.runtime.scriptrunner.add_script_run_ctx(thread)
             # push work into task 1
@@ -273,18 +273,18 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                     # signal that there is no more work
                     task1_queue_in.put(None)
                     break
-            # # consume results
-            # while True:
-            #     # retrieve data
-            #     data = task2_queue_out.get()
-            #     # check for the end of work
-            #     if data is None:
-            #         # stop processing
-            #         break
-            #     # <>
-            #     results.append(data)
-    # total = pd.concat(results)
-    # return total
+            # consume results
+            while True:
+                # retrieve data
+                data = task2_queue_out.get()
+                # check for the end of work
+                if data is None:
+                    # stop processing
+                    break
+                # <>
+                results.append(data)
+    total = pd.concat(results)
+    return total
 
 if __name__ == "__main__":
     pass
