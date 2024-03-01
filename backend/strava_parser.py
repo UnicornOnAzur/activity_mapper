@@ -271,7 +271,6 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             if None in task1_queue_in.queue:
                 # signal that there is no more work
                 task1_queue_in.put(None)
-                st.write("Breaking loop 1")
                 break
         # consume results
         while True:
@@ -280,11 +279,9 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             # check for the end of work
             if data is None:
                 # stop processing
-                st.write("Breaking loop 2")
                 break
             # <>
             results.append(data)
-            st.write(len(results), results[-1])
     total = pd.concat(results)
     return total
 
