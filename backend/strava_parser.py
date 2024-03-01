@@ -211,7 +211,7 @@ def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
         if isinstance(response, dict):
             st.write(response)
         # check for shutdown
-        if len(response) <= 200 or isinstance(response, dict):# or request_page_num is None:
+        if len(response) < 200 or isinstance(response, dict):# or request_page_num is None:
             # put signal back on queue
             queue_in.put(None)
         	# wait on the barrier for all other workers
