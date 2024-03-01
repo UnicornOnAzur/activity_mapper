@@ -273,7 +273,8 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             st.write(f"{i=}")
             task1_queue_in.put(i)
             i += 1
-            # time.sleep(1)
+            # set sleep to wait for feedback on requests
+            time.sleep(1)
             if None in task1_queue_in.queue:
                 # signal that there is no more work
                 task1_queue_in.put(None)
