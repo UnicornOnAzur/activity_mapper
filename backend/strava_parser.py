@@ -6,7 +6,6 @@
 
 # Standard library
 import concurrent
-import functools
 import queue
 import threading
 import time
@@ -17,6 +16,7 @@ import polyline
 import streamlit as st
 # Local imports
 import backend
+
 
 STRAVA_CLIENT_ID = backend.STRAVA_CLIENT_ID
 STRAVA_CLIENT_SECRET = backend.STRAVA_CLIENT_SECRET
@@ -236,6 +236,8 @@ def parse_page(queue_in, queue_out, barrier) -> None:
             queue_out.put(None)
             # stop processing
             break
+        elif isinstance(data, dict):
+            queue_out.put(data)
         #
         parsed_data = backend.parse(data)
         # push result onto queue
