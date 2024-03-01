@@ -207,9 +207,6 @@ def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
         response = backend.get_request(url=backend.ACTIVITIES_LINK,
                                        headers=header,
                                        params=param)
-        st.write("DEBUG",isinstance(response, dict))
-        if isinstance(response, dict):
-            st.write(response)
         # check for shutdown
         if len(response) == 0 or isinstance(response, dict) or request_page_num is None:
             # put signal back on queue
@@ -268,24 +265,22 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             st.runtime.scriptrunner.add_script_run_ctx(thread)
         # push work into task 1
         while True:
-            st.write(f"{i=}")
             task1_queue_in.put(i)
             i += 1
             time.sleep(1)
             if None in task1_queue_in.queue:
                 # signal that there is no more work
                 task1_queue_in.put(None)
-                st.write("Breaking loop")
+                st.write("Breaking loop 1")
                 break
         # consume results
         while True:
             # retrieve data
             data = task2_queue_out.get()
-            st.write("Retrieved element from queue", data)
             # check for the end of work
             if data is None:
                 # stop processing
-                st.write("Breaking loop")
+                st.write("Breaking loop 2")
                 break
             # <>
             results.append(data)
