@@ -118,10 +118,9 @@ def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
     return value
 
 
-@functools.lru_cache()
-# @st.cache_data()
+@st.cache_data()
 def nomatim_lookup(lat, lon):
-    print(f"api_call with {lat=}, {lon=}")
+    # print(f"api_call with {lat=}, {lon=}")
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
                                     params={"lat": lat,
                                             "lon": lon,
@@ -258,9 +257,11 @@ def thread_get_and_parse(token) -> pd.DataFrame:
     with st.spinner():
         with concurrent.futures.ThreadPoolExecutor(max_workers=15) as threadpool:
             # issue task 1 workers
-            _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
+            _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token)
+                 for _ in range(5)]
             # issue task 2 workers
-            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2)
+                 for _ in range(10)]
             for thread in threadpool._threads:
                 st.runtime.scriptrunner.add_script_run_ctx(thread)
             # push work into task 1
