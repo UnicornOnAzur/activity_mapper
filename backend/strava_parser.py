@@ -199,19 +199,17 @@ def parse(activities: list[dict]) -> pd.DataFrame:
 
 
 def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
-    per_page = 100
     # loop forever
     while True:
         # read item from queue
         request_page_num = queue_in.get()
         header = {"Authorization": f"Bearer {access_token}"}
-        param = {"per_page": per_page, "page": request_page_num}
+        param = {"per_page": 200, "page": request_page_num}
         response = backend.get_request(url=backend.ACTIVITIES_LINK,
                                        headers=header,
                                        params=param)
         # check for shutdown
-        if len(response) <= per_page or isinstance(response, dict) or request_page_num is None:
-            st.write(f"{request_page_num=}")
+        if len(response) <= 200 or isinstance(response, dict) or request_page_num is None:
             # put signal back on queue
             queue_in.put(None)
         	# wait on the barrier for all other workers
@@ -246,53 +244,49 @@ def parse_page(queue_in, queue_out, barrier) -> None:
 
 
 def thread_get_and_parse(token) -> pd.DataFrame:
-    #
-    worker_group = 5
     # create the shared queues
     task1_queue_in = queue.Queue()
     task1_queue_out = queue.Queue()
     task2_queue_out = queue.Queue()
     #
-    barrier1 = threading.Barrier(worker_group)
-    barrier2 = threading.Barrier(worker_group*2)
+    barrier1 = threading.Barrier(5)
+    barrier2 = threading.Barrier(10)
     #
     results = []
     i = 1
     # create the thread pool
-    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_group*3) as threadpool:
-        # issue task 1 workers
-        _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token)
-             for _ in range(worker_group)]
-        # issue task 2 workers
-        _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2)
-             for _ in range(worker_group*2)]
-        for thread in threadpool._threads:
-            st.runtime.scriptrunner.add_script_run_ctx(thread)
-        # push work into task 1
-        while True:
-            st.write(f"{i=}")
-            task1_queue_in.put(i)
-            i += 1
-            # set sleep to wait for feedback on requests
-            time.sleep(1)
-            if None in task1_queue_in.queue:
-                # signal that there is no more work
-                task1_queue_in.put(None)
-                st.write("Breaking loop")
-                break
-        # consume results
-        while True:
-            # retrieve data
-            data = task2_queue_out.get()
-            st.write("Retrieved element from queue")
-            # check for the end of work
-            if data is None:
-                # stop processing
-                st.write("Breaking loop")
-                break
-            # <>
-            results.append(data)
-            st.write(len(results), results[-1])
+    with st.spinner():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=15) as threadpool:
+            # issue task 1 workers
+            _ = [threadpool.submit(backend.get_activities_page, task1_queue_in, task1_queue_out, barrier1, token) for _ in range(5)]
+            # issue task 2 workers
+            _ = [threadpool.submit(backend.parse_page, task1_queue_out, task2_queue_out, barrier2) for _ in range(10)]
+            for thread in threadpool._threads:
+                st.runtime.scriptrunner.add_script_run_ctx(thread)
+            # push work into task 1
+            while True:
+                st.write(f"{i=}")
+                task1_queue_in.put(i)
+                i += 1
+                time.sleep(1)
+                if None in task1_queue_in.queue:
+                    # signal that there is no more work
+                    task1_queue_in.put(None)
+                    st.write("Breaking loop")
+                    break
+            # consume results
+            while True:
+                # retrieve data
+                data = task2_queue_out.get()
+                st.write("Retrieved element from queue")
+                # check for the end of work
+                if data is None:
+                    # stop processing
+                    st.write("Breaking loop")
+                    break
+                # <>
+                results.append(data)
+                st.write(len(results), results[-1])
     total = pd.concat(results)
     return total
 
