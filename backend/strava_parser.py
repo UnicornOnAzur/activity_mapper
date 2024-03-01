@@ -207,6 +207,7 @@ def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
         response = backend.get_request(url=backend.ACTIVITIES_LINK,
                                        headers=header,
                                        params=param)
+        st.write("DEBUG",type(response))
         # check for shutdown
         if len(response) <= 200 or isinstance(response, dict):# or request_page_num is None:
             # put signal back on queue
