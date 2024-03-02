@@ -40,7 +40,7 @@ def connect_strava(code: str):
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
     data = backend.thread_get_and_parse(st.session_state["access_token"])
-    if isinstance(data, pd.DataFame):
+    if isinstance(data, pd.DataFrame):
         st.write(f"{data.shape=}")
     else:
         st.write(data)
