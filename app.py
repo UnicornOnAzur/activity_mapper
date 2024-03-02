@@ -18,7 +18,7 @@ def refresh_access_token(refresh_token):
     response = backend.post_request(backend.TOKEN_LINK,
                                     data={"client_id": backend.STRAVA_CLIENT_ID,
                                           "client_secret": backend.STRAVA_CLIENT_SECRET,
-                                          "code": refresh_token,
+                                          "refresh_token": refresh_token,
                                           "grant_type": "refresh_token"}
                                     )
     st.write(response)
