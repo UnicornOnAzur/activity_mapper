@@ -88,7 +88,6 @@ def main():
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
-    st.dataframe(df)
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
