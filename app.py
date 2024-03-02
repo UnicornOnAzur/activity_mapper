@@ -94,7 +94,6 @@ def main():
 
     """
     st.write(st.session_state)
-    st.write(response)
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
