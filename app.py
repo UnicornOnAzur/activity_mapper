@@ -14,6 +14,17 @@ import streamlit as st
 import backend
 
 
+def refresh_access_token(refresh_token):
+    response = backend.post_request(backend.TOKEN_LINK,
+                                    data={"client_id": backend.STRAVA_CLIENT_ID,
+                                          "client_secret": backend.STRAVA_CLIENT_SECRET,
+                                          "code": refresh_token,
+                                          "grant_type": "refresh_token"}
+                                    )
+    st.write(response)
+    return
+
+
 def connect_strava(code: str):
     """
     <>
@@ -42,6 +53,8 @@ def connect_strava(code: str):
     data = backend.thread_get_and_parse(st.session_state["access_token"])
     # if an error occur stop the function
     if data.iloc[0].name == "401":
+        if "refresh_token" in st.session_state:
+            refresh_access_token(st.session_state.get("refresh_token"))
         error_message = st.error(backend.ERROR_MESSAGE)
         return
     # PARSING THE DATA
