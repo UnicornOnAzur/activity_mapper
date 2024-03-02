@@ -13,6 +13,7 @@ import streamlit as st
 # Local imports
 import backend
 
+st.write(st.session_state)
 
 def refresh_access_token(refresh_token):
     response = backend.post_request(backend.TOKEN_LINK,
