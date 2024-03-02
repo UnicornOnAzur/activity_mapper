@@ -22,7 +22,6 @@ def refresh_access_token(refresh_token):
                                           "refresh_token": refresh_token,
                                           "grant_type": "refresh_token"}
                                     )
-    st.write(response)
     return
 
 
@@ -95,6 +94,7 @@ def main():
     None.
 
     """
+    st.write(response)
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
