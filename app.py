@@ -40,14 +40,10 @@ def connect_strava(code: str):
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
     data = backend.thread_get_and_parse(st.session_state["access_token"])
-    if isinstance(data, pd.DataFrame):
-        st.write(f"{data.shape=}")
-    else:
-        st.write(data)
-    # # if an error occur stop the function
-    # if data == []: #[0] == {'401': 'Unauthorized'}:
-    #     error_message = st.error(backend.ERROR_MESSAGE)
-    #     return
+    # if an error occur stop the function
+    if data.iloc[0].name == "401":
+        error_message = st.error(backend.ERROR_MESSAGE)
+        return
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
     # dataframe = backend.parse(data)
