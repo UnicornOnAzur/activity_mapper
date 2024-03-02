@@ -214,7 +214,7 @@ def get_activities_page(queue_in, queue_out, barrier, access_token) -> None:
         	# wait on the barrier for all other workers
             barrier.wait()
             # send signal on output queue
-            queue_out.put(None)
+            queue_out.put(response if isinstance(response, dict) else None)
             # stop processing
             break
         # push result onto queue
@@ -227,17 +227,15 @@ def parse_page(queue_in, queue_out, barrier) -> None:
         # read item from queue
         data = queue_in.get()
         # check for shutdown
-        if data is None:
+        if data is None or isinstance(data, dict):
             # put signal back on queue
             queue_in.put(None)
+            # send signal on output queue
+            queue_out.put(data if isinstance(data, dict) else  None)
         	# wait on the barrier for all other workers
             barrier.wait()
-            # send signal on output queue
-            queue_out.put(None)
             # stop processing
             break
-        elif isinstance(data, dict):
-            queue_out.put(data)
         #
         parsed_data = backend.parse(data)
         # push result onto queue
@@ -283,7 +281,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
                 # stop processing
                 break
             # <>
-            results.append(data)
+            results.append(pd.DataFrame.from_dict(data,orient="index") if isinstance(data, dict) else data)
     total = pd.concat(results)
     return total
 
