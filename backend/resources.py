@@ -35,7 +35,7 @@ TITLE: str = "Activity Mapper"
 
 # COLUMNS FOR DATAFRAMA
 DISPLAY_COLS: list[str] = ["name",
-                           "view on Strava",
+                           "id",
                            "date",
                            "sport_type",
                            "country"]
