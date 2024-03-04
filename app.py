@@ -163,6 +163,7 @@ def main():
         data=st.session_state.get("dataframe",
                                                pd.DataFrame(columns=backend.DISPLAY_COLS)
                                                ).loc[:, backend.DISPLAY_COLS]
+        data["id"] = data["id"].apply(lambda id_:f"https://www.strava.com/activities/{id_}")
         with st.expander(f"See your {data.shape[0]} unique events", expanded = False):
             st.dataframe(data,
                          use_container_width=True,
