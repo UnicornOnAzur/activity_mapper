@@ -57,6 +57,25 @@ def get_access_token(authorization_code: str) -> tuple[str]:
     return access_token, refresh_token, athlete_name, created_at
 
 
+def refresh_access_token(refresh_token):
+    response = backend.post_request(backend.TOKEN_LINK,
+                                    data={"client_id": backend.STRAVA_CLIENT_ID,
+                                          "client_secret": backend.STRAVA_CLIENT_SECRET,
+                                          "grant_type": "refresh_token",
+                                          "refresh_token": refresh_token}
+                                    )
+    refresh_token = response.get("refresh_token")
+    access_token = response.get("access_token")
+    athlete = backend.get_request("https://www.strava.com/api/v3/athlete",
+                                  headers = {"Authorization": f"Bearer {access_token}"})
+    athlete_name = " ".join((athlete.get("firstname", ""),
+                             athlete.get("lastname", "")
+                             )
+                            )
+    created_at = athlete.get("created_at", "Not found")
+    return access_token, refresh_token, athlete_name, created_at
+
+
 def request_data_from_api(access_token: str) -> list[dict]:
     """
     Send get requests in a loop to retreive all the activities. Loop will stop
