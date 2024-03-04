@@ -170,7 +170,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                     "hour": timestamp.hour,
                     "minutes": timestamp.minute,
                     "moving_time": activity.get("moving_time"),
-                    "type": activity.get("type"),
+                    # "type": activity.get("type"),
                     "sport_type": activity.get("sport_type"),
                     "polyline": activity.get("map", {}
                                              ).get("summary_polyline")
