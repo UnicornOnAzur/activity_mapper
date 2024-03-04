@@ -85,7 +85,7 @@ ACTIVITIES_LINK: str = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITIES_URL: str = "https://www.strava.com/activities/"
 NOMINATIM_LINK: str = "https://nominatim.openstreetmap.org/reverse"
 authorization_link = f"""
-{AUTH_LINK}?client_id={STRAVA_CLIENT_ID}&response_type=code&redirect_uri={APP_URL}&approval_prompt=force&scope=activity:read,activity:read_all
+{AUTH_LINK}?client_id={STRAVA_CLIENT_ID}&redirect_uri={APP_URL}&response_type=code&approval_prompt=force&scope=activity:read,activity:read_all
 """
 
 # JSON
