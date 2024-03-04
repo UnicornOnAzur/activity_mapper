@@ -89,7 +89,7 @@ def main():
         connect_strava(code)
     # DEBUG
     with st.expander("DEBUG"):
-        st.write(refresh_access_token(st.session_state.get("refresh_token")))
+        st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
         st.dataframe(st.session_state.get("dataframe"))
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
