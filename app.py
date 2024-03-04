@@ -98,7 +98,8 @@ def main():
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     # DEBUG
-    st.dataframe(st.session_state.get("dataframe"))
+    with st.expander("DEBUG"):
+        st.dataframe(st.session_state.get("dataframe"))
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
