@@ -43,6 +43,7 @@ from backend.strava_parser import (
     get_activities_page,
     parse,
     parse_page,
+    refresh_access_token,
     request_data_from_api,
     thread_get_and_parse
     )
