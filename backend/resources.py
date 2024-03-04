@@ -37,7 +37,7 @@ TITLE: str = "Activity Mapper"
 DISPLAY_COLS: list[str] = ["name",
                            "view on Strava",
                            "date",
-                           "type",
+                           # "type",
                            "sport_type",
                            "country"]
 STRAVA_COLS: list[str] = ["app",
