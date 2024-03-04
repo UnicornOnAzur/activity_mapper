@@ -18,8 +18,8 @@ def refresh_access_token(refresh_token):
     response = backend.post_request(backend.TOKEN_LINK,
                                     data={"client_id": backend.STRAVA_CLIENT_ID,
                                           "client_secret": backend.STRAVA_CLIENT_SECRET,
-                                          "refresh_token": refresh_token,
-                                          "grant_type": "refresh_token"}
+                                          "grant_type": "refresh_token",
+                                          "refresh_token": refresh_token}
                                     )
     return
 
@@ -93,7 +93,6 @@ def main():
     None.
 
     """
-    st.write(st.session_state)
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
