@@ -37,15 +37,14 @@ def connect_strava(code: str):
     st.session_state["refresh_token"]: str = results[1]
     st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
+    # if an error occur stop the function
+    if not "access_token" in st.session_state:
+        backend.refresh_access_token(st.session_state.get("refresh_token"))
+        error_message = st.error(backend.ERROR_MESSAGE)
+        return
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
     data = backend.thread_get_and_parse(st.session_state.get("access_token"))
-    # if an error occur stop the function
-    if data.iloc[0].name == "401":
-        if "refresh_token" in st.session_state:
-            backend.refresh_access_token(st.session_state.get("refresh_token"))
-        error_message = st.error(backend.ERROR_MESSAGE)
-        return
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
     # dataframe = backend.parse(data)
