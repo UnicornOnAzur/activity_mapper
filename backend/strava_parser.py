@@ -283,6 +283,7 @@ def thread_get_and_parse(token) -> pd.DataFrame:
             # <>
             results.append(pd.DataFrame.from_dict(data,orient="index") if isinstance(data, dict) else data)
     total = pd.concat(results)
+    total.sort_values("timestamp", inplace=True)
     return total
 
 if __name__ == "__main__":
