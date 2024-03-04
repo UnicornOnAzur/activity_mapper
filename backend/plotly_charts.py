@@ -665,7 +665,7 @@ def types(original: pd.DataFrame,
     # prepare data
     data = original.copy()
     mapper = backend.load_category_mapper(backend.PATH_MAPPER)
-    data["type"] = data["type"].map(mapper)
+    data["type"] = data["sport_type"].map(mapper)
     data["counts"] = 1
     # create figure
     types_plot = sunburst_figure(data,
