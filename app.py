@@ -21,7 +21,16 @@ def refresh_access_token(refresh_token):
                                           "grant_type": "refresh_token",
                                           "refresh_token": refresh_token}
                                     )
-    return response
+    refresh_token = response.get("refresh_token")
+    access_token = response.get("access_token")
+    athlete = backend.get_request("https://www.strava.com/api/v3/athlete",
+                                  headers = {"Authorization": f"Bearer {access_token}"})
+    athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
+                             res.get("athlete", {}).get("lastname", "")
+                             )
+                            )
+    created_at = res.get("athlete", {}).get("created_at", "Not found")
+    return athlete_name, access_token, refresh_token, created_at
 
 
 def connect_strava(code: str):
