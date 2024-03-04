@@ -30,7 +30,7 @@ def refresh_access_token(refresh_token):
                              )
                             )
     created_at = athlete.get("created_at", "Not found")
-    return athlete_name, access_token, refresh_token, created_at
+    return access_token, refresh_token, athlete_name, created_at
 
 
 def connect_strava(code: str):
@@ -52,9 +52,9 @@ def connect_strava(code: str):
     progress_bar = st.progress(0, "Getting access token")
     # TODO: make a get refresg token function
     results = backend.get_access_token(code)
-    st.session_state["athlete_name"]: str = results[0]
-    st.session_state["access_token"]: str = results[1]
-    st.session_state["refresh_token"]: str = results[2]
+    st.session_state["access_token"]: str = results[0]
+    st.session_state["refresh_token"]: str = results[1]
+    st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retreiving data...")
