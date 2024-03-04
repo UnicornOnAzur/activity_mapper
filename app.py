@@ -21,7 +21,7 @@ def refresh_access_token(refresh_token):
                                           "grant_type": "refresh_token",
                                           "refresh_token": refresh_token}
                                     )
-    return
+    return response
 
 
 def connect_strava(code: str):
