@@ -47,14 +47,14 @@ def get_access_token(authorization_code: str) -> tuple[str]:
                                 "client_secret": STRAVA_CLIENT_SECRET,
                                 "code": authorization_code,
                                 "grant_type": "authorization_code"})
+    access_token = res.get("access_token")
+    refresh_token = res.get("refresh_token")
     athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
                              res.get("athlete", {}).get("lastname", "")
                              )
                             )
-    refresh_token = res.get("refresh_token")
-    access_token = res.get("access_token")
     created_at = res.get("athlete", {}).get("created_at", "Not found")
-    return athlete_name, access_token, refresh_token, created_at
+    return access_token, refresh_token, athlete_name, created_at
 
 
 def request_data_from_api(access_token: str) -> list[dict]:
