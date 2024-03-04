@@ -609,7 +609,6 @@ def hours(original: pd.DataFrame,
     """
     plot_title = "Hours"
     # prepare data
-    original.sort_values("date", inplace=True)
     original["timestep"] = original["hour"]*60 + original["minutes"]//10
     original["timestep"] = original["timestep"].apply(backend.min2ang)
     original.sort_values(by="timestep",
