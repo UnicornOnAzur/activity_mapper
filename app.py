@@ -168,8 +168,8 @@ def main():
                          use_container_width=True,
                          hide_index=True,
                          column_order=backend.DISPLAY_COLS,
-                         column_config={"view on Strava":
-                                        st.column_config.LinkColumn(label=None,
+                         column_config={"id":
+                                        st.column_config.LinkColumn(label="view on Strava",
                                                                     help=\
                                         "See this activity on the Strava website")
                                         }

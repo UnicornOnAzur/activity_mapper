@@ -157,8 +157,7 @@ def parse(activities: list[dict]) -> pd.DataFrame:
     # <>
     for activity in activities:
         timestamp = pd.to_datetime(activity.get("start_date_local"))
-        elements = {"view on Strava":
-                    f"{backend.ACTIVITIES_URL}{activity.get('id')}",
+        elements = {"id": activity.get("id"),
                     "name": activity.get("name"),
                     "timestamp": timestamp,
                     "year": timestamp.year,
