@@ -241,7 +241,7 @@ def parse_page(queue_in, queue_out, barrier) -> None:
         # push result onto queue
         queue_out.put(parsed_data)
 
-
+# TODO: fix import so it always retreives all pages
 def thread_get_and_parse(token) -> pd.DataFrame:
     # create the shared queues
     task1_queue_in = queue.Queue()

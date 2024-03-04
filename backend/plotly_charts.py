@@ -467,7 +467,7 @@ def worldmap_figure(data: pd.DataFrame,
     figure.update_layout(coloraxis_showscale=False)
     return figure
 
-
+# TODO: get points aligned with area chart
 def timeline(original: pd.DataFrame,
              plot_height: int,
              **kwargs: typing.Any) -> go.Figure:
@@ -585,7 +585,7 @@ def days(original: pd.DataFrame,
         weekdays = _add_annotation(weekdays)
     return weekdays
 
-
+# TODO: have points come together
 def hours(original: pd.DataFrame,
           plot_height: int,
           **kwargs: typing.Any) -> go.Figure:
