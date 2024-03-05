@@ -96,21 +96,23 @@ def main():
                                     "" if df.empty else dt.datetime.strftime(df.date.min(),
                                                                              "%Y-%m-%dT%H:%M:%SZ"))
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
-        futures = [threadpool.submit(func,
-                                     **{"original":df,
-                                        "plot_height":height,
-                                        "creation":creation})
-                   for func, height in zip([backend.timeline,
-                                            backend.days,
-                                            backend.locations,
-                                            backend.types,
-                                            backend.hours],
-                                           [backend.TOP_ROW_HEIGHT,
-                                            backend.BOTTOM_ROW_HEIGHT//3-50,
-                                            backend.BOTTOM_ROW_HEIGHT,
-                                            backend.BOTTOM_ROW_HEIGHT//1.5,
-                                            backend.BOTTOM_ROW_HEIGHT//1.5]
-                                           )
+        futures = [threadpool.submit(backend.timeline,**{"original":df,
+                                                         "plot_height":backend.TOP_ROW_HEIGHT,
+                                                         "creation":creation})]
+        for func, height in zip([backend.days,
+                                 backend.locations,
+                                 backend.types,
+                                 backend.hours],
+                                [backend.BOTTOM_ROW_HEIGHT//3-50,
+                                 backend.BOTTOM_ROW_HEIGHT,
+                                 backend.BOTTOM_ROW_HEIGHT//1.5,
+                                 backend.BOTTOM_ROW_HEIGHT//1.5]
+                                ):
+            futures.append(threadpool.submit(func,
+                                             **{"original":df,
+                                                "plot_height":height}
+                                             )
+                           )
                    ]
         figures = []
         for future in futures:
