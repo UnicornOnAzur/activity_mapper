@@ -31,7 +31,6 @@ def connect_strava(code: str):
     error_message = st.empty()
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
-    # TODO: make a get refresg token function
     results = backend.get_access_token(code)
     st.session_state["access_token"]: str = results[0]
     st.session_state["refresh_token"]: str = results[1]
