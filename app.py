@@ -92,12 +92,15 @@ def main():
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
-
+    creation = st.session_state.get("creation",
+                                    "" if df.empty else dt.datetime.strftime(df.date.min(),
+                                                                             "%Y-%m-%dT%H:%M:%SZ"))
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
         futures = [threadpool.submit(func,
                                      **{"original":df,
-                                     "plot_height":height})
-                   for func, height in zip([backend.days,
+                                        "plot_height":height,
+                                        "creation":creation})
+                   for func, height in zip([backend.timeline,
                                             backend.days,
                                             backend.locations,
                                             backend.types,
@@ -140,12 +143,7 @@ def main():
         with st.container():
             st.markdown(f"## {backend.TITLE}: {welcome_text}")
             # top row
-            st.plotly_chart(figure_or_data=backend.timeline(df,
-                                                        backend.TOP_ROW_HEIGHT,
-                                                        creation=st.session_state.get("creation",
-                                                                                      "" if df.empty else dt.datetime.strftime(df.date.min(),            "%Y-%m-%dT%H:%M:%SZ"))
-
-                                                        ),
+            st.plotly_chart(figure_or_data=figures[0],
                                use_container_width=True,
                                config=backend.CONFIG)
 
