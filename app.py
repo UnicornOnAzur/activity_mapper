@@ -85,9 +85,31 @@ def main():
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
+    import concurrent
+    import time
+    start = time.perf_counter()
+    with concurrent.futures.ThreadPoolExecutor() as threadpool:
+        figures = [threadpool.submit(func,
+                                     **{"original":pd.DataFrame(columns=backend.STRAVA_COLS),
+                                     "plot_height":height})
+                   for func, height in zip([backend.timeline,
+                                            backend.days,
+                                            backend.hours,
+                                            backend.locations,
+                                            backend.types],
+                                           [400,
+                                            400,
+                                            400,
+                                            400,
+                                            400]
+                                           )
+                   ]
+    end = time.perf_counter()
     # DEBUG
     with st.expander("DEBUG"):
         st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
+        st.write(end-start)
+        st.write(figures)
         st.dataframe(st.session_state.get("dataframe"))
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
