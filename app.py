@@ -89,27 +89,30 @@ def main():
     import time
     start = time.perf_counter()
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
-        figures = [threadpool.submit(func,
+        futures = [threadpool.submit(func,
                                      **{"original":pd.DataFrame(columns=backend.STRAVA_COLS),
                                      "plot_height":height})
                    for func, height in zip([backend.timeline,
                                             backend.days,
-                                            backend.hours,
                                             backend.locations,
-                                            backend.types],
-                                           [400,
-                                            400,
-                                            400,
-                                            400,
-                                            400]
+                                            backend.types,
+                                            backend.hours],
+                                           [backend.TOP_ROW_HEIGHT,
+                                            backend.BOTTOM_ROW_HEIGHT//3-50,
+                                            backend.BOTTOM_ROW_HEIGHT,
+                                            backend.BOTTOM_ROW_HEIGHT//1.5,
+                                            backend.BOTTOM_ROW_HEIGHT//1.5]
                                            )
                    ]
+        figures = []
+        for future in futures:
+            figures.append(future.result())
     end = time.perf_counter()
     # DEBUG
     with st.expander("DEBUG"):
         st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
         st.write(end-start)
-        st.write(figures)
+        # st.write(figures)
         st.dataframe(st.session_state.get("dataframe"))
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
@@ -153,21 +156,25 @@ def main():
             # middle row
             cols = st.columns(spec=[6,6],
                               gap="small")
-            cols[0].plotly_chart(figure_or_data=backend.days(df,
-                                                         backend.BOTTOM_ROW_HEIGHT//3-50),
+            cols[0].plotly_chart(figure_or_data=figures[1],
+                # figure_or_data=backend.days(df,
+                #                                          backend.BOTTOM_ROW_HEIGHT//3-50),
                                   use_container_width=True,
                                   config=backend.CONFIG)
-            cols[1].plotly_chart(figure_or_data=backend.locations(df,
-                                                              backend.BOTTOM_ROW_HEIGHT),
+            cols[1].plotly_chart(figure_or_data=figures[2],
+                # figure_or_data=backend.locations(df,
+                #                                               backend.BOTTOM_ROW_HEIGHT),
                                  use_container_width=True,
                                  config=backend.CONFIG2)
             subcols = cols[0].columns(spec=[3,3], gap="small")
-            subcols[0].plotly_chart(figure_or_data=backend.types(df,
-                                                             backend.BOTTOM_ROW_HEIGHT//1.5),
+            subcols[0].plotly_chart(figure_or_data=figures[3],
+                #figure_or_data=backend.types(df,
+                                     #                        backend.BOTTOM_ROW_HEIGHT//1.5),
                                   use_container_width=True,
                                   config=backend.CONFIG)
-            subcols[1].plotly_chart(figure_or_data=backend.hours(df,
-                                                             backend.BOTTOM_ROW_HEIGHT//1.5),
+            subcols[1].plotly_chart(figure_or_data=figures[4],
+                #figure_or_data=backend.hours(df,
+                                     #                        backend.BOTTOM_ROW_HEIGHT//1.5),
                                   use_container_width=True,
                                   config=backend.CONFIG)
             # SLIDER
