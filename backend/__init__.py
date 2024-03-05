@@ -44,8 +44,7 @@ from backend.strava_parser import (
     parse,
     parse_page,
     refresh_access_token,
-    request_data_from_api,
-    thread_get_and_parse
+    request_data_from_api
     )
 
 from backend.plotly_charts import (
@@ -54,6 +53,10 @@ from backend.plotly_charts import (
     locations,
     timeline,
     types
+    )
+
+from backend.threadpools import (
+    thread_get_and_parse
     )
 
 from backend.test import (
