@@ -88,12 +88,6 @@ def main():
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
-    # DEBUG
-    with st.expander("DEBUG"):
-        st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
-        st.write(end-start)
-        # st.write(figures)
-        st.dataframe(st.session_state.get("dataframe"))
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
     start = time.perf_counter()
@@ -117,6 +111,7 @@ def main():
         for future in futures:
             figures.append(future.result())
     end = time.perf_counter()
+    st.write(end-start)
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
