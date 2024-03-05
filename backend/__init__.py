@@ -56,6 +56,7 @@ from backend.plotly_charts import (
     )
 
 from backend.threadpools import (
+    thread_create_figures,
     thread_get_and_parse
     )
 

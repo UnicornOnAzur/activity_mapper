@@ -5,8 +5,6 @@
 <>
 """
 # Standard library
-import concurrent
-import time
 import datetime as dt
 import os
 # Third party
@@ -85,39 +83,15 @@ def main():
     """
     params: dict = st.query_params.to_dict()
     code = params.get("code")
-    start = time.perf_counter()
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
-    end1 = time.perf_counter()
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
     creation = st.session_state.get("creation",
                                     "" if df.empty else dt.datetime.strftime(df.date.min(),
                                                                              "%Y-%m-%dT%H:%M:%SZ"))
-    with concurrent.futures.ThreadPoolExecutor() as threadpool:
-        futures = [threadpool.submit(backend.timeline,**{"original":df,
-                                                         "plot_height":backend.TOP_ROW_HEIGHT,
-                                                         "creation":creation})]
-        for func, height in zip([backend.days,
-                                 backend.locations,
-                                 backend.types,
-                                 backend.hours],
-                                [backend.BOTTOM_ROW_HEIGHT//3-50,
-                                 backend.BOTTOM_ROW_HEIGHT,
-                                 backend.BOTTOM_ROW_HEIGHT//1.5,
-                                 backend.BOTTOM_ROW_HEIGHT//1.5]
-                                ):
-            futures.append(threadpool.submit(func,
-                                             **{"original":df,
-                                                "plot_height":height}
-                                             )
-                           )
-        figures = []
-        for future in futures:
-            figures.append(future.result())
-    end2 = time.perf_counter()
-    st.write(end1-start, end2-end1)
+    figures = backend.thread_create_figures(df, creation)
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
