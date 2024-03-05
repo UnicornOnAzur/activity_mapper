@@ -85,12 +85,14 @@ def main():
     """
     params: dict = st.query_params.to_dict()
     code = params.get("code")
+    start = time.perf_counter()
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
+    end1 = time.perf_counter()
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS))
-    start = time.perf_counter()
+
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
         futures = [threadpool.submit(func,
                                      **{"original":df,
@@ -110,8 +112,8 @@ def main():
         figures = []
         for future in futures:
             figures.append(future.result())
-    end = time.perf_counter()
-    st.write(end-start)
+    end2 = time.perf_counter()
+    st.write(end1-start, end2-end1)
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
