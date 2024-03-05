@@ -95,7 +95,7 @@ def main():
         futures = [threadpool.submit(func,
                                      **{"original":df,
                                      "plot_height":height})
-                   for func, height in zip([backend.timeline,
+                   for func, height in zip([backend.days,
                                             backend.days,
                                             backend.locations,
                                             backend.types,
