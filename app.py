@@ -5,6 +5,8 @@
 <>
 """
 # Standard library
+import concurrent
+import time
 import datetime as dt
 import os
 # Third party
@@ -85,12 +87,19 @@ def main():
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
-    import concurrent
-    import time
+    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
+    # DEBUG
+    with st.expander("DEBUG"):
+        st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
+        st.write(end-start)
+        # st.write(figures)
+        st.dataframe(st.session_state.get("dataframe"))
+    df = st.session_state.get("dataframe",
+                              pd.DataFrame(columns=backend.STRAVA_COLS))
     start = time.perf_counter()
     with concurrent.futures.ThreadPoolExecutor() as threadpool:
         futures = [threadpool.submit(func,
-                                     **{"original":pd.DataFrame(columns=backend.STRAVA_COLS),
+                                     **{"original":df,
                                      "plot_height":height})
                    for func, height in zip([backend.timeline,
                                             backend.days,
@@ -108,15 +117,6 @@ def main():
         for future in futures:
             figures.append(future.result())
     end = time.perf_counter()
-    # DEBUG
-    with st.expander("DEBUG"):
-        st.write(backend.refresh_access_token(st.session_state.get("refresh_token")))
-        st.write(end-start)
-        # st.write(figures)
-        st.dataframe(st.session_state.get("dataframe"))
-    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
-    df = st.session_state.get("dataframe",
-                              pd.DataFrame(columns=backend.STRAVA_COLS))
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
@@ -157,24 +157,16 @@ def main():
             cols = st.columns(spec=[6,6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=figures[1],
-                # figure_or_data=backend.days(df,
-                #                                          backend.BOTTOM_ROW_HEIGHT//3-50),
                                   use_container_width=True,
                                   config=backend.CONFIG)
             cols[1].plotly_chart(figure_or_data=figures[2],
-                # figure_or_data=backend.locations(df,
-                #                                               backend.BOTTOM_ROW_HEIGHT),
                                  use_container_width=True,
                                  config=backend.CONFIG2)
             subcols = cols[0].columns(spec=[3,3], gap="small")
             subcols[0].plotly_chart(figure_or_data=figures[3],
-                #figure_or_data=backend.types(df,
-                                     #                        backend.BOTTOM_ROW_HEIGHT//1.5),
                                   use_container_width=True,
                                   config=backend.CONFIG)
             subcols[1].plotly_chart(figure_or_data=figures[4],
-                #figure_or_data=backend.hours(df,
-                                     #                        backend.BOTTOM_ROW_HEIGHT//1.5),
                                   use_container_width=True,
                                   config=backend.CONFIG)
             # SLIDER
