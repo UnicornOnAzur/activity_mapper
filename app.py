@@ -113,7 +113,6 @@ def main():
                                                 "plot_height":height}
                                              )
                            )
-                   ]
         figures = []
         for future in futures:
             figures.append(future.result())
