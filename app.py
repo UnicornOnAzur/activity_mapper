@@ -6,7 +6,6 @@
 """
 # Standard library
 import datetime as dt
-import os
 # Third party
 import pandas as pd
 import streamlit as st
@@ -37,7 +36,7 @@ def connect_strava(code: str):
     st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
     # if an error occur stop the function
-    if not "access_token" in st.session_state:
+    if "access_token" not in st.session_state:
         backend.refresh_access_token(st.session_state.get("refresh_token"))
         error_message = st.error(backend.ERROR_MESSAGE)
         return
@@ -46,8 +45,7 @@ def connect_strava(code: str):
     data = backend.thread_get_and_parse(st.session_state.get("access_token"))
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
-    # dataframe = backend.parse(data)
-    st.session_state["dataframe"] = data#frame
+    st.session_state["dataframe"] = data
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     progress_bar.empty()
@@ -85,13 +83,14 @@ def main():
     code = params.get("code")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
-    welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
+    welcome_text = "Welcome" if not (n := st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS)
                               ).loc[:, backend.STRAVA_COLS]
     creation = st.session_state.get("creation",
-                                    "" if df.empty else dt.datetime.strftime(df.date.min(),
-                                                                             "%Y-%m-%dT%H:%M:%SZ"))
+                                    "" if df.empty
+                                    else dt.datetime.strftime(df.date.min(),
+                                                              "%Y-%m-%dT%H:%M:%SZ"))
     figures = backend.thread_create_figures(df, creation)
     with st.spinner("Making visualizations..."):
         # sidebar
@@ -120,40 +119,40 @@ def main():
             st.markdown(f"## {backend.TITLE}: {welcome_text}")
             # top row
             st.plotly_chart(figure_or_data=figures[0],
-                               use_container_width=True,
-                               config=backend.CONFIG)
+                            use_container_width=True,
+                            config=backend.CONFIG)
 
         with st.container():
             # middle row
-            cols = st.columns(spec=[6,6],
+            cols = st.columns(spec=[6, 6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=figures[1],
-                                  use_container_width=True,
-                                  config=backend.CONFIG)
+                                 use_container_width=True,
+                                 config=backend.CONFIG)
             cols[1].plotly_chart(figure_or_data=figures[2],
                                  use_container_width=True,
                                  config=backend.CONFIG2)
-            subcols = cols[0].columns(spec=[3,3], gap="small")
+            subcols = cols[0].columns(spec=[3, 3], gap="small")
             subcols[0].plotly_chart(figure_or_data=figures[3],
-                                  use_container_width=True,
-                                  config=backend.CONFIG)
+                                    use_container_width=True,
+                                    config=backend.CONFIG)
             subcols[1].plotly_chart(figure_or_data=figures[4],
-                                  use_container_width=True,
-                                  config=backend.CONFIG)
+                                    use_container_width=True,
+                                    config=backend.CONFIG)
             # SLIDER
-        data=st.session_state.get("dataframe",
-                                               pd.DataFrame(columns=backend.DISPLAY_COLS)
-                                               ).loc[:, backend.DISPLAY_COLS]
-        data["id"] = data["id"].apply(lambda id_:f"https://www.strava.com/activities/{id_}")
-        with st.expander(f"See your {data.shape[0]} unique events", expanded = False):
+        data = st.session_state.get("dataframe",
+                                    pd.DataFrame(columns=backend.DISPLAY_COLS)
+                                    ).loc[:, backend.DISPLAY_COLS]
+        data["id"] = data["id"].apply(lambda id_: f"https://www.strava.com/activities/{id_}")
+        with st.expander(f"See your {data.shape[0]} unique events", expanded=False):
             st.dataframe(data,
                          use_container_width=True,
                          hide_index=True,
                          column_order=backend.DISPLAY_COLS,
                          column_config={"id":
                                         st.column_config.LinkColumn(label="view on Strava",
-                                                                    help=\
-                                        "See this activity on the Strava website")
+                                                                    help="See this activity on the Strava website"
+                                                                    )
                                         }
                          )
         st.caption(backend.CAPTION)
