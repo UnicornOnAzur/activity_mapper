@@ -41,9 +41,7 @@ from backend.resources import (
 
 from backend.strava_parser import (
     get_access_token,
-    get_activities_page,
     parse,
-    parse_page,
     refresh_access_token,
     request_data_from_api
     )
@@ -57,6 +55,8 @@ from backend.plotly_charts import (
     )
 
 from backend.threadpools import (
+    get_activities_page,
+    parse_page,
     thread_create_figures,
     thread_get_and_parse
     )

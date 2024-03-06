@@ -19,6 +19,94 @@ import streamlit as st
 import backend
 
 
+def get_activities_page(queue_in: queue.Queue,
+                        queue_out: queue.Queue,
+                        barrier: threading.Barrier,
+                        access_token: str) -> None:
+    """
+
+
+    Parameters
+    ----------
+    queue_in : queue.Queue
+        DESCRIPTION.
+    queue_out : queue.Queue
+        DESCRIPTION.
+    barrier : threading.Barrier
+        DESCRIPTION.
+    access_token : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    None
+        DESCRIPTION.
+
+    """
+    # loop forever
+    while True:
+        # read item from queue
+        request_page_num = queue_in.get()
+        header = {"Authorization": f"Bearer {access_token}"}
+        param = {"per_page": 200, "page": request_page_num}
+        response = backend.get_request(url=backend.ACTIVITIES_LINK,
+                                       headers=header,
+                                       params=param)
+        # check for shutdown
+        if len(response) == 0 or isinstance(response, dict) or request_page_num is None:
+            # put signal back on queue
+            queue_in.put(None)
+        	# wait on the barrier for all other workers
+            barrier.wait()
+            # send signal on output queue
+            queue_out.put(response if isinstance(response, dict) else None)
+            # stop processing
+            break
+        # push result onto queue
+        queue_out.put(response)
+
+
+def parse_page(queue_in: queue.Queue,
+               queue_out: queue.Queue,
+               barrier: threading.Barrier) -> None:
+    """
+
+
+    Parameters
+    ----------
+    queue_in : queue.Queue
+        DESCRIPTION.
+    queue_out : queue.Queue
+        DESCRIPTION.
+    barrier : threading.Barrier
+        DESCRIPTION.
+
+    Returns
+    -------
+    None
+        DESCRIPTION.
+
+    """
+    # loop forever
+    while True:
+        # read item from queue
+        data = queue_in.get()
+        # check for shutdown
+        if data is None or isinstance(data, dict):
+            # put signal back on queue
+            queue_in.put(None)
+        	# wait on the barrier for all other workers
+            barrier.wait()
+            # send signal on output queue
+            queue_out.put(data if isinstance(data, dict) else  None)
+            # stop processing
+            break
+        #
+        parsed_data = backend.parse(data)
+        # push result onto queue
+        queue_out.put(parsed_data)
+
+
 def thread_get_and_parse(token: str) -> pd.DataFrame:
     """
     Use threading to speed up sending get requests and parse the responses.
