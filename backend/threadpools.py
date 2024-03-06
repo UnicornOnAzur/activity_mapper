@@ -6,7 +6,7 @@ The two threadpools used in the app.
 """
 
 # Standard library
-import concurrent as c_futures
+import concurrent.futures as c_futures
 import queue
 import threading
 import time
