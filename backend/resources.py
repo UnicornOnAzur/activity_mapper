@@ -2,6 +2,7 @@
 """
 @author: QtyPython2020
 
+All the variables used throughout the app.
 """
 #  Standard library
 import os
@@ -10,7 +11,7 @@ import plotly.express as px
 # Local imports
 import backend
 
-#
+# STRAVA CREDENTIALS
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 
@@ -35,20 +36,23 @@ TITLE: str = "Activity Mapper"
 
 # COLUMNS FOR DATAFRAMA
 DISPLAY_COLS: list[str] = ["name",
-                           "id",
+                           "id",  # input for the 'view on Strava' column
                            "date",
                            "sport_type",
-                           "country"]
-STRAVA_COLS: list[str] = ["app",
+                           "country"
+                           ]
+STRAVA_COLS: list[str] = ["name",
+                          "app",
                           "weekday",
                           "time",
                           "hour",
                           "minutes",
-                          "name",
+                          "sport_type",
                           "date",
                           "country",
                           "lat",
-                          "lon"]
+                          "lon"
+                          ]
 
 # DICT WITH CONFIGURATION FOR PLOTLY CHARTS
 CONFIG: dict = {"displaylogo": False,  # remove the plotly logo
