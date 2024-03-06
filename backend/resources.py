@@ -55,7 +55,8 @@ STRAVA_COLS: list[str] = ["name",
                           "calender-week",
                           "year",
                           "week",
-                          "timestamp"
+                          "timestamp",
+                          "coords"
                           ]
 
 # DICT WITH CONFIGURATION FOR PLOTLY CHARTS
