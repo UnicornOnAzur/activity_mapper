@@ -31,7 +31,6 @@ def connect_strava(code: str):
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
     results = backend.get_access_token(code)
-    st.session_state["dump"] =  results
     st.session_state["access_token"]: str = results[0]
     st.session_state["refresh_token"]: str = results[1]
     st.session_state["athlete_name"]: str = results[2]
@@ -80,9 +79,10 @@ def main():
     None.
 
     """
-    st.write(st.session_state.get("dump"))
     params: dict = st.query_params.to_dict()
     code = params.get("code")
+    scope = params.get("scope")
+    st.write(scope)
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     welcome_text = "Welcome" if not (n := st.session_state.get('athlete_name')) else f"Welcome, {n}"
