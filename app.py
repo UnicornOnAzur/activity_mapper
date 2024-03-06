@@ -117,6 +117,7 @@ def main():
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
                 st.session_state["dataframe"] = test_data
+                st.session_state["creation"] = None
                 wrap_up()
 
         # MAIN PAGE
