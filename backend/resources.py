@@ -28,7 +28,11 @@ the Strava page. Then select to view public and/or private activities, and
 click "Authorize". This provides the dashboard with your data for the duration
 of your use.
 """
-ERROR_MESSAGE: str =\
+ERROR_MESSAGE1: str =\
+    """
+The scope provided is not sufficient. Please allow to view activities.
+"""
+ERROR_MESSAGE2: str =\
     """
 An error occurred while retrieving the data. Please try to authorize again.
 """

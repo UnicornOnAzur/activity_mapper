@@ -28,6 +28,9 @@ def connect_strava(code: str):
 
     """
     error_message = st.empty()
+    if st.session_state.get("scope") == "read":
+        error_message = st.error(backend.ERROR_MESSAGE1)
+        return
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
     results = backend.get_access_token(code)
@@ -38,7 +41,7 @@ def connect_strava(code: str):
     # if an error occur stop the function
     if st.session_state.get("access_token") is None:
         backend.refresh_access_token(st.session_state.get("refresh_token"))
-        error_message = st.error(backend.ERROR_MESSAGE)
+        error_message = st.error(backend.ERROR_MESSAGE2)
         return
     # RETREIVING THE DATA
     progress_bar.progress(33, "Retrieving data...")
@@ -81,8 +84,7 @@ def main():
     """
     params: dict = st.query_params.to_dict()
     code = params.get("code")
-    scope = params.get("scope")
-    st.write(scope)
+    st.session_state["scope"] = params.get("scope")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
     welcome_text = "Welcome" if not (n := st.session_state.get('athlete_name')) else f"Welcome, {n}"
