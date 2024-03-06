@@ -53,13 +53,13 @@ def get_activities_page(queue_in: queue.Queue,
                                        headers=header,
                                        params=param)
         # check for shutdown
-        if len(response) == 0 or isinstance(response, dict) or request_page_num is None:
+        if request_page_num is None or len(response) == 0:
             # put signal back on queue
             queue_in.put(None)
         	# wait on the barrier for all other workers
             barrier.wait()
             # send signal on output queue
-            queue_out.put(response if isinstance(response, dict) else None)
+            queue_out.put(None)
             # stop processing
             break
         # push result onto queue
@@ -92,13 +92,13 @@ def parse_page(queue_in: queue.Queue,
         # read item from queue
         data = queue_in.get()
         # check for shutdown
-        if data is None or isinstance(data, dict):
+        if data is None:
             # put signal back on queue
             queue_in.put(None)
         	# wait on the barrier for all other workers
             barrier.wait()
             # send signal on output queue
-            queue_out.put(data if isinstance(data, dict) else  None)
+            queue_out.put(None)
             # stop processing
             break
         #
