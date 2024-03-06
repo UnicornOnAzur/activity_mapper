@@ -41,11 +41,11 @@ def connect_strava(code: str):
         error_message = st.error(backend.ERROR_MESSAGE)
         return
     # RETREIVING THE DATA
-    progress_bar.progress(33, "Retreiving data...")
+    progress_bar.progress(33, "Retrieving data...")
     data = backend.thread_get_and_parse(st.session_state.get("access_token"))
     # PARSING THE DATA
     progress_bar.progress(67, "Parsing data...")
-    st.session_state["dataframe"] = data
+    st.session_state["dataframe"]: pd.DataFrame = data
     # FINALIZE THE PROCESS
     progress_bar.progress(100, "Done")
     progress_bar.empty()
@@ -63,9 +63,9 @@ def wrap_up():
 
     """
     # set the sidebar to collapse after the rerun
-    st.session_state["sidebar_state"] = "collapsed"
+    st.session_state["sidebar_state"]: str = "collapsed"
     # signal that data has been loaded
-    st.session_state["loaded"] = True
+    st.session_state["loaded"]: bool = True
     # rerun the page to have header and sidebar be updated
     st.rerun()
 
