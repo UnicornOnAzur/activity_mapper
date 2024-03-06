@@ -36,7 +36,7 @@ def connect_strava(code: str):
     st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
     # if an error occur stop the function
-    if "access_token" not in st.session_state:
+    if st.session_state.get("access_token") is None:
         backend.refresh_access_token(st.session_state.get("refresh_token"))
         error_message = st.error(backend.ERROR_MESSAGE)
         return
