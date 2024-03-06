@@ -2,7 +2,7 @@
 """
 @author: QtyPython2020
 
-The two threadpools used in the app.
+The two threadpools used in the app and the worker functions.
 """
 
 # Standard library
@@ -43,20 +43,22 @@ def get_activities_page(queue_in: queue.Queue,
         DESCRIPTION.
 
     """
-    # loop forever
+    # loop forever until shutdown signal is given
     while True:
         # read item from queue
-        request_page_num = queue_in.get()
-        header = {"Authorization": f"Bearer {access_token}"}
-        param = {"per_page": 200, "page": request_page_num}
-        response = backend.get_request(url=backend.ACTIVITIES_LINK,
-                                       headers=header,
-                                       params=param)
+        request_page_num: typing.Union[int | None] = queue_in.get()
+        header: dict = {"Authorization": f"Bearer {access_token}"}
+        param: dict = {"per_page": 200, "page": request_page_num}
+        response: typing.Union[list[dict] | dict] = backend.get_request(
+            url=backend.ACTIVITIES_LINK,
+            headers=header,
+            params=param
+                                                    )
         # check for shutdown
         if request_page_num is None or len(response) == 0:
             # put signal back on queue
             queue_in.put(None)
-        	# wait on the barrier for all other workers
+            # wait on the barrier for all other workers
             barrier.wait()
             # send signal on output queue
             queue_out.put(None)
@@ -87,22 +89,22 @@ def parse_page(queue_in: queue.Queue,
         DESCRIPTION.
 
     """
-    # loop forever
+    # loop forever until shutdown signal is given
     while True:
         # read item from queue
-        data = queue_in.get()
+        data: typing.Union[list[dict] | dict | None] = queue_in.get()
         # check for shutdown
-        if data is None:
+        if data is None or isinstance(data, dict):
             # put signal back on queue
             queue_in.put(None)
-        	# wait on the barrier for all other workers
+            # wait on the barrier for all other workers
             barrier.wait()
             # send signal on output queue
-            queue_out.put(None)
+            queue_out.put(data if isinstance(data, dict) else None)
             # stop processing
             break
         #
-        parsed_data = backend.parse(data)
+        parsed_data: pd.DataFrame = backend.parse(data)
         # push result onto queue
         queue_out.put(parsed_data)
 
