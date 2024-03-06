@@ -31,7 +31,11 @@ def connect_strava(code: str):
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
     results = backend.get_access_token(code)
-    st.session_state["dump"] = results
+    st.session_state["dump"] =  backend.post_request(backend.TOKEN_LINK,
+                                                     data={"client_id": backend.STRAVA_CLIENT_ID,
+                                                           "client_secret": backend.STRAVA_CLIENT_SECRET,
+                                                           "code": code,
+                                                           "grant_type": "authorization_code"})
     st.session_state["access_token"]: str = results[0]
     st.session_state["refresh_token"]: str = results[1]
     st.session_state["athlete_name"]: str = results[2]
