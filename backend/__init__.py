@@ -39,7 +39,7 @@ from backend.resources import (
     TOP_ROW_HEIGHT
     )
 
-from backend.strava_parser import (
+from backend.strava import (
     get_access_token,
     parse,
     refresh_access_token,
