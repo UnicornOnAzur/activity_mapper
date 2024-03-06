@@ -117,7 +117,8 @@ def main():
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
                 st.session_state["dataframe"] = test_data
-                st.session_state["creation"] = None
+                st.session_state["creation"] = test_data.datetime.strftime(df.date.min(),
+                                                                           "%Y-%m-%dT%H:%M:%SZ")
                 wrap_up()
 
         # MAIN PAGE
