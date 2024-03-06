@@ -28,6 +28,7 @@ def connect_strava(code: str):
 
     """
     error_message = st.empty()
+    # check if a sufficient scope was provided
     if st.session_state.get("scope") == "read":
         error_message = st.error(backend.ERROR_MESSAGE1)
         return
@@ -38,7 +39,7 @@ def connect_strava(code: str):
     st.session_state["refresh_token"]: str = results[1]
     st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
-    # if an error occur stop the function
+    # check if an access token was returned
     if st.session_state.get("access_token") is None:
         backend.refresh_access_token(st.session_state.get("refresh_token"))
         error_message = st.error(backend.ERROR_MESSAGE2)
