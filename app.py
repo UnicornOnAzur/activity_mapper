@@ -87,7 +87,8 @@ def main():
         connect_strava(code)
     welcome_text = "Welcome" if not (n:=st.session_state.get('athlete_name')) else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
-                              pd.DataFrame(columns=backend.STRAVA_COLS))
+                              pd.DataFrame(columns=backend.STRAVA_COLS)
+                              ).loc[:, backend.STRAVA_COLS]
     creation = st.session_state.get("creation",
                                     "" if df.empty else dt.datetime.strftime(df.date.min(),
                                                                              "%Y-%m-%dT%H:%M:%SZ"))
