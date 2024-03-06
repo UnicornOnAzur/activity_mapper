@@ -89,8 +89,9 @@ def thread_get_and_parse(token: str) -> pd.DataFrame:
             results.append(pd.DataFrame.from_dict(data,
                                                   orient="index")
                            if isinstance(data, dict) else data)
-    total: pd.DataFrame = pd.concat(results,
-                                    ignore_index=True)
+    total: pd.DataFrame = pd.DataFrame(columns=backend.STRAVA_COLS)\
+        if not results else pd.concat(results,
+                                      ignore_index=True)
     total.sort_values("timestamp",
                       inplace=True)
     return total
