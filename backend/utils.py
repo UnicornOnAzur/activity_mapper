@@ -8,6 +8,7 @@ Helper functions for the activity mapper app.
 import base64
 import collections
 # Third party
+import json
 import requests
 import urllib3
 
@@ -183,6 +184,26 @@ def load_image(path: str) -> str:
         contents: bytes = file.read()
     image_as_str: str = base64.b64encode(contents).decode("utf-8")
     return image_as_str
+
+
+def load_geojson(path: str) -> dict:
+    """
+
+
+    Parameters
+    ----------
+    path : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict
+        DESCRIPTION.
+
+    """
+    with open(path, mode="rb") as file:
+        json_file: dict = json.load(file)
+    return json_file
 
 
 def min2ang(time: int) -> float:

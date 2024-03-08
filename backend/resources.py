@@ -76,6 +76,7 @@ CONFIG2: dict = {"displaylogo": False,  # remove the plotly logo
 
 # FILE PATHS
 PATH_CODES: str = "country_codes.txt"
+PATH_GEOJSON: str = "countries.geojson"
 PATH_MAPPER: str = "strava_categories.txt"
 
 # COLORS AND THEMES
@@ -99,11 +100,6 @@ NOMINATIM_LINK: str = "https://nominatim.openstreetmap.org/reverse"
 authorization_link = f"""
 {AUTH_LINK}?client_id={STRAVA_CLIENT_ID}&redirect_uri={APP_URL}&response_type=code&approval_prompt=force&scope=activity:read,activity:read_all
 """
-
-# JSON
-GEOJSON: dict = backend.get_request(
-    "https://datahub.io/core/geo-countries/r/0.geojson"
-                                    )
 
 
 if __name__ == "__main__":
