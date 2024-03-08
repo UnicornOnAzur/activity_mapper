@@ -18,8 +18,8 @@ STRAVA_CLIENT_SECRET = os.environ.get("STRAVA_CLIENT_SECRET")
 # TEXT
 CAPTION: str = \
     """
-This page was created by QtyPython2020 and the code can be found on
-https://github.com/QtyPython2020/activity_mapper .
+This page was created by UnicornOnAzur and the code can be found on
+https://github.com/UnicornOnAzur/activity_mapper .
 """
 EXPLANATION: str =\
     """
