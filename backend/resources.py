@@ -76,6 +76,7 @@ CONFIG2: dict = {"displaylogo": False,  # remove the plotly logo
 
 # FILE PATHS
 PATH_CODES: str = "country_codes.txt"
+PATH_LOGO: str = "logos/api_logo_pwrdBy_strava_horiz_light.png"
 PATH_GEOJSON: str = "countries.geojson"
 PATH_MAPPER: str = "strava_categories.txt"
 
@@ -91,16 +92,16 @@ TOP_ROW_HEIGHT: int = 200
 BOTTOM_ROW_HEIGHT: int = 600
 
 # URLS
-APP_URL: str = "https://strava-activity-mapper.streamlit.app/"
-TOKEN_LINK: str = "https://www.strava.com/oauth/token"
-AUTH_LINK: str = "https://www.strava.com/oauth/authorize"
 ACTIVITIES_LINK: str = "https://www.strava.com/api/v3/athlete/activities"
 ACTIVITIES_URL: str = "https://www.strava.com/activities/"
+ATHLETE_URL: str = "https://www.strava.com/api/v3/athlete"
+APP_URL: str = "https://strava-activity-mapper.streamlit.app/"
+AUTH_LINK: str = "https://www.strava.com/oauth/authorize"
 NOMINATIM_LINK: str = "https://nominatim.openstreetmap.org/reverse"
 authorization_link = f"""
 {AUTH_LINK}?client_id={STRAVA_CLIENT_ID}&redirect_uri={APP_URL}&response_type=code&approval_prompt=force&scope=activity:read,activity:read_all
 """
-
+TOKEN_LINK: str = "https://www.strava.com/oauth/token"
 
 if __name__ == "__main__":
     pass

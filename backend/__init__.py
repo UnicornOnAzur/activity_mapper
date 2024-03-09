@@ -12,6 +12,7 @@ from backend.utils import (
 from backend.resources import (
     ACTIVITIES_LINK,
     ACTIVITIES_URL,
+    ATHLETE_URL,
     APP_URL,
     authorization_link,
     AUTH_LINK,
@@ -29,6 +30,7 @@ from backend.resources import (
     NOMINATIM_LINK,
     PATH_CODES,
     PATH_GEOJSON,
+    PATH_LOGO,
     PATH_MAPPER,
     STRAVA_CLIENT_ID,
     STRAVA_CLIENT_SECRET,
@@ -41,9 +43,9 @@ from backend.resources import (
     )
 
 from backend.strava import (
-    get_access_token,
+    get_access,
     parse,
-    refresh_access_token,
+    refresh_access,
     request_data_from_api
     )
 

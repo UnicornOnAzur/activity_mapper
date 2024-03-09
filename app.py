@@ -34,14 +34,14 @@ def connect_strava(code: str):
         return
     # RETREIVING THE ACCESS TOKEN
     progress_bar = st.progress(0, "Getting access token")
-    results = backend.get_access_token(code)
+    results = backend.get_access(code)
     st.session_state["access_token"]: str = results[0]
     st.session_state["refresh_token"]: str = results[1]
     st.session_state["athlete_name"]: str = results[2]
     st.session_state["creation"]: str = results[3]
     # check if an access token was returned
     if st.session_state.get("access_token") is None:
-        backend.refresh_access_token(st.session_state.get("refresh_token"))
+        backend.refresh_access(st.session_state.get("refresh_token"))
         error_message = st.error(backend.ERROR_MESSAGE2)
         return
     # RETREIVING THE DATA
@@ -100,7 +100,7 @@ def main():
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
-            image_powered = backend.load_image("logos/api_logo_pwrdBy_strava_horiz_light.png")
+            image_powered = backend.load_image(backend.PATH_LOGO)
             st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
                         unsafe_allow_html=True)
             st.header("Menu")
