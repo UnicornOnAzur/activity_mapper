@@ -8,8 +8,6 @@ All the variables used throughout the app.
 import os
 # Third party
 import plotly.express as px
-# Local imports
-import backend
 
 # STRAVA CREDENTIALS
 STRAVA_CLIENT_ID = os.environ.get("STRAVA_CLIENT_ID")
@@ -49,8 +47,8 @@ DISPLAY_COLS: list[str] = ["name",
                            ]
 STRAVA_COLS: list[str] = ["name",
                           "date",
-                          "sport_type", # used for types figure
-                          "country", # used for locations figure
+                          "sport_type",  # used for types figure
+                          "country",  # used for locations figure
                           "app",
                           "weekday",
                           "time",
