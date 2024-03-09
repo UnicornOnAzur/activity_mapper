@@ -26,6 +26,7 @@ from backend.resources import (
     EXPLANATION,
     ERROR_MESSAGE1,
     ERROR_MESSAGE2,
+    HELP_TEXT,
     LEFT_RIGHT_MARGIN,
     NOMINATIM_LINK,
     PATH_CODES,

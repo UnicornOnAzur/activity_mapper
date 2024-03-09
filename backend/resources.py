@@ -36,6 +36,7 @@ ERROR_MESSAGE2: str =\
     """
 An error occurred while retrieving the data. Please try to authorize again.
 """
+HELP_TEXT: str = """See this activity on the Strava website"""
 TITLE: str = "Activity Mapper"
 
 # COLUMNS FOR DATAFRAMA
