@@ -98,7 +98,7 @@ def main():
                                     "" if df.empty
                                     else dt.datetime.strftime(
                                         df.date.min(),
-                                        "%Y-%m-%dT%H:%M:%SZ"
+                                        backend.DT_FORMAT
                                                               )
                                     )
     figures = backend.thread_create_figures(df, creation)
@@ -130,7 +130,7 @@ def main():
                 st.session_state["dataframe"] = test_data
                 st.session_state["creation"] = dt.datetime.strftime(
                                                 test_data.date.min(),
-                                                "%Y-%m-%dT%H:%M:%SZ"
+                                                backend.DT_FORMAT
                                                                     )
                 wrap_up()
 

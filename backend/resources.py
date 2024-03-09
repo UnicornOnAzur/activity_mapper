@@ -38,6 +38,7 @@ An error occurred while retrieving the data. Please try to authorize again.
 """
 HELP_TEXT: str = """See this activity on the Strava website"""
 TITLE: str = "Activity Mapper"
+DT_FORMAT: str = "%Y-%m-%dT%H:%M:%SZ"
 
 # COLUMNS FOR DATAFRAMA
 DISPLAY_COLS: list[str] = ["name",

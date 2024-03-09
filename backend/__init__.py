@@ -23,6 +23,7 @@ from backend.resources import (
     CONFIG2,
     DISCRETE_COLOR,
     DISPLAY_COLS,
+    DT_FORMAT,
     EXPLANATION,
     ERROR_MESSAGE1,
     ERROR_MESSAGE2,
