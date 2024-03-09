@@ -17,194 +17,231 @@ import backend
 COUNTRIES = backend.load_country_code_mapper(backend.PATH_CODES)
 
 
-def get_access_token(authorization_code: str) -> tuple[str]:
+def get_access(authorization_code: str) -> tuple[str]:
     """
-    <>
+    Given the authorization code in the redirect link get the tokens and the
+    details of the athlete who logs in.
 
     Parameters
     ----------
     authorization_code : str
-        DESCRIPTION.
+        The authorization code from the redirect link.
+
+    Returns
+    -------
+    access_token : str
+        The Strava access token.
+    refresh_token : str
+        The Strava refresh token.
+    athlete_name : str
+        The combined first and last name of the athlete.
+    created_at : str
+        The Strava profile creation date.
+    """
+    response: dict = backend.post_request(backend.TOKEN_LINK,
+                                          data={
+                                              "client_id":
+                                                  backend.STRAVA_CLIENT_ID,
+                                              "client_secret":
+                                                  backend.STRAVA_CLIENT_SECRET,
+                                              "code": authorization_code,
+                                              "grant_type":
+                                                  "authorization_code"}
+                                          )
+    access_token: str = response.get("access_token")
+    refresh_token: str = response.get("refresh_token")
+    # retrieve and combine the first and last name of the athlete
+    athlete_name: str = " ".join((response.get("athlete",
+                                               {}).get("firstname", ""),
+                                  response.get("athlete",
+                                               {}).get("lastname", "")
+                                  )
+                                 )
+    created_at: str = response.get("athlete",
+                                   {}).get("created_at", "Not found")
+    return access_token, refresh_token, athlete_name, created_at
+
+
+def refresh_access(refresh_token: str) -> tuple[str]:
+    """
+    Based on the refresh token retrieve the same attributes as the get_access
+    function.
+
+    Parameters
+    ----------
+    refresh_token : str
+        The Strava refresh token.
 
     Returns
     -------
     athlete_name : str
-        DESCRIPTION.
+        The combined first and last name of the athlete.
     access_token : str
-        DESCRIPTION.
+        The Strava access token.
     refresh_token : str
-        DESCRIPTION.
+        The Strava refresh token.
     created_at : str
-        DESCRIPTION.
+        The Strava profile creation date.
     """
-    res = backend.post_request(backend.TOKEN_LINK,
-                               data={"client_id": backend.STRAVA_CLIENT_ID,
-                                     "client_secret": backend.STRAVA_CLIENT_SECRET,
-                                     "code": authorization_code,
-                                     "grant_type": "authorization_code"})
-    access_token = res.get("access_token")
-    refresh_token = res.get("refresh_token")
-    athlete_name = " ".join((res.get("athlete", {}).get("firstname", ""),
-                             res.get("athlete", {}).get("lastname", "")
-                             )
-                            )
-    created_at = res.get("athlete", {}).get("created_at", "Not found")
+    response: dict = backend.post_request(backend.TOKEN_LINK,
+                                          data={
+                                              "client_id":
+                                                  backend.STRAVA_CLIENT_ID,
+                                              "client_secret":
+                                                  backend.STRAVA_CLIENT_SECRET,
+                                              "grant_type": "refresh_token",
+                                              "refresh_token": refresh_token}
+                                          )
+    refresh_token: str = response.get("refresh_token")
+    access_token: str = response.get("access_token")
+    athlete: str = backend.get_request(backend.ATHLETE_URL,
+                                       headers={"Authorization":
+                                                f"Bearer {access_token}"}
+                                       )
+    athlete_name: str = " ".join((athlete.get("firstname", ""),
+                                  athlete.get("lastname", "")
+                                  )
+                                 )
+    created_at: str = athlete.get("created_at", "Not found")
     return access_token, refresh_token, athlete_name, created_at
-
-
-def refresh_access_token(refresh_token):
-    response = backend.post_request(backend.TOKEN_LINK,
-                                    data={"client_id": backend.STRAVA_CLIENT_ID,
-                                          "client_secret": backend.STRAVA_CLIENT_SECRET,
-                                          "grant_type": "refresh_token",
-                                          "refresh_token": refresh_token}
-                                    )
-    refresh_token = response.get("refresh_token")
-    access_token = response.get("access_token")
-    athlete = backend.get_request("https://www.strava.com/api/v3/athlete",
-                                  headers = {"Authorization": f"Bearer {access_token}"})
-    athlete_name = " ".join((athlete.get("firstname", ""),
-                             athlete.get("lastname", "")
-                             )
-                            )
-    created_at = athlete.get("created_at", "Not found")
-    return access_token, refresh_token, athlete_name, created_at
-
-
-def request_data_from_api(access_token: str) -> list[dict]:
-    """
-    Send get requests in a loop to retreive all the activities. Loop will stop
-    if the result is empty implying that all activities have been retrieved.
-
-    Parameters
-    ----------
-    access_token : str
-        DESCRIPTION.
-
-    Returns
-    -------
-    list[dict]
-        DESCRIPTION.
-
-    """
-    header = {"Authorization": f"Bearer {access_token}"}
-    request_page_num = 1
-    all_activities = []
-
-    while True:
-        param = {"per_page": 200,
-                 "page": request_page_num}
-        response = backend.get_request(url=backend.ACTIVITIES_LINK,
-                                       headers=header,
-                                       params=param)
-        # if an invalid response is received
-        # return the message and stop looping
-        if isinstance(response, dict):
-            all_activities.append(response)
-            break
-        # otherwise add the response to the list
-        all_activities.extend(response)
-        # if the page is empty or less than 200 records stop the loop
-        if len(response) < 200:
-            break
-        # increment to get the next page
-        request_page_num += 1
-    return all_activities
-
-
-def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
-    """
-
-
-    Parameters
-    ----------
-    value : list[float]
-        DESCRIPTION.
-
-    Returns
-    -------
-    TYPE
-        DESCRIPTION.
-
-    """
-    if value == []:
-        return [None, None]
-    return value
 
 
 @st.cache_data()
-def nomatim_lookup(lat, lon):
-    # print(f"api_call with {lat=}, {lon=}")
+def nomatim_lookup(lat: str, lon: str) -> dict:
+    """
+    Request a reverse location lookup on the Nominatim API.
+
+    Parameters
+    ----------
+    lat : str
+        The latitude.
+    lon : str
+        The longitude.
+
+    Returns
+    -------
+    response: dict
+        The Nominatim API response containing the country code.
+
+    """
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
-                                    params={"lat": lat,
-                                            "lon": lon,
-                                            "format": "json"})
+                                         params={"lat": lat,
+                                                 "lon": lon,
+                                                 "format": "json"}
+                                         )
     return response
 
 
-def locate_country(lat, lon, mapper=COUNTRIES):
-    response = nomatim_lookup(lat, lon)
+def locate_country(lat: str,
+                   lon: str,
+                   mapper: dict = COUNTRIES) -> str:
+    """
+    Locate the country by the coordinates via the reverse lookup with the
+    Nominatim API and then map the country code to the country name.
+
+    Parameters
+    ----------
+    lat : str
+        The latitude.
+    lon : str
+        The longitude.
+    mapper : dict, optional
+        The mapper of country codes to country names. The default is COUNTRIES.
+
+    Returns
+    -------
+    country: str
+        The country name.
+
+    """
+    response: dict = nomatim_lookup(lat, lon)
     country_code: str = response.get("address", {}).get("country_code", "")
     country: str = COUNTRIES.get(country_code.upper(),
-                                     "undefined")
+                                 "undefined")
     return country
 
 
 def parse(activities: list[dict]) -> pd.DataFrame:
     """
+    Parse the Strava activities for use in the dashboard.
 
+    Decode the polyline to coordinates.
+    Reverse lookup the country from start coordinates of the activity.
 
     Parameters
     ----------
     activities : list[dict]
-        DESCRIPTION.
+        List of API responses containing the activities.
 
     Returns
     -------
-    dataframe : TYPE
-        DESCRIPTION.
+    dataframe : pd.DataFrame
+        The dataframe containing the parsed activities.
 
     """
+    def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
+        if value == []:
+            return [None, None]
+        return value
+
+    # if no activities are provided return an empty dataframe.
     if activities == [{}]:
         return pd.DataFrame()
-    parsed_activities = []
-    # <>
+    parsed_activities: list = []
+    # for each activity
     for activity in activities:
+        # create timestamp from the local start date
         timestamp = pd.to_datetime(activity.get("start_date_local"))
-        elements = {"id": activity.get("id"),
-                    "name": activity.get("name"),
-                    "timestamp": timestamp,
-                    "year": timestamp.year,
-                    "week": timestamp.week,
-                    "calender-week": f"{timestamp.year}-{timestamp.week}",
-                    "date": timestamp.date(),
-                    "weekday": timestamp.weekday(),
-                    "time": timestamp.time(),
-                    "hour": timestamp.hour,
-                    "minutes": timestamp.minute,
-                    "sport_type": activity.get("sport_type"),
-                    "polyline": activity.get("map", {}
-                                             ).get("summary_polyline")
-                    }
+        elements: dict = {"id": activity.get("id"),
+                          "name": activity.get("name"),
+                          "sport_type": activity.get("sport_type"),
+                          "polyline": activity.get("map", {}
+                                                   ).get("summary_polyline"),
+                          "timestamp": timestamp,
+                          "year": timestamp.year,
+                          "week": timestamp.week,
+                          "calender-week":
+                              f"{timestamp.year}-{timestamp.week}",
+                          "date": timestamp.date(),
+                          "weekday": timestamp.weekday(),
+                          "time": timestamp.time(),
+                          "hour": timestamp.hour,
+                          "minutes": timestamp.minute,
+                          }
+        # unpack the starting coordinates to lat and lon
         elements.update(dict(zip(["lat", "lon"],
                                  get_lat_long(activity.get("start_latlng",
-                                                           [])))))
+                                                           []
+                                                           )
+                                              )
+                                 )
+                             )
+                        )
+        # if there is a polyline for the activity add the individual
+        # coordinates to the activity and lookup the country name
         if elements.get("polyline"):
             elements.update({"coords": polyline.decode(elements.get("polyline"
                                                                     ),
                                                        5),
-                             "country": locate_country(*tuple(map(lambda x: (s:=str(round(x, 1))).ljust(len(s.split(".")[0])+2, "0"),
-                                                                  [elements.get("lat"),
-                                                                   elements.get("lon")]
-                                                                  )
+                             "country": locate_country(*tuple(
+                                 map(lambda x:
+                                     (s := str(round(x, 1))
+                                      ).ljust(
+                                          len(s.split(".")[0])+2,
+                                          "0"
+                                              ),
+                                     [elements.get("lat"),
+                                      elements.get("lon")]
+                                     )
                                                               )
                                                        )
                              }
                             )
         parsed_activities.append(elements)
-    # <>
-    dataframe = pd.DataFrame(parsed_activities)
-    dataframe["app"] = "Strava"
+    # create a dataframe from the dictionary
+    dataframe: pd.DataFrame = pd.DataFrame(parsed_activities)
+    # add the label Strava to each activity
+    dataframe["app"]: pd.Series = "Strava"
     return dataframe
 
 
