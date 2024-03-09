@@ -106,8 +106,11 @@ def main():
         # sidebar
         with st.sidebar:
             image_powered = backend.load_image(backend.PATH_LOGO)
-            st.markdown(f'<img src="data:image/png;base64,{image_powered}" width="100%">',
-                        unsafe_allow_html=True)
+            st.markdown(f"""
+            <img src='data:image/png;base64,{image_powered}' width='100%'>
+                        """,
+                        unsafe_allow_html=True
+                        )
             st.header("Menu")
             if not st.session_state.get("loaded"):
                 image_connect = backend.load_image(backend.PATH_CONNECT)
@@ -172,7 +175,7 @@ def main():
                          column_config={"id":
                                         st.column_config.LinkColumn(
                                             label="view on Strava",
-                                            help="""See this activity on the Strava website"""
+                                            help=backend.HELP_TEXT
                                                                     )
                                         }
                          )
