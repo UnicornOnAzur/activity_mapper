@@ -164,7 +164,7 @@ def main():
                                     pd.DataFrame(columns=backend.DISPLAY_COLS)
                                     ).loc[:, backend.DISPLAY_COLS]
         data["id"] = data["id"].apply(
-            lambda id_: f"https://www.strava.com/activities/{id_}"
+            lambda id_: f"{backend.ACTIVITIES_URL}{id_}"
                                       )
         with st.expander(f"See your {data.shape[0]} unique events",
                          expanded=False):
