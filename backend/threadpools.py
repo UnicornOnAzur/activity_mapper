@@ -24,36 +24,38 @@ def get_activities_page(queue_in: queue.Queue,
                         barrier: threading.Barrier,
                         access_token: str) -> None:
     """
-
+    Function for worker group 1 to retreive one page at a time until the
+    response length is zero or the input is None.
 
     Parameters
     ----------
     queue_in : queue.Queue
-        DESCRIPTION.
+        The queue providing the request_page_num.
     queue_out : queue.Queue
-        DESCRIPTION.
+        The queue receiving the retrieved page.
     barrier : threading.Barrier
-        DESCRIPTION.
+        Barrier object to make all workers wait to complete execution.
     access_token : str
-        DESCRIPTION.
+        The Strava access token.
 
     Returns
     -------
-    None
-        DESCRIPTION.
+    None.
 
     """
     # loop forever until shutdown signal is given
     while True:
         # read item from queue
         request_page_num: typing.Union[int | None] = queue_in.get()
+        # prepare header and param
         header: dict = {"Authorization": f"Bearer {access_token}"}
         param: dict = {"per_page": 200, "page": request_page_num}
+        # send get request for the desired page
         response: typing.Union[list[dict] | dict] = backend.get_request(
             url=backend.ACTIVITIES_LINK,
             headers=header,
             params=param
-                                                    )
+                                                                        )
         # check for shutdown
         if request_page_num is None or len(response) == 0:
             # put signal back on queue
@@ -72,16 +74,17 @@ def parse_page(queue_in: queue.Queue,
                queue_out: queue.Queue,
                barrier: threading.Barrier) -> None:
     """
-
+    Function for worker group 2 to parse one page at a time until the input is
+    None or a dict which signals a propagated error message.
 
     Parameters
     ----------
     queue_in : queue.Queue
-        DESCRIPTION.
+        The queue providing the retrieved data.
     queue_out : queue.Queue
-        DESCRIPTION.
+        The queue receiving the parsed data.
     barrier : threading.Barrier
-        DESCRIPTION.
+        Barrier object to make all workers wait to complete execution.
 
     Returns
     -------
@@ -103,7 +106,7 @@ def parse_page(queue_in: queue.Queue,
             queue_out.put(data if isinstance(data, dict) else None)
             # stop processing
             break
-        #
+        # parse the retrieved data
         parsed_data: pd.DataFrame = backend.parse(data)
         # push result onto queue
         queue_out.put(parsed_data)
