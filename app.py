@@ -88,14 +88,19 @@ def main():
     st.session_state["scope"] = params.get("scope")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
-    welcome_text = "Welcome" if not (n := st.session_state.get('athlete_name')) else f"Welcome, {n}"
+    welcome_text = "Welcome"\
+        if not (n := st.session_state.get('athlete_name'))\
+        else f"Welcome, {n}"
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS)
                               ).loc[:, backend.STRAVA_COLS]
     creation = st.session_state.get("creation",
                                     "" if df.empty
-                                    else dt.datetime.strftime(df.date.min(),
-                                                              "%Y-%m-%dT%H:%M:%SZ"))
+                                    else dt.datetime.strftime(
+                                        df.date.min(),
+                                        "%Y-%m-%dT%H:%M:%SZ"
+                                                              )
+                                    )
     figures = backend.thread_create_figures(df, creation)
     with st.spinner("Making visualizations..."):
         # sidebar
@@ -106,10 +111,13 @@ def main():
             st.header("Menu")
             if not st.session_state.get("loaded"):
                 image_connect = backend.load_image("logos/btn_strava_connectwith_orange@2x.png")
-                st.markdown(f'<a href="{backend.authorization_link}">'
-                            f'<img src="data:image/png;base64,{image_connect}" width="100%">'
-                            f'</a>',
-                            unsafe_allow_html=True)
+                st.markdown(f"""
+            <a href="{backend.authorization_link}">
+            <img src='data:image/png;base64,{image_connect}' width='100%'>
+            </a>
+                    """,
+                            unsafe_allow_html=True
+                            )
             else:
                 st.error("connected")
             st.divider()
@@ -117,8 +125,10 @@ def main():
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
                 st.session_state["dataframe"] = test_data
-                st.session_state["creation"] = dt.datetime.strftime(test_data.date.min(),
-                                                                    "%Y-%m-%dT%H:%M:%SZ")
+                st.session_state["creation"] = dt.datetime.strftime(
+                                                test_data.date.min(),
+                                                "%Y-%m-%dT%H:%M:%SZ"
+                                                                    )
                 wrap_up()
 
         # MAIN PAGE
@@ -150,15 +160,19 @@ def main():
         data = st.session_state.get("dataframe",
                                     pd.DataFrame(columns=backend.DISPLAY_COLS)
                                     ).loc[:, backend.DISPLAY_COLS]
-        data["id"] = data["id"].apply(lambda id_: f"https://www.strava.com/activities/{id_}")
-        with st.expander(f"See your {data.shape[0]} unique events", expanded=False):
+        data["id"] = data["id"].apply(
+            lambda id_: f"https://www.strava.com/activities/{id_}"
+                                      )
+        with st.expander(f"See your {data.shape[0]} unique events",
+                         expanded=False):
             st.dataframe(data,
                          use_container_width=True,
                          hide_index=True,
                          column_order=backend.DISPLAY_COLS,
                          column_config={"id":
-                                        st.column_config.LinkColumn(label="view on Strava",
-                                                                    help="See this activity on the Strava website"
+                                        st.column_config.LinkColumn(
+                                            label="view on Strava",
+                                            help="""See this activity on the Strava website"""
                                                                     )
                                         }
                          )
@@ -169,9 +183,10 @@ if __name__ == "__main__":
     # set the initial state of the sidebar
     if "sidebar_state" not in st.session_state:
         st.session_state["sidebar_state"] = "expanded"
-    st.set_page_config(page_title=backend.TITLE,
-                       page_icon=":world_map:",
-                       layout="wide",
-                       initial_sidebar_state=st.session_state.get("sidebar_state")
+    st.set_page_config(
+        page_title=backend.TITLE,
+        page_icon=":world_map:",
+        layout="wide",
+        initial_sidebar_state=st.session_state.get("sidebar_state")
                        )
     main()
