@@ -110,7 +110,7 @@ def main():
                         unsafe_allow_html=True)
             st.header("Menu")
             if not st.session_state.get("loaded"):
-                image_connect = backend.load_image("logos/btn_strava_connectwith_orange@2x.png")
+                image_connect = backend.load_image(backend.PATH_CONNECT)
                 st.markdown(f"""
             <a href="{backend.authorization_link}">
             <img src='data:image/png;base64,{image_connect}' width='100%'>

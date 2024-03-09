@@ -29,6 +29,7 @@ from backend.resources import (
     LEFT_RIGHT_MARGIN,
     NOMINATIM_LINK,
     PATH_CODES,
+    PATH_CONNECT,
     PATH_GEOJSON,
     PATH_LOGO,
     PATH_MAPPER,

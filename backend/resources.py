@@ -76,6 +76,7 @@ CONFIG2: dict = {"displaylogo": False,  # remove the plotly logo
 
 # FILE PATHS
 PATH_CODES: str = "country_codes.txt"
+PATH_CONNECT: str = "logos/btn_strava_connectwith_orange@2x.png"
 PATH_LOGO: str = "logos/api_logo_pwrdBy_strava_horiz_light.png"
 PATH_GEOJSON: str = "countries.geojson"
 PATH_MAPPER: str = "strava_categories.txt"
