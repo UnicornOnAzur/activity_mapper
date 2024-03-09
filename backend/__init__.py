@@ -45,8 +45,7 @@ from backend.resources import (
 from backend.strava import (
     get_access,
     parse,
-    refresh_access,
-    request_data_from_api
+    refresh_access
     )
 
 from backend.plotly_charts import (
