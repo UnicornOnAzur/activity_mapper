@@ -445,8 +445,7 @@ def worldmap_figure(data: pd.DataFrame,
                                   mapbox_style="carto-darkmatter",
                                   title=title,
                                   height=height
-                                  )
-    # figure.add
+                                  ) # TODO: remove hover text
     # add the routes of the activities
     figure.add_scattermapbox(below="",  # put trace above all others
                              lat=lats,
@@ -456,7 +455,8 @@ def worldmap_figure(data: pd.DataFrame,
                                      "symbol": "circle",
                                      },
                              mode="lines",
-                             customdata=name
+                             customdata=name,
+                             name="Strava"
                              )
     figure.add_scattermapbox(below="",   # put trace above all others
                              lat=data["lat"],
@@ -466,7 +466,8 @@ def worldmap_figure(data: pd.DataFrame,
                                      "symbol": "circle",
                                      },
                              mode="markers",
-                             customdata=data["name"]
+                             customdata=data["name"],
+                             name="Strava"
                              )
     figure.update_traces(hovertemplate="%{customdata}")
     figure = _update_layout(figure)
