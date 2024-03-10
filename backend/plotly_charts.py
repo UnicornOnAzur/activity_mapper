@@ -425,7 +425,7 @@ def worldmap_figure(data: pd.DataFrame,
     """
     lats: list = kwargs.get("lat", [])
     lons: list = kwargs.get("lon", [])
-    # TODO: center map
+    name: list = kwargs.get("name", [])
     # color the countries by (log of) the amount of activities
     figure = px.choropleth_mapbox(data_frame=countries,
                                   geojson=geojson,
@@ -439,6 +439,9 @@ def worldmap_figure(data: pd.DataFrame,
                                   range_color=[0, countries["count"].max()],
                                   opacity=.5,
                                   zoom=1,
+                                  # center map on coordinates of activities
+                                  center={"lat": data["lat"].mean(),
+                                          "lon": data["lon"].mean()},
                                   mapbox_style="carto-darkmatter",
                                   title=title,
                                   height=height
@@ -453,6 +456,7 @@ def worldmap_figure(data: pd.DataFrame,
                                      "symbol": "circle",
                                      },
                              mode="lines",
+                             customdata=name
                              )
     figure.add_scattermapbox(below="",   # put trace above all others
                              lat=data["lat"],
@@ -462,7 +466,9 @@ def worldmap_figure(data: pd.DataFrame,
                                      "symbol": "circle",
                                      },
                              mode="markers",
+                             customdata=data["name"]
                              )
+    figure.update_traces(hovertemplate="%{customdata}")
     figure = _update_layout(figure)
     figure.update_layout(coloraxis_showscale=False)
     return figure
