@@ -445,7 +445,7 @@ def worldmap_figure(data: pd.DataFrame,
                                   )
     # figure.add
     # add the routes of the activities
-    figure.add_scattermapbox(below="traces",
+    figure.add_scattermapbox(below="",  # put trace above all others
                              lat=lats,
                              lon=lons,
                              marker={"size": 1,
@@ -453,16 +453,16 @@ def worldmap_figure(data: pd.DataFrame,
                                      "symbol": "circle",
                                      },
                              mode="lines",
-                             ) # TODO: add hover labels
-    figure.add_scattermapbox(below="traces",
+                             )
+    figure.add_scattermapbox(below="",   # put trace above all others
                              lat=data["lat"],
                              lon=data["lon"],
                              marker={"size": 5,
                                      "color": backend.COLOR_MAP.get("Strava"),
                                      "symbol": "circle",
                                      },
-                             mode="markers"
-                             ) # TODO: add hover labels
+                             mode="markers",
+                             )
     figure = _update_layout(figure)
     figure.update_layout(coloraxis_showscale=False)
     return figure
