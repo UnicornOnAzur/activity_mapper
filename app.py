@@ -83,6 +83,7 @@ def main():
     None.
 
     """
+    start = dt.datetime.now()
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     st.session_state["scope"] = params.get("scope")
@@ -180,6 +181,8 @@ def main():
                                         }
                          )
         st.caption(backend.CAPTION)
+        end = dt.datetime.now()
+        st.write((end-start).seconds)
 
 
 if __name__ == "__main__":
