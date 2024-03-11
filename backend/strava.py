@@ -5,8 +5,6 @@
 All the functions and variables related to using the Strava API and it's data.
 """
 
-# Standard library
-import typing
 # Third party
 import pandas as pd
 import polyline
@@ -179,11 +177,6 @@ def parse(activities: list[dict]) -> pd.DataFrame:
         The dataframe containing the parsed activities.
 
     """
-    def get_lat_long(value: list[float]) -> list[typing.Union[None, float]]:
-        if value == []:
-            return [None, None]
-        return value
-
     # if no activities are provided return an empty dataframe.
     if activities == [{}]:
         return pd.DataFrame()
@@ -209,32 +202,50 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                           "minutes": timestamp.minute,
                           }
         # unpack the starting coordinates to lat and lon
-        elements.update(dict(zip(["lat", "lon"],
-                                 get_lat_long(activity.get("start_latlng",
-                                                           []
-                                                           )
-                                              )
+        elements.update(dict(zip(
+            # keys
+            ["lat", "lon"],
+            # values
+            activity.get("start_latlng",
+                         [None, None]
+                         )
                                  )
                              )
                         )
         # if there is a polyline for the activity add the individual
         # coordinates to the activity and lookup the country name
         if elements.get("polyline"):
-            elements.update({"coords": polyline.decode(elements.get("polyline"
-                                                                    ),
-                                                       5),
-                             "country": locate_country(*tuple(
-                                 map(lambda x:
-                                     (s := str(round(x, 1))
-                                      ).ljust(
-                                          len(s.split(".")[0])+2,
-                                          "0"
-                                              ),
-                                     [elements.get("lat"),
-                                      elements.get("lon")]
-                                     )
-                                                              )
+            elements.update({"coords":
+                             polyline.decode(
+                                 # make a raw string from the polyline
+                                 fr"{elements.get('polyline')}",
+                                 # precision which is 5 for Google Maps
+                                 int=5
+                                             ),
+
+                             "country":
+                             # provide the function with the coordinates of the
+                             # activity as an unpacked tuple of the coordinates
+                             # after mapping a rounding to 1 decimal and
+                             # filling the strings to the length
+                             locate_country(*tuple(map(lambda x:
+                                                       # round the string to 1
+                                                       # decimal and store it
+                                                       (s := str(round(x, 1))
+                                                        ).ljust(
+                                                        # fill out the string
+                                                        # to the length of the
+                                                        # rounded string plus 2
+                                                        # characters
+                                                        len(s.split(".")[0])+2,
+                                                        # fill character
+                                                        "0"
+                                                                ),
+                                                       [elements.get("lat"),
+                                                        elements.get("lon")]
                                                        )
+                                                   )
+                                            )
                              }
                             )
         parsed_activities.append(elements)
