@@ -89,6 +89,7 @@ def main():
     st.session_state["scope"] = params.get("scope")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
+    parsing = dt.datetime.now()
     welcome_text = "Welcome"\
         if not (n := st.session_state.get('athlete_name'))\
         else f"Welcome, {n}"
@@ -103,6 +104,7 @@ def main():
                                                               )
                                     )
     figures = backend.thread_create_figures(df, creation)
+    creating = dt.datetime.now()
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
@@ -182,7 +184,7 @@ def main():
                          )
         st.caption(backend.CAPTION)
         end = dt.datetime.now()
-        st.write((end-start).seconds)
+        st.write(f"total: {(end-start).seconds}, loading: {(parsing-start).seconds}, figures: {(creating-start).seconds}")
 
 
 if __name__ == "__main__":
