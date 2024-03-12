@@ -49,7 +49,8 @@ def get_activities_page(queue_in: queue.Queue,
         request_page_num: typing.Union[int | None] = queue_in.get()
         # prepare header and param
         header: dict = {"Authorization": f"Bearer {access_token}"}
-        param: dict = {"per_page": 100, "page": request_page_num}
+        param: dict = {"per_page": 50,
+                       "page": request_page_num}
         # send get request for the desired page
         response: typing.Union[list[dict] | dict] = backend.get_request(
             url=backend.ACTIVITIES_LINK,
