@@ -184,7 +184,7 @@ def main():
                          )
         st.caption(backend.CAPTION)
         end = dt.datetime.now()
-        st.write(f"total: {(end-start).seconds}, loading: {(parsing-start).seconds}, figures: {(creating-start).seconds}")
+        st.write(f"total: {(end-start).seconds}, loading: {(parsing-start).seconds}, figures: {(creating-start).seconds} !")
 
 
 if __name__ == "__main__":
