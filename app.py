@@ -95,6 +95,7 @@ def main():
     df = st.session_state.get("dataframe",
                               pd.DataFrame(columns=backend.STRAVA_COLS)
                               ).loc[:, backend.STRAVA_COLS]
+    st.dataframe(dt)  # DEBUG
     creation = st.session_state.get("creation",
                                     "" if df.empty
                                     else dt.datetime.strftime(
