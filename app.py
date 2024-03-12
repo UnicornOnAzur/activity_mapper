@@ -33,7 +33,7 @@ def connect_strava(code: str):
         error_message = st.error(backend.ERROR_MESSAGE1)
         return
     # RETREIVING THE ACCESS TOKEN
-    progress_bar = st.progress(0, "Getting access token")
+    # progress_bar = st.progress(0, "Getting access token")
     results = backend.get_access(code)
     st.session_state["access_token"]: str = results[0]
     st.session_state["refresh_token"]: str = results[1]
@@ -45,14 +45,14 @@ def connect_strava(code: str):
         error_message = st.error(backend.ERROR_MESSAGE2)
         return
     # RETREIVING THE DATA
-    progress_bar.progress(33, "Retrieving data...")
+    # progress_bar.progress(33, "Retrieving data...")
     data = backend.thread_get_and_parse(st.session_state.get("access_token"))
     # PARSING THE DATA
-    progress_bar.progress(67, "Parsing data...")
+    # progress_bar.progress(67, "Parsing data...")
     st.session_state["dataframe"]: pd.DataFrame = data
     # FINALIZE THE PROCESS
-    progress_bar.progress(100, "Done")
-    progress_bar.empty()
+    # progress_bar.progress(100, "Done")
+    # progress_bar.empty()
     wrap_up()
     return
 
