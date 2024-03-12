@@ -75,11 +75,11 @@ CONFIG2: dict = {"displaylogo": False,  # remove the plotly logo
                  }
 
 # FILE PATHS
-PATH_CODES: str = "country_codes.txt"
+PATH_CODES: str = "files/country_codes.txt"
 PATH_CONNECT: str = "logos/btn_strava_connectwith_orange@2x.png"
 PATH_LOGO: str = "logos/api_logo_pwrdBy_strava_horiz_light.png"
-PATH_GEOJSON: str = "countries.geojson"
-PATH_MAPPER: str = "strava_categories.txt"
+PATH_GEOJSON: str = "files/countries.geojson"
+PATH_MAPPER: str = "files/strava_categories.txt"
 
 # COLORS AND THEMES
 COLOR_MAP: dict = {"Strava": "#FC4C02"}  # the color of the Strava app

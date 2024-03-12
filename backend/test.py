@@ -16,7 +16,7 @@ def load_test_data() -> list[dict]:
     data: list[dict]
         List of the activities.
     """
-    with open("api_test.txt", "rb") as file:
+    with open("files/api_test.txt", "rb") as file:
         data: list[dict] = json.loads(file.read())
     return data
 
