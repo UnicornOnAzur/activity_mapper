@@ -218,9 +218,9 @@ def parse(activities: list[dict]) -> pd.DataFrame:
             elements.update({"coords":
                              polyline.decode(
                                  # make a raw string from the polyline
-                                 fr"{elements.get('polyline')}",
+                                 expression=fr"{elements.get('polyline')}",
                                  # precision which is 5 for Google Maps
-                                 int=5
+                                 precision=5
                                              ),
 
                              "country":
