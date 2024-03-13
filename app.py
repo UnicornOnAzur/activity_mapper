@@ -49,7 +49,9 @@ def connect_strava(code: str):
             return
         # RETREIVING AND PARSING THE DATA
         status.write("Retrieving and parsing data")
-        data = backend.thread_get_and_parse(st.session_state.get("access_token"))
+        data = backend.thread_get_and_parse(
+            st.session_state.get("access_token")
+                                            )
         # FINALIZE THE PROCESS
         status.write("Store data")
         st.session_state["dataframe"]: pd.DataFrame = data
@@ -86,13 +88,11 @@ def main():
     None.
 
     """
-    start = dt.datetime.now()
     params: dict = st.query_params.to_dict()
     code = params.get("code")
     st.session_state["scope"] = params.get("scope")
     if code and not st.session_state.get("loaded", False):
         connect_strava(code)
-    parsing = dt.datetime.now()
     welcome_text = "Welcome"\
         if not (n := st.session_state.get('athlete_name'))\
         else f"Welcome, {n}"
@@ -107,7 +107,6 @@ def main():
                                                               )
                                     )
     figures = backend.thread_create_figures(df, creation)
-    creating = dt.datetime.now()
     with st.spinner("Making visualizations..."):
         # sidebar
         with st.sidebar:
@@ -186,8 +185,6 @@ def main():
                                         }
                          )
         st.caption(backend.CAPTION)
-        end = dt.datetime.now()
-        st.write(f"total: {(end-start).seconds}, loading: {(parsing-start).seconds}, figures: {(creating-start).seconds} !")
 
 
 if __name__ == "__main__":
