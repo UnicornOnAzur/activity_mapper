@@ -754,7 +754,7 @@ def worldmap_figure(data: pd.DataFrame,
                                   color="count",
                                   # remover hover label for choropleth plot
                                   hover_data=["country"],
-                                  color_continuous_scale=backend.DISCRETE_COLOR,                                 ,
+                                  color_continuous_scale=backend.DISCRETE_COLOR,
                                   range_color=[0, countries["count"].max()],
                                   opacity=.5,
                                   zoom=1,
