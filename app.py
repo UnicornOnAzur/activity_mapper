@@ -55,6 +55,8 @@ def connect_strava(code: str):
         # FINALIZE THE PROCESS
         status.write("Store data")
         st.session_state["dataframe"]: pd.DataFrame = data
+        # signal that data has been loaded
+        st.session_state["loaded"]: bool = True
         wrap_up()
         status.update(label="Done!",
                       state="complete",
@@ -73,8 +75,6 @@ def wrap_up():
     """
     # set the sidebar to collapse after the rerun
     st.session_state["sidebar_state"]: str = "collapsed"
-    # signal that data has been loaded
-    st.session_state["loaded"]: bool = True
     # rerun the page to have header and sidebar be updated
     st.rerun()
 
