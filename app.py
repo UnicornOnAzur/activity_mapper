@@ -27,33 +27,36 @@ def connect_strava(code: str):
     None.
 
     """
-    error_message = st.empty()
-    # check if a sufficient scope was provided
-    if st.session_state.get("scope") == "read":
-        error_message = st.error(backend.ERROR_MESSAGE1)
-        return
-    # RETREIVING THE ACCESS TOKEN
-    # progress_bar = st.progress(0, "Getting access token")
-    results = backend.get_access(code)
-    st.session_state["access_token"]: str = results[0]
-    st.session_state["refresh_token"]: str = results[1]
-    st.session_state["athlete_name"]: str = results[2]
-    st.session_state["creation"]: str = results[3]
-    # check if an access token was returned
-    if st.session_state.get("access_token") is None:
-        backend.refresh_access(st.session_state.get("refresh_token"))
-        error_message = st.error(backend.ERROR_MESSAGE2)
-        return
-    # RETREIVING THE DATA
-    # progress_bar.progress(33, "Retrieving data...")
-    data = backend.thread_get_and_parse(st.session_state.get("access_token"))
-    # PARSING THE DATA
-    # progress_bar.progress(67, "Parsing data...")
-    st.session_state["dataframe"]: pd.DataFrame = data
-    # FINALIZE THE PROCESS
-    # progress_bar.progress(100, "Done")
-    # progress_bar.empty()
-    wrap_up()
+    with st.status("Downloading data...", expanded=True) as status:
+        error_message = st.empty()
+        # check if a sufficient scope was provided
+        status.write("Checking scope")
+        if st.session_state.get("scope") == "read":
+            error_message = st.error(backend.ERROR_MESSAGE1)
+            return
+        # RETREIVING THE ACCESS TOKEN
+        status.write("Getting access token")
+        results = backend.get_access(code)
+        st.session_state["access_token"]: str = results[0]
+        st.session_state["refresh_token"]: str = results[1]
+        st.session_state["athlete_name"]: str = results[2]
+        st.session_state["creation"]: str = results[3]
+        # check if an access token was returned
+        status.write("Checking if token was returned")
+        if st.session_state.get("access_token") is None:
+            backend.refresh_access(st.session_state.get("refresh_token"))
+            error_message = st.error(backend.ERROR_MESSAGE2)
+            return
+        # RETREIVING AND PARSING THE DATA
+        status.write("Retrieving and parsing data")
+        data = backend.thread_get_and_parse(st.session_state.get("access_token"))
+        # FINALIZE THE PROCESS
+        status.write("Store data")
+        st.session_state["dataframe"]: pd.DataFrame = data
+        wrap_up()
+        status.update(label="Done!",
+                      state="complete",
+                      expanded=False)
     return
 
 
