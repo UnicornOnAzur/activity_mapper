@@ -46,11 +46,12 @@ DISPLAY_COLS: list[str] = ["name",
                            "country"
                            ]
 STRAVA_COLS: list[str] = ["name",
-                          "date",
+                          "id",  # used in days figure
+                          "date",  # used in days figure
                           "sport_type",  # used for types figure
                           "country",  # used for locations figure
-                          "app",
-                          "weekday",
+                          "app",  # used in days figure
+                          "weekday",  # used in days figure
                           "time",
                           "hour",
                           "minutes",
