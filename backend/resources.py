@@ -83,7 +83,8 @@ PATH_MAPPER: str = "files/strava_categories.txt"
 
 # COLORS AND THEMES
 COLOR_MAP: dict = {"Strava": "#FC4C02"}  # the color of the Strava app
-DISCRETE_COLOR: list[str] = px.colors.sequential.Oranges_r
+DISCRETE_COLOR: list[str] = px.colors.sequential.Oranges
+DISCRETE_COLOR_R: list[str] = px.colors.sequential.Oranges_r
 TEMPLATE: str = "plotly_dark"
 
 # SIZES FOR PLOTS

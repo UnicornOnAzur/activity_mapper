@@ -22,6 +22,7 @@ from backend.resources import (
     CONFIG,
     CONFIG2,
     DISCRETE_COLOR,
+    DISCRETE_COLOR_R,
     DISPLAY_COLS,
     DT_FORMAT,
     EXPLANATION,
