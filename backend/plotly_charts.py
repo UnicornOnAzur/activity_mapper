@@ -318,8 +318,10 @@ def timeline_figure(aggregated_data: pd.DataFrame,
                                    -100,
                                    "Today")
     figure = _update_layout(figure,
-                            xaxis={"range": [creation_date - dt.timedelta(days=2),
-                                             today + dt.timedelta(days=2)]}
+                            xaxis={"range":
+                                   [creation_date - dt.timedelta(days=2),
+                                    today + dt.timedelta(days=2)]
+                                   }
                             )
     return figure
 
