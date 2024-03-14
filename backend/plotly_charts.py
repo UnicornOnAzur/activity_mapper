@@ -560,8 +560,8 @@ def types(original: pd.DataFrame,
         return empty_figure(plot_title,
                             plot_height)
     # prepare data
-    data = original.copy()
     mapper = backend.load_category_mapper(backend.PATH_MAPPER)
+    data = original.loc[:,["sport_type"]].copy()
     data["type"] = data["sport_type"].map(mapper)
     data["counts"] = 1
     # create figure
