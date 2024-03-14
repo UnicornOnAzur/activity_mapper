@@ -71,16 +71,23 @@ def connect_strava(code: str) -> None:
 
 def wrap_up(data, creation=None) -> None:
     """
-    <>
+
+
+    Parameters
+    ----------
+    data : TYPE
+        DESCRIPTION.
+    creation : TYPE, optional
+        DESCRIPTION. The default is None.
 
     Returns
     -------
-    None.
+    None
+        DESCRIPTION.
 
     """
-    # store data
+    # store activities and creation date of profile
     st.session_state["dataframe"]: pd.DataFrame = data
-    #
     st.session_state["creation"]: str = dt.datetime.strftime(data.date.min(),
                                                              backend.DT_FORMAT
                                                              ) \
@@ -120,7 +127,7 @@ def main() -> None:
                                     )
     figures = backend.thread_create_figures(df, creation)
     with st.spinner("Making visualizations..."):
-        # sidebar
+        # SIDEBAR
         with st.sidebar:
             image_powered = backend.load_image(backend.PATH_LOGO)
             st.markdown(f"""
@@ -143,13 +150,7 @@ def main() -> None:
             st.divider()
             st.markdown(backend.EXPLANATION)
             if st.button("Show with demo data"):
-                test_data = backend.parse(backend.load_test_data())
-                # st.session_state["dataframe"] = test_data
-                # st.session_state["creation"] = dt.datetime.strftime(
-                #                                 test_data.date.min(),
-                #                                 backend.DT_FORMAT
-                #                                                     )
-                wrap_up(test_data)
+                wrap_up(backend.parse(backend.load_test_data()))
 
         # MAIN PAGE
         # TOP ROW
