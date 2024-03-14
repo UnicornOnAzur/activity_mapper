@@ -350,12 +350,8 @@ def days(original: pd.DataFrame,
 
     plot_title = "Weekdays"
     # prepare data
-    data = original.sort_values("date").\
-        groupby(["app", "weekday"])["id"].\
-        count().\
-        reset_index().\
-        rename({"id": "counts"}, axis=1)
-    data["percentage"] = data["counts"] / original.shape[0]
+    data = original.groupby(["app", "weekday"])["id"].count().reset_index()
+    data["percentage"] = data["id"] / original.shape[0]
     # create figure
     weekdays = weekdays_figure(data,
                                title=plot_title,
