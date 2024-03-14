@@ -148,23 +148,19 @@ def main():
                 wrap_up()
 
         # MAIN PAGE
+        # TOP ROW
         with st.container():
             st.markdown(f"## {backend.TITLE}: {welcome_text}")
-            # top row
             st.plotly_chart(figure_or_data=figures[0],
                             use_container_width=True,
                             config=backend.CONFIG)
-
+        # MIDDLE ROW
         with st.container():
-            # middle row
             cols = st.columns(spec=[6, 6],
                               gap="small")
             cols[0].plotly_chart(figure_or_data=figures[1],
                                  use_container_width=True,
                                  config=backend.CONFIG)
-            cols[1].plotly_chart(figure_or_data=figures[2],
-                                 use_container_width=True,
-                                 config=backend.CONFIG2)
             subcols = cols[0].columns(spec=[3, 3], gap="small")
             subcols[0].plotly_chart(figure_or_data=figures[3],
                                     use_container_width=True,
@@ -172,7 +168,10 @@ def main():
             subcols[1].plotly_chart(figure_or_data=figures[4],
                                     use_container_width=True,
                                     config=backend.CONFIG)
-            # SLIDER
+            cols[1].plotly_chart(figure_or_data=figures[2],
+                                 use_container_width=True,
+                                 config=backend.CONFIG2)
+        # BOTTOM ROW
         data = st.session_state.get("dataframe",
                                     pd.DataFrame(columns=backend.DISPLAY_COLS)
                                     ).loc[:, backend.DISPLAY_COLS]
