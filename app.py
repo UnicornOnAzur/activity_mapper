@@ -67,7 +67,7 @@ def connect_strava(code: str):
         st.session_state["loaded"]: bool = True
         wrap_up()
         status.update(label="Done!",
-                      expanded=False
+                      expanded=False,
                       state="complete")
     return
 
