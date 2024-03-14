@@ -27,12 +27,17 @@ def connect_strava(code: str):
     None.
 
     """
-    with st.status("Downloading data...", expanded=True) as status:
+    with st.status(label="Downloading data...",
+                   expanded=True,
+                   state="running") as status:
         error_message = st.empty()
         # check if a sufficient scope was provided
         status.write("Checking scope")
         if st.session_state.get("scope") == "read":
             error_message = st.error(backend.ERROR_MESSAGE1)
+            status.update(label="Insufficient scope",
+                          expanded=True,
+                          state="error")
             return
         # RETREIVING THE ACCESS TOKEN
         status.write("Getting access token")
@@ -46,6 +51,9 @@ def connect_strava(code: str):
         if st.session_state.get("access_token") is None:
             backend.refresh_access(st.session_state.get("refresh_token"))
             error_message = st.error(backend.ERROR_MESSAGE2)
+            status.update(label="Unauthorized access",
+                          expanded=True,
+                          state="error")
             return
         # RETREIVING AND PARSING THE DATA
         status.write("Retrieving and parsing data")
@@ -59,8 +67,8 @@ def connect_strava(code: str):
         st.session_state["loaded"]: bool = True
         wrap_up()
         status.update(label="Done!",
-                      state="complete",
-                      expanded=False)
+                      expanded=False
+                      state="complete")
     return
 
 
