@@ -13,7 +13,7 @@ import streamlit as st
 import backend
 
 
-def connect_strava(code: str):
+def connect_strava(code: str) -> None:
     """
     <>
 
@@ -45,7 +45,6 @@ def connect_strava(code: str):
         st.session_state["access_token"]: str = results[0]
         st.session_state["refresh_token"]: str = results[1]
         st.session_state["athlete_name"]: str = results[2]
-        st.session_state["creation"]: str = results[3]
         # check if an access token was returned
         status.write("Checking if token was returned")
         if st.session_state.get("access_token") is None:
@@ -61,18 +60,16 @@ def connect_strava(code: str):
             st.session_state.get("access_token")
                                             )
         # FINALIZE THE PROCESS
-        status.write("Store data")
-        st.session_state["dataframe"]: pd.DataFrame = data
         # signal that data has been loaded
         st.session_state["loaded"]: bool = True
-        wrap_up()
         status.update(label="Done!",
                       expanded=False,
                       state="complete")
+        wrap_up(data, results[3])
     return
 
 
-def wrap_up():
+def wrap_up(data, creation=None) -> None:
     """
     <>
 
@@ -81,13 +78,20 @@ def wrap_up():
     None.
 
     """
+    # store data
+    st.session_state["dataframe"]: pd.DataFrame = data
+    #
+    st.session_state["creation"]: str = dt.datetime.strftime(data.date.min(),
+                                                             backend.DT_FORMAT
+                                                             ) \
+        if not creation else creation
     # set the sidebar to collapse after the rerun
     st.session_state["sidebar_state"]: str = "collapsed"
     # rerun the page to have header and sidebar be updated
     st.rerun()
 
 
-def main():
+def main() -> None:
     """
     <>
 
@@ -140,12 +144,12 @@ def main():
             st.markdown(backend.EXPLANATION)
             if st.button("Show with demo data"):
                 test_data = backend.parse(backend.load_test_data())
-                st.session_state["dataframe"] = test_data
-                st.session_state["creation"] = dt.datetime.strftime(
-                                                test_data.date.min(),
-                                                backend.DT_FORMAT
-                                                                    )
-                wrap_up()
+                # st.session_state["dataframe"] = test_data
+                # st.session_state["creation"] = dt.datetime.strftime(
+                #                                 test_data.date.min(),
+                #                                 backend.DT_FORMAT
+                #                                                     )
+                wrap_up(test_data)
 
         # MAIN PAGE
         # TOP ROW
@@ -172,9 +176,7 @@ def main():
                                  use_container_width=True,
                                  config=backend.CONFIG2)
         # BOTTOM ROW
-        data = st.session_state.get("dataframe",
-                                    pd.DataFrame(columns=backend.DISPLAY_COLS)
-                                    ).loc[:, backend.DISPLAY_COLS]
+        data = df.loc[:, backend.DISPLAY_COLS]
         data["id"] = data["id"].apply(
             lambda id_: f"{backend.ACTIVITIES_URL}{id_}"
                                       )
