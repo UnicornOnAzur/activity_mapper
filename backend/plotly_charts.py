@@ -181,6 +181,19 @@ def timeline(original: pd.DataFrame,
         DESCRIPTION.
 
     """
+    def give_position(group):
+        group = group.sort_values(["date", "time"],
+                                  ascending=[True, True]
+                                  ).reset_index()
+        group["pos"] = group.index
+        return group
+
+    def first_day_of_week(table):
+        column = pd.to_datetime(table.loc[:, ["year", "week"]].apply(
+            lambda row: f"{row.get('year')}-{row.get('week')}-1", axis=1),
+                                    format="%Y-%W-%w")
+        return column
+
     # show empty figure if no data is provided
     plot_title = "Timeline"
     if original.empty:
@@ -189,43 +202,21 @@ def timeline(original: pd.DataFrame,
     # prepare data
     summarize_name = "Times per week"
     name = "calender-week"
-    dataframe = original.copy()
-    dataframe["pos"] = 0
-    last = None
-    count = None
-    for index, row in dataframe.loc[:].iterrows():
-        week = row[name]
-        if week != last:
-            last = week
-            count = 0
-            continue
-        count += 1
-        dataframe.loc[index, "pos"] = count
-    # rework the calender-week column to be the first day of the week
-    # TODO: update use of .loc
-    dataframe["cw"] = dataframe.loc[:, ["year", "week"]]\
-        .apply(lambda row: f"{row[0]}-{row[1]}-1",
-               axis=1)
-    dataframe["cw"] = pd.to_datetime(dataframe["cw"],
-                                     format="%Y-%W-%w")
-    # summarize the amount of activities per week
-    data = dataframe.groupby(["app", "year", "week"])["timestamp"]\
-        .count().reset_index().rename({"timestamp": summarize_name},
+    data = original.groupby(["app", "year", "week"])["id"]\
+        .count().reset_index().rename({"id": summarize_name},
                                       axis=1)
-    # rework the calender-week column to be the first day of the week
-    # TODO: update use of .loc
-    data[name] = data.loc[:, ["year", "week"]].apply(
-        lambda row: f"{row[0]}-{row[1]}-1", axis=1)
-    # TODO: update use of pd.to_datetime
-    data[name] = pd.to_datetime(data[name],
-                                format="%Y-%W-%w")
+    data[name] = first_day_of_week(data)
+
+    dataframe = original.groupby(["year", "week"])[["date", "time", "name"]]\
+        .apply(give_position).reset_index()
+    dataframe["cw"] = first_day_of_week(dataframe)
 
     # make creation_
     creation_date: dt.date = dt.datetime.strptime(kwargs.get("creation"),
                                                   backend.DT_FORMAT).date()
     # create figure
-    time_line = timeline_figure(data,
-                                dataframe,
+    time_line = timeline_figure(aggregated_data=data,
+                                data=dataframe,
                                 title=plot_title,
                                 height=plot_height,
                                 x=name,
@@ -518,7 +509,8 @@ def clock_figure(preprocessed_data: pd.DataFrame,
     figure.update_traces(hovertemplate="""
                          <b>%{customdata[0]}</b><br>%{customdata[1]}
                          """)
-    max_axis = 0 if preprocessed_data.empty else int(preprocessed_data["count"].max())
+    max_axis = 0 if preprocessed_data.empty \
+        else int(preprocessed_data["count"].max())
     figure = _update_layout(figure)
     figure.update_layout(polar={"radialaxis": {"tickvals":
                                                list(range(0, max_axis+1, 5))},
@@ -561,7 +553,7 @@ def types(original: pd.DataFrame,
                             plot_height)
     # prepare data
     mapper = backend.load_category_mapper(backend.PATH_MAPPER)
-    data = original.loc[:,["sport_type"]].copy()
+    data = original.loc[:, ["sport_type"]].copy()
     data["type"] = data["sport_type"].map(mapper)
     data["counts"] = 1
     # create figure
