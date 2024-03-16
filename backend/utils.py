@@ -119,17 +119,16 @@ def load_category_mapper(path: str) -> collections.defaultdict:
             The corrected or original sport.
 
         """
-        corrections: dict = {"E-Bike Ride": "EBikeRide",
-                             "E-Mountain Bike Ride": "EMountainBikeRide",
+        corrections: dict = {"HIIT": "HighIntensityIntervalTraining",
                              "Kayak": "Kayaking",
-                             "Stair Stepper": "StairStepper",
-                             "Surf": "Surfing",
-                             "Weight Training": "WeightTraining"}
+                             "Surf": "Surfing"}
         correction: str = corrections.get(key, key)
         return correction
 
     with open(path, mode="r") as file:
-        original: dict = {corrected(value.strip()): main
+        original: dict = {corrected(
+            value.replace(" ", "").replace("-", "").strip()
+                                    ): main
                           for main, values in [part.split("\n\n")
                                                for part
                                                in file.read().split("\n\n\n")
