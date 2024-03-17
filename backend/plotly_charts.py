@@ -473,22 +473,22 @@ def hours(original: pd.DataFrame,
     # prepare data
     original["timestep"] = original["hour"]*60 + original["minutes"]//10
     original["timestep"] = original["timestep"].apply(backend.min2ang)
-    original = original.groupby(["app", "timestep"])[["date", "time", "name"]].apply(give_position).reset_index()
-    print(f"{original.columns=}")
-    # original.sort_values(by="timestep",
-    #                       ascending=True,
-    #                       inplace=True)
-    # original["pos"] = 1
-    # last = None
-    # count = None
-    # for index, row in original.loc[:].iterrows():
-    #     step = row["timestep"]
-    #     if step != last:
-    #         last = step
-    #         count = 1
-    #         continue
-    #     count += 1
-    #     original.loc[index, "pos"] = count
+    # original = original.groupby(["app", "timestep"])[["date", "time", "name"]].apply(give_position).reset_index()
+    # print(f"{original.columns=}")
+    original.sort_values(by="timestep",
+                          ascending=True,
+                          inplace=True)
+    original["pos"] = 1
+    last = None
+    count = None
+    for index, row in original.loc[:].iterrows():
+        step = row["timestep"]
+        if step != last:
+            last = step
+            count = 1
+            continue
+        count += 1
+        original.loc[index, "pos"] = count
     # create figure
     clock = clock_figure(original,
                          title=plot_title,
