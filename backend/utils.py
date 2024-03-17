@@ -121,7 +121,9 @@ def load_category_mapper(path: str) -> collections.defaultdict:
         """
         corrections: dict = {"HIIT": "HighIntensityIntervalTraining",
                              "Kayak": "Kayaking",
-                             "Surf": "Surfing"}
+                             "Surf": "Surfing",
+                             "Row": "Rowing"
+                             }
         correction: str = corrections.get(key, key)
         return correction
 
