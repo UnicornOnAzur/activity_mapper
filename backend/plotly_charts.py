@@ -129,6 +129,49 @@ def _update_layout(fig: go.Figure,
     return fig
 
 
+def give_position(group):
+    """
+
+
+    Parameters
+    ----------
+    group : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    group : TYPE
+        DESCRIPTION.
+
+    """
+    group = group.sort_values(["date", "time"],
+                              ascending=[True, True]
+                              ).reset_index()
+    group["pos"] = group.index
+    return group
+
+
+def first_day_of_week(table):
+    """
+
+
+    Parameters
+    ----------
+    table : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    column : TYPE
+        DESCRIPTION.
+
+    """
+    column = pd.to_datetime(table.loc[:, ["year", "week"]].apply(
+        lambda row: f"{row.get('year')}-{row.get('week')}-1", axis=1),
+                                format="%Y-%W-%w")
+    return column
+
+
 def empty_figure(title: str,
                  height: int = None,
                  **kwargs: typing.Any) -> go.Figure:
@@ -181,19 +224,6 @@ def timeline(original: pd.DataFrame,
         DESCRIPTION.
 
     """
-    def give_position(group):
-        group = group.sort_values(["date", "time"],
-                                  ascending=[True, True]
-                                  ).reset_index()
-        group["pos"] = group.index
-        return group
-
-    def first_day_of_week(table):
-        column = pd.to_datetime(table.loc[:, ["year", "week"]].apply(
-            lambda row: f"{row.get('year')}-{row.get('week')}-1", axis=1),
-                                    format="%Y-%W-%w")
-        return column
-
     # show empty figure if no data is provided
     plot_title = "Timeline"
     if original.empty:
@@ -443,20 +473,22 @@ def hours(original: pd.DataFrame,
     # prepare data
     original["timestep"] = original["hour"]*60 + original["minutes"]//10
     original["timestep"] = original["timestep"].apply(backend.min2ang)
-    original.sort_values(by="timestep",
-                         ascending=True,
-                         inplace=True)
-    original["count"] = 1
-    last = None
-    count = None
-    for index, row in original.loc[:].iterrows():
-        step = row["timestep"]
-        if step != last:
-            last = step
-            count = 1
-            continue
-        count += 1
-        original.loc[index, "count"] = count
+    original = original.groupby(["app", "timestep"])[["date", "time", "name"]].apply(give_position).reset_index()
+    print(f"{original.columns=}")
+    # original.sort_values(by="timestep",
+    #                       ascending=True,
+    #                       inplace=True)
+    # original["pos"] = 1
+    # last = None
+    # count = None
+    # for index, row in original.loc[:].iterrows():
+    #     step = row["timestep"]
+    #     if step != last:
+    #         last = step
+    #         count = 1
+    #         continue
+    #     count += 1
+    #     original.loc[index, "pos"] = count
     # create figure
     clock = clock_figure(original,
                          title=plot_title,
@@ -493,7 +525,7 @@ def clock_figure(preprocessed_data: pd.DataFrame,
 
     """
     figure = px.scatter_polar(data_frame=preprocessed_data,
-                              r="count",
+                              r="pos",
                               theta="timestep",
                               color="app",
                               hover_name="name",
@@ -510,7 +542,7 @@ def clock_figure(preprocessed_data: pd.DataFrame,
                          <b>%{customdata[0]}</b><br>%{customdata[1]}
                          """)
     max_axis = 0 if preprocessed_data.empty \
-        else int(preprocessed_data["count"].max())
+        else int(preprocessed_data["pos"].max())
     figure = _update_layout(figure)
     figure.update_layout(polar={"radialaxis": {"tickvals":
                                                list(range(0, max_axis+1, 5))},
@@ -635,6 +667,7 @@ def locations(original: pd.DataFrame,
         countries_count = data.country.value_counts().reset_index()
         # get the colors closer together by taking the log of the value
         countries_count["count"] = countries_count["count"].apply(math.log) + 2
+    # TODO: fix JSONDecodeError
     geojson_file = backend.load_geojson(backend.PATH_GEOJSON)
     # create figure
     worldmap = worldmap_figure(data,
