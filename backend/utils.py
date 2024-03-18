@@ -207,6 +207,7 @@ def load_geojson(path: str) -> dict:
         for _ in range(3):
             try:
                 json_file: dict = json.load(file)
+            # catch JSONDecodeError as it inherets from ValueError
             except ValueError:
                 json_file: dict = {}
                 continue
