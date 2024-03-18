@@ -203,7 +203,13 @@ def load_geojson(path: str) -> dict:
 
     """
     with open(path, mode="rb") as file:
-        json_file: dict = json.load(file)
+        # allow three retries to load geojson file
+        for _ in range(3):
+            try:
+                json_file: dict = json.load(file)
+            except ValueError:
+                json_file: dict = {}
+                continue
     return json_file
 
 

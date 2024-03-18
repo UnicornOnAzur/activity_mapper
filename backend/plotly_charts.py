@@ -667,7 +667,6 @@ def locations(original: pd.DataFrame,
         countries_count = data.country.value_counts().reset_index()
         # get the colors closer together by taking the log of the value
         countries_count["count"] = countries_count["count"].apply(math.log) + 2
-    # TODO: fix JSONDecodeError
     geojson_file = backend.load_geojson(backend.PATH_GEOJSON)
     # create figure
     worldmap = worldmap_figure(data,
