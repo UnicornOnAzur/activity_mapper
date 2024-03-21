@@ -137,6 +137,7 @@ def main() -> None:
                         )
             st.header("Menu")
             if not st.session_state.get("loaded"):
+                st.button("Look up countries")
                 image_connect = backend.load_image(backend.PATH_CONNECT)
                 st.markdown(f"""
             <a href="{backend.authorization_link}">
