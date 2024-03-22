@@ -127,6 +127,7 @@ def nomatim_lookup(lat: str, lon: str) -> dict:
                                                  "lon": lon,
                                                  "format": "json"}
                                          )
+    print(lat, lon, response)
     return response
 
 
