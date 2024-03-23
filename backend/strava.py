@@ -125,6 +125,7 @@ def nomatim_lookup(lat: str, lon: str) -> dict:
     response: dict = backend.get_request(backend.NOMINATIM_LINK,
                                          params={"lat": lat,
                                                  "lon": lon,
+                                                 "zoom": 3, # country level
                                                  "format": "json"}
                                          )
     print(lat, lon, response)
@@ -223,30 +224,29 @@ def parse(activities: list[dict]) -> pd.DataFrame:
                                  # precision which is 5 for Google Maps
                                  precision=5
                                              ),
-
-                             # "country":
-                             # # provide the function with the coordinates of the
-                             # # activity as an unpacked tuple of the coordinates
-                             # # after mapping a rounding to 1 decimal and
-                             # # filling the strings to the length
-                             # locate_country(*tuple(map(lambda x:
-                             #                           # round the string to 1
-                             #                           # decimal and store it
-                             #                           (s := str(round(x, 1))
-                             #                            ).ljust(
-                             #                            # fill out the string
-                             #                            # to the length of the
-                             #                            # rounded string plus 2
-                             #                            # characters
-                             #                            len(s.split(".")[0])+2,
-                             #                            # fill character
-                             #                            "0"
-                             #                                    ),
-                             #                           [elements.get("lat"),
-                             #                            elements.get("lon")]
-                             #                           )
-                             #                       )
-                             #                )
+                              "country":
+                              # provide the function with the coordinates of the
+                              # activity as an unpacked tuple of the coordinates
+                              # after mapping a rounding to 1 decimal and
+                              # filling the strings to the length
+                              locate_country(*tuple(map(lambda x:
+                                                        # round the string to 1
+                                                        # decimal and store it
+                                                        (s := str(round(x, 1))
+                                                         ).ljust(
+                                                         # fill out the string
+                                                         # to the length of the
+                                                         # rounded string plus 2
+                                                         # characters
+                                                         len(s.split(".")[0])+2,
+                                                         # fill character
+                                                         "0"
+                                                                 ),
+                                                        [elements.get("lat"),
+                                                         elements.get("lon")]
+                                                        )
+                                                    )
+                                             )
                              }
                             )
         parsed_activities.append(elements)
