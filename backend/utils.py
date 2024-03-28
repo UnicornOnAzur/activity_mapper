@@ -202,7 +202,7 @@ def load_geojson(path: str) -> dict:
         DESCRIPTION.
 
     """
-    with open(path, mode="rb") as file:
+    with open(path, mode="rb", encoding="utf-8") as file:
         # allow three retries to load geojson file
         for _ in range(3):
             try:
