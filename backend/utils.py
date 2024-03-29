@@ -10,6 +10,7 @@ import collections
 # Third party
 import json
 import requests
+import streamlit as st
 import urllib3
 
 
@@ -89,6 +90,7 @@ def get_request(url: str,
     return result
 
 
+@st.cache_resource
 def load_category_mapper(path: str) -> collections.defaultdict:
     """
     Load the different sport types with their categories into a dictionary.
@@ -142,6 +144,7 @@ def load_category_mapper(path: str) -> collections.defaultdict:
     return mapper
 
 
+@st.cache_resource
 def load_country_code_mapper(path: str) -> dict:
     """
     Load a mapper of country codes to country names
@@ -187,6 +190,7 @@ def load_image(path: str) -> str:
     return image_as_str
 
 
+@st.cache_resource
 def load_geojson(path: str) -> dict:
     """
 
@@ -202,15 +206,17 @@ def load_geojson(path: str) -> dict:
         DESCRIPTION.
 
     """
-    with open(path, mode="r", encoding="utf-8") as file:
+    with open(path, mode="r", encoding="utf-8-sig") as file:
         # allow three retries to load geojson file
         for _ in range(3):
             try:
-                json_file: dict = json.load(file)
+                json_file: dict = json.loads(file.read())
             # catch JSONDecodeError as it inherets from ValueError
-            except ValueError:
+            except ValueError as e:
+                print(e)
                 json_file: dict = {}
                 continue
+        print(len(json_file))
     return json_file
 
 
