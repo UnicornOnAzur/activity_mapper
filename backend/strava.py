@@ -8,7 +8,6 @@ All the functions and variables related to using the Strava API and it's data.
 # Third party
 import pandas as pd
 import polyline
-import streamlit as st
 # Local imports
 import backend
 
@@ -104,7 +103,6 @@ def refresh_access(refresh_token: str) -> tuple[str]:
     return access_token, refresh_token, athlete_name, created_at
 
 
-@st.cache_data()
 def nomatim_lookup(lat: str, lon: str) -> dict:
     """
     Request a reverse location lookup on the Nominatim API.
