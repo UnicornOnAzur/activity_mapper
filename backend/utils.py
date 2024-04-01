@@ -202,17 +202,20 @@ def load_geojson(path: str) -> dict:
         DESCRIPTION.
 
     """
-    with open(path, mode="r", encoding="utf-8-sig") as file:
-        # allow three retries to load geojson file
-        for _ in range(3):
-            try:
-                json_file: dict = json.loads(file.read())
-            # catch JSONDecodeError as it inherets from ValueError
-            except ValueError as e:
-                print(e)
-                json_file: dict = {}
-                continue
-        print(len(json_file))
+    link = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
+    response = backend.get_request(link)
+    json_file = response.json()
+    # with open(path, mode="r", encoding="utf-8-sig") as file:
+    #     # allow three retries to load geojson file
+    #     for _ in range(3):
+    #         try:
+    #             json_file: dict = json.loads(file.read())
+    #         # catch JSONDecodeError as it inherets from ValueError
+    #         except ValueError as e:
+    #             print(e)
+    #             json_file: dict = {}
+    #             continue
+    #     print(len(json_file))
     return json_file
 
 
