@@ -203,8 +203,7 @@ def load_geojson(path: str) -> dict:
 
     """
     link = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
-    response = get_request(link)
-    json_file = response.json()
+    json_file = get_request(link)
     # with open(path, mode="r", encoding="utf-8-sig") as file:
     #     # allow three retries to load geojson file
     #     for _ in range(3):
