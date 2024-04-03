@@ -125,7 +125,7 @@ def nomatim_lookup(lat: str, lon: str) -> dict:
                                                  "lon": lon,
                                                  "zoom": 3,  # country level
                                                  "format": "json"},
-                                         headers={} # TODO: ...
+                                         headers={"Referer": backend.APP_URL} # TODO: ...
                                          )
     print(lat, lon, response)
     return response
