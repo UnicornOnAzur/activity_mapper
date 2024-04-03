@@ -127,7 +127,7 @@ def nomimatim_lookup(lat: str, lon: str) -> dict:
                                                  "lon": lon,
                                                  "zoom": 3,  # country level
                                                  "format": "json"},
-                                         headers={"Referer": backend.APP_URL}
+                                         # headers={"Referer": backend.APP_URL}
                                          )
     print(lat, lon, response)
     return response
